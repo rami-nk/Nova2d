@@ -34,7 +34,6 @@ public class Nova2dWindow {
             var dimension = Toolkit.getDefaultToolkit().getScreenSize();
             nova2dWindow.setHeight(dimension.height);
             nova2dWindow.setWidth(dimension.width);
-            return nova2dWindow;
         }
         return nova2dWindow;
     }
