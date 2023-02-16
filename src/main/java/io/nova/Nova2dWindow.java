@@ -22,11 +22,11 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class Nova2dWindow {
 
     private static Nova2dWindow nova2dWindow;
-    private Integer width;
-    private Integer height;
+    private int width;
+    private int height;
     @NonNull
     private String title;
-    private Long glfwWindow;
+    private long glfwWindow;
 
     public static Nova2dWindow get() {
         if (Objects.isNull(nova2dWindow)) {
