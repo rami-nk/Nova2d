@@ -28,7 +28,7 @@ public class Nova2dWindow {
     private String title;
     private long glfwWindow;
 
-    public static Nova2dWindow get() {
+    public static Nova2dWindow getInstance() {
         if (Objects.isNull(nova2dWindow)) {
             nova2dWindow = new Nova2dWindow("Nova2d");
             var dimension = Toolkit.getDefaultToolkit().getScreenSize();
@@ -77,6 +77,10 @@ public class Nova2dWindow {
         if (glfwWindow == NULL) {
             throw new RuntimeException("Failed to create the GLFW window");
         }
+
+        glfwSetCursorPosCallback(glfwWindow, MouseListener::cursorPositionCallback);
+        glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
+        glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
 
         // Make the OpenGL context current
         glfwMakeContextCurrent(glfwWindow);
