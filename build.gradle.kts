@@ -18,7 +18,6 @@ tasks.getByName<Test>("test") {
     useJUnitPlatform()
 }
 
-
 // Generated though https://www.lwjgl.org/customize
 val lwjglVersion = "3.3.1"
 val jomlVersion = "1.10.5"
@@ -26,7 +25,6 @@ val lwjglNatives = "natives-macos-arm64"
 
 dependencies {
     implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
-
     implementation("org.lwjgl", "lwjgl")
     implementation("org.lwjgl", "lwjgl-assimp")
     implementation("org.lwjgl", "lwjgl-glfw")
@@ -42,4 +40,10 @@ dependencies {
     runtimeOnly("org.lwjgl", "lwjgl-opengl", classifier = lwjglNatives)
     runtimeOnly("org.lwjgl", "lwjgl-stb", classifier = lwjglNatives)
     implementation("org.joml", "joml", jomlVersion)
+}
+
+// lombok
+dependencies {
+    compileOnly("org.projectlombok:lombok:1.18.22")
+    annotationProcessor("org.projectlombok:lombok:1.18.22")
 }
