@@ -64,19 +64,20 @@ public class Nova2dWindow {
         GLFWErrorCallback.createPrint(System.err).set();
 
         // Initialize GLFW. Most GLFW functions will not work before doing this.
-        if (!glfwInit())
+        if (!glfwInit()) {
             throw new IllegalStateException("Unable to initialize GLFW");
+        }
 
         // Configure GLFW
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
-        glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE); // window in maximized position
 
         // Create the window
         glfwWindow = glfwCreateWindow(width, height, title, NULL, NULL);
-        if (glfwWindow == NULL)
+        if (glfwWindow == NULL) {
             throw new RuntimeException("Failed to create the GLFW window");
+        }
 
         // Make the OpenGL context current
         glfwMakeContextCurrent(glfwWindow);
