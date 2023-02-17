@@ -100,20 +100,22 @@ public class Nova2dWindow {
     private void loop() {
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
-        while (!glfwWindowShouldClose(glfwWindow)) {
+        double startTime = Time.getElapsedTimeSinceApplicationStartInSeconds();
+        double endTime;
 
+        while (!glfwWindowShouldClose(glfwWindow)) {
             glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
             glClear(GL_COLOR_BUFFER_BIT); // clear the framebuffer
-
-            if (KeyListener.isKeyPressed(GLFW_KEY_SPACE)) {
-                System.out.println("Space is pressed");
-            }
 
             glfwSwapBuffers(glfwWindow); // swap the color buffers
 
             // Poll for window events. The key callback above will only be
             // invoked during this call.
             glfwPollEvents();
+
+            endTime = Time.getElapsedTimeSinceApplicationStartInSeconds();
+            var timePerFrame = endTime - startTime;
+            startTime = endTime;
         }
     }
 
