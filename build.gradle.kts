@@ -18,7 +18,7 @@ tasks.getByName<Test>("test") {
     useJUnitPlatform()
 }
 
-// Generated though https://www.lwjgl.org/customize
+// Generated with https://www.lwjgl.org/customize
 val lwjglVersion = "3.3.1"
 val jomlVersion = "1.10.5"
 val lwjglNatives = "natives-macos-arm64"
@@ -41,3 +41,4 @@ dependencies {
     runtimeOnly("org.lwjgl", "lwjgl-stb", classifier = lwjglNatives)
     implementation("org.joml", "joml", jomlVersion)
 }
+
