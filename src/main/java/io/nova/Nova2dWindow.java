@@ -1,14 +1,9 @@
 package io.nova;
 
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
-import java.awt.*;
 import java.util.Objects;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
@@ -16,24 +11,23 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-@Setter
-@Getter
-@RequiredArgsConstructor
 public class Nova2dWindow {
 
     private static Nova2dWindow nova2dWindow;
-    private int width;
-    private int height;
-    @NonNull
-    private String title;
+    private final int width;
+    private final int height;
+    private final String title;
     private long glfwWindow;
+
+    private Nova2dWindow(String title, int height, int width) {
+        this.title = title;
+        this.height = height;
+        this.width = width;
+    }
 
     public static Nova2dWindow getInstance() {
         if (Objects.isNull(nova2dWindow)) {
-            nova2dWindow = new Nova2dWindow("Nova2d");
-            var dimension = Toolkit.getDefaultToolkit().getScreenSize();
-            nova2dWindow.setHeight(dimension.height);
-            nova2dWindow.setWidth(dimension.width);
+            nova2dWindow = new Nova2dWindow("Nova2d", 300, 300);
         }
         return nova2dWindow;
     }
@@ -45,6 +39,10 @@ public class Nova2dWindow {
     private static void terminateGLFWAndFreeErrorCallback() {
         glfwTerminate();
         Objects.requireNonNull(glfwSetErrorCallback(null)).free();
+    }
+
+    public static void main(String[] args) {
+        Nova2dWindow.getInstance().run();
     }
 
     public void run() {
@@ -81,6 +79,7 @@ public class Nova2dWindow {
         glfwSetCursorPosCallback(glfwWindow, MouseListener::cursorPositionCallback);
         glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
         glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
+        glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback);
 
         // Make the OpenGL context current
         glfwMakeContextCurrent(glfwWindow);
@@ -99,13 +98,16 @@ public class Nova2dWindow {
     }
 
     private void loop() {
-        // Set the clear color
-        glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
-
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while (!glfwWindowShouldClose(glfwWindow)) {
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+
+            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+            glClear(GL_COLOR_BUFFER_BIT); // clear the framebuffer
+
+            if (KeyListener.isKeyPressed(GLFW_KEY_SPACE)) {
+                System.out.println("Space is pressed");
+            }
 
             glfwSwapBuffers(glfwWindow); // swap the color buffers
 
