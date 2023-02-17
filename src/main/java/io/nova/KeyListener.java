@@ -3,6 +3,7 @@ package io.nova;
 import java.util.Objects;
 
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 
 public class KeyListener {
 
@@ -23,7 +24,11 @@ public class KeyListener {
     }
 
     public static void keyCallback(long glfwWindow, int keyCode, int scanCode, int action, int mods) {
-        getInstance().keyPressed[keyCode] = action == GLFW_PRESS;
+        if (action == GLFW_PRESS) {
+            getInstance().keyPressed[keyCode] = true;
+        } else if (action == GLFW_RELEASE) {
+            getInstance().keyPressed[keyCode] = false;
+        }
     }
 
     public static boolean isKeyPressed(int keyCode) {

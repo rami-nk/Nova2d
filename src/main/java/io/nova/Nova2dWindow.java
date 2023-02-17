@@ -2,7 +2,6 @@ package io.nova;
 
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -18,7 +17,6 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 @Setter
 @Getter
-@RequiredArgsConstructor
 public class Nova2dWindow {
 
     private static Nova2dWindow nova2dWindow;
@@ -27,6 +25,10 @@ public class Nova2dWindow {
     @NonNull
     private String title;
     private long glfwWindow;
+
+    private Nova2dWindow(@NonNull String title) {
+        this.title = title;
+    }
 
     public static Nova2dWindow getInstance() {
         if (Objects.isNull(nova2dWindow)) {
@@ -100,13 +102,16 @@ public class Nova2dWindow {
     }
 
     private void loop() {
-        // Set the clear color
-        glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
-
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while (!glfwWindowShouldClose(glfwWindow)) {
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+
+            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+            glClear(GL_COLOR_BUFFER_BIT); // clear the framebuffer
+
+            if (KeyListener.isKeyPressed(GLFW_KEY_SPACE)) {
+                System.out.println("Space is pressed");
+            }
 
             glfwSwapBuffers(glfwWindow); // swap the color buffers
 
