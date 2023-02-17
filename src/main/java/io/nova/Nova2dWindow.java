@@ -81,6 +81,7 @@ public class Nova2dWindow {
         glfwSetCursorPosCallback(glfwWindow, MouseListener::cursorPositionCallback);
         glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
         glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
+        glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback);
 
         // Make the OpenGL context current
         glfwMakeContextCurrent(glfwWindow);
