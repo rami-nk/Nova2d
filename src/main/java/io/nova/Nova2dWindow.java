@@ -1,13 +1,9 @@
 package io.nova;
 
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
-import java.awt.*;
 import java.util.Objects;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
@@ -15,27 +11,23 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-@Setter
-@Getter
 public class Nova2dWindow {
 
     private static Nova2dWindow nova2dWindow;
-    private int width;
-    private int height;
-    @NonNull
-    private String title;
+    private final int width;
+    private final int height;
+    private final String title;
     private long glfwWindow;
 
-    private Nova2dWindow(@NonNull String title) {
+    private Nova2dWindow(String title, int height, int width) {
         this.title = title;
+        this.height = height;
+        this.width = width;
     }
 
     public static Nova2dWindow getInstance() {
         if (Objects.isNull(nova2dWindow)) {
-            nova2dWindow = new Nova2dWindow("Nova2d");
-            var dimension = Toolkit.getDefaultToolkit().getScreenSize();
-            nova2dWindow.setHeight(dimension.height);
-            nova2dWindow.setWidth(dimension.width);
+            nova2dWindow = new Nova2dWindow("Nova2d", 300, 300);
         }
         return nova2dWindow;
     }
@@ -47,6 +39,10 @@ public class Nova2dWindow {
     private static void terminateGLFWAndFreeErrorCallback() {
         glfwTerminate();
         Objects.requireNonNull(glfwSetErrorCallback(null)).free();
+    }
+
+    public static void main(String[] args) {
+        Nova2dWindow.getInstance().run();
     }
 
     public void run() {
