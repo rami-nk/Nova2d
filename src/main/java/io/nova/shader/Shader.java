@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL30.*;
 
 public class Shader {
 
