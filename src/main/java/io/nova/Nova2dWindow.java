@@ -3,6 +3,7 @@ package io.nova;
 import io.nova.scene.LevelEditorScene;
 import io.nova.scene.LevelScene;
 import io.nova.scene.MenuScene;
+import io.nova.scene.SimpleSquareScene;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -49,10 +50,6 @@ public class Nova2dWindow {
         Objects.requireNonNull(glfwSetErrorCallback(null)).free();
     }
 
-    public static void main(String[] args) {
-        Nova2dWindow.getInstance().run();
-    }
-
     public void run() {
         printVersion();
 
@@ -77,6 +74,9 @@ public class Nova2dWindow {
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
         // Create the window
         glfwWindow = glfwCreateWindow(width, height, title, NULL, NULL);
@@ -110,6 +110,7 @@ public class Nova2dWindow {
 
         menuScene.registerScene("LevelEditor", LevelEditorScene.class);
         menuScene.registerScene("LevelScene", LevelScene.class);
+        menuScene.registerScene("SimpleSquareScene", SimpleSquareScene.class);
         menuScene.printInfo();
     }
 
