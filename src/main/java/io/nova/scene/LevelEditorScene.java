@@ -1,4 +1,8 @@
-package io.nova;
+package io.nova.scene;
+
+import io.nova.KeyListener;
+import io.nova.Nova2dWindow;
+import io.nova.scene.Scene;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 
@@ -19,5 +23,10 @@ public class LevelEditorScene extends Scene {
         } else if (isChanging) {
             Nova2dWindow.getInstance().changeScene(1);
         }
+    }
+
+    @Override
+    public void render() {
+
     }
 }

@@ -1,5 +1,9 @@
 package io.nova;
 
+import io.nova.scene.LevelEditorScene;
+import io.nova.scene.LevelScene;
+import io.nova.scene.MenuScene;
+import io.nova.scene.Scene;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -18,8 +22,9 @@ public class Nova2dWindow {
     private final int height;
     private final String title;
     private long glfwWindow;
-    private Scene currentScene;
     private double red, green, blue;
+    private Scene currentScene;
+    private MenuScene menuScene;
 
     private Nova2dWindow(String title, int height, int width) {
         this.title = title;
@@ -107,6 +112,13 @@ public class Nova2dWindow {
         // creates the GLCapabilities instance and makes the OpenGL
         // bindings available for use.
         GL.createCapabilities();
+
+        // Register Scenes
+        menuScene = new MenuScene(currentScene);
+        currentScene = menuScene;
+
+        menuScene.registerScene("LevelEditor", LevelEditorScene.class);
+        menuScene.registerScene("LevelScene", LevelScene.class);
     }
 
     private void loop() {
@@ -122,8 +134,13 @@ public class Nova2dWindow {
 
             glfwSwapBuffers(glfwWindow); // swap the color buffers
 
-            if (deltaTime >= 0) {
+            if (!Objects.isNull(currentScene) && deltaTime >= 0) {
                 currentScene.update(deltaTime);
+                currentScene.render();
+
+                if (KeyListener.isKeyPressed(GLFW_KEY_DELETE) && currentScene != menuScene) {
+                    currentScene = menuScene;
+                }
             }
 
             // Poll for window events. The key callback above will only be
