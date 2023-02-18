@@ -3,15 +3,17 @@ package io.nova;
 import io.nova.scene.LevelEditorScene;
 import io.nova.scene.LevelScene;
 import io.nova.scene.MenuScene;
+import io.nova.scene.SimpleColoredSquareScene;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GLUtil;
 
 import java.util.Objects;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_TRUE;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Nova2dWindow {
@@ -28,14 +30,14 @@ public class Nova2dWindow {
         this.title = title;
         this.height = height;
         this.width = width;
-        this.red = 0.0f;
-        this.green = 0.0f;
-        this.blue = 0.0f;
+        this.red = 1.0f;
+        this.green = 1.0f;
+        this.blue = 1.0f;
     }
 
     public static Nova2dWindow getInstance() {
         if (Objects.isNull(nova2dWindow)) {
-            nova2dWindow = new Nova2dWindow("Nova2d", 300, 300);
+            nova2dWindow = new Nova2dWindow("Nova2d", 500, 500);
         }
         return nova2dWindow;
     }
@@ -47,10 +49,6 @@ public class Nova2dWindow {
     private static void terminateGLFWAndFreeErrorCallback() {
         glfwTerminate();
         Objects.requireNonNull(glfwSetErrorCallback(null)).free();
-    }
-
-    public static void main(String[] args) {
-        Nova2dWindow.getInstance().run();
     }
 
     public void run() {
@@ -77,6 +75,10 @@ public class Nova2dWindow {
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
         // Create the window
         glfwWindow = glfwCreateWindow(width, height, title, NULL, NULL);
@@ -88,6 +90,7 @@ public class Nova2dWindow {
         glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
         glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
         glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback);
+
 
         // Make the OpenGL context current
         glfwMakeContextCurrent(glfwWindow);
@@ -104,12 +107,15 @@ public class Nova2dWindow {
         // bindings available for use.
         GL.createCapabilities();
 
+        GLUtil.setupDebugMessageCallback();
+
         // Register Scenes
         menuScene = new MenuScene(null);
         menuScene.setCurrentScene(menuScene);
 
         menuScene.registerScene("LevelEditor", LevelEditorScene.class);
         menuScene.registerScene("LevelScene", LevelScene.class);
+        menuScene.registerScene("SimpleColoredSquare", SimpleColoredSquareScene.class);
         menuScene.printInfo();
     }
 
@@ -125,8 +131,8 @@ public class Nova2dWindow {
             // invoked during this call.
             glfwPollEvents();
 
-            glClearColor((float) red, (float) green, (float) blue, 0.0f);
-            glClear(GL_COLOR_BUFFER_BIT); // clear the framebuffer
+            Renderer.setClearColor((float) red, (float) green, (float) blue, 0.0f);
+            Renderer.clear();
 
             var currentScene = menuScene.getCurrentScene();
             if (!Objects.isNull(currentScene) && deltaTime >= 0) {
