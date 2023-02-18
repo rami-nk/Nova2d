@@ -1,9 +1,14 @@
 package io.nova.core.shader;
 
+import org.joml.Matrix4f;
+import org.lwjgl.BufferUtils;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import static org.lwjgl.opengl.GL30.*;
@@ -12,11 +17,13 @@ public class Shader {
 
     private final String filePath;
     private final int rendererId;
+    private final Map<String, Integer> uniformLocationCache;
 
     public Shader(String filePath) {
         this.filePath = filePath;
         ShaderProgramSource source = parseShader(filePath);
         rendererId = createShader(source.vertexSource(), source.fragmentSource());
+        uniformLocationCache = new HashMap<>();
     }
 
     public void bind() {
@@ -25,6 +32,22 @@ public class Shader {
 
     public void unbind() {
         glUseProgram(0);
+    }
+
+    public void setUniformMat4f(final String name, final Matrix4f mat4f) {
+        glUniformMatrix4fv(getUniformLocation(name), false, mat4f.get(BufferUtils.createFloatBuffer(16)));
+    }
+
+    private int getUniformLocation(final String name) {
+        if (uniformLocationCache.containsKey(name)) {
+            return uniformLocationCache.get(name);
+        }
+        int location = glGetUniformLocation(rendererId, name);
+        if (location == -1) {
+            System.out.printf("WARNING: uniform \"%s\" does not exist!\n", name);
+        }
+        uniformLocationCache.put(name, location);
+        return location;
     }
 
     private int createShader(final String vertexShader, final String fragmentShader) {
