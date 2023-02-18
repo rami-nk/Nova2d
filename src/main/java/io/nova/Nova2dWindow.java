@@ -23,7 +23,6 @@ public class Nova2dWindow {
     private final String title;
     private long glfwWindow;
     private double red, green, blue;
-    private Scene currentScene;
     private MenuScene menuScene;
 
     private Nova2dWindow(String title, int height, int width) {
@@ -33,7 +32,6 @@ public class Nova2dWindow {
         this.red = 0.0f;
         this.green = 0.0f;
         this.blue = 0.0f;
-        this.currentScene = new LevelEditorScene();
     }
 
     public static Nova2dWindow getInstance() {
@@ -60,16 +58,6 @@ public class Nova2dWindow {
 
         freeWindowCallbacksAndDestroyWindow();
         terminateGLFWAndFreeErrorCallback();
-    }
-
-    public void changeScene(int scene) {
-        switch (scene) {
-            case 0 -> currentScene = new LevelEditorScene();
-            case 1 -> currentScene = new LevelScene();
-            default -> {
-                assert false;
-            }
-        }
     }
 
     private void init() {
@@ -114,11 +102,12 @@ public class Nova2dWindow {
         GL.createCapabilities();
 
         // Register Scenes
-        menuScene = new MenuScene(currentScene);
-        currentScene = menuScene;
+        menuScene = new MenuScene(null);
+        menuScene.setCurrentScene(menuScene);
 
         menuScene.registerScene("LevelEditor", LevelEditorScene.class);
         menuScene.registerScene("LevelScene", LevelScene.class);
+        menuScene.printInfo();
     }
 
     private void loop() {
@@ -134,12 +123,13 @@ public class Nova2dWindow {
 
             glfwSwapBuffers(glfwWindow); // swap the color buffers
 
+            var currentScene = menuScene.getCurrentScene();
             if (!Objects.isNull(currentScene) && deltaTime >= 0) {
                 currentScene.update(deltaTime);
                 currentScene.render();
 
-                if (KeyListener.isKeyPressed(GLFW_KEY_DELETE) && currentScene != menuScene) {
-                    currentScene = menuScene;
+                if (KeyListener.isKeyPressed(GLFW_KEY_BACKSPACE) && currentScene != menuScene) {
+                    menuScene.setCurrentScene(menuScene);
                 }
             }
 
