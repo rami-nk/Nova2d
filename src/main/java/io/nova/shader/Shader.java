@@ -8,9 +8,12 @@ import java.util.Objects;
 import static org.lwjgl.opengl.GL20.*;
 
 public class Shader {
+
+    private final String filePath;
     private final int rendererId;
 
     public Shader(String filePath) {
+        this.filePath = filePath;
         ShaderProgramSource source = parseShader(filePath);
         rendererId = createShader(source.vertexSource(), source.fragmentSource());
     }
@@ -49,8 +52,9 @@ public class Shader {
 
         if (result == GL_FALSE) {
             String message = glGetShaderInfoLog(id, glGetShaderi(id, GL_INFO_LOG_LENGTH));
-            System.err.printf("Failed to compile %s shader!\n%s",
+            System.err.printf("Failed to compile %s shader in %s!\n%s",
                     type == ShaderType.VERTEX.ordinal() ? "vertex" : "fragment",
+                    filePath,
                     message);
             glDeleteShader(id);
             return 0;
