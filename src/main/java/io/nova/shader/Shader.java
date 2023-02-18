@@ -37,6 +37,15 @@ public class Shader {
         glLinkProgram(program);
         glValidateProgram(program);
 
+        int result = glGetProgrami(program, GL_LINK_STATUS);
+        if (result == GL_FALSE) {
+            String message = glGetProgramInfoLog(program, glGetProgrami(program, GL_INFO_LOG_LENGTH));
+            System.err.printf("Failed to link shader in %s!\n%s",
+                    filePath,
+                    message);
+            return 0;
+        }
+
         glDeleteShader(vs);
         glDeleteShader(fs);
 
