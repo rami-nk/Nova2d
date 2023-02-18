@@ -18,10 +18,6 @@ public class VertexArray {
         var elements = vertexBufferLayout.getElements();
         int offset = 0;
         int index = 0;
-        int stride = 0;
-        for (var element : elements) {
-            stride += element.getCount() * VertexBufferElement.getSizeOfType(element.getType());
-        }
         for (var element : elements) {
             glVertexAttribPointer(index, element.getCount(), element.getType(), element.getNormalized(), vertexBufferLayout.getStride(), offset);
             glEnableVertexAttribArray(index);
