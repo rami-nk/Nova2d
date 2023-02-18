@@ -18,11 +18,17 @@ public class Nova2dWindow {
     private final int height;
     private final String title;
     private long glfwWindow;
+    private Scene currentScene;
+    private double red, green, blue;
 
     private Nova2dWindow(String title, int height, int width) {
         this.title = title;
         this.height = height;
         this.width = width;
+        this.red = 0.0f;
+        this.green = 0.0f;
+        this.blue = 0.0f;
+        this.currentScene = new LevelEditorScene();
     }
 
     public static Nova2dWindow getInstance() {
@@ -41,10 +47,6 @@ public class Nova2dWindow {
         Objects.requireNonNull(glfwSetErrorCallback(null)).free();
     }
 
-    public static void main(String[] args) {
-        Nova2dWindow.getInstance().run();
-    }
-
     public void run() {
         printVersion();
 
@@ -53,6 +55,16 @@ public class Nova2dWindow {
 
         freeWindowCallbacksAndDestroyWindow();
         terminateGLFWAndFreeErrorCallback();
+    }
+
+    public void changeScene(int scene) {
+        switch (scene) {
+            case 0 -> currentScene = new LevelEditorScene();
+            case 1 -> currentScene = new LevelScene();
+            default -> {
+                assert false;
+            }
+        }
     }
 
     private void init() {
@@ -102,19 +114,24 @@ public class Nova2dWindow {
         // the window or has pressed the ESCAPE key.
         double startTime = Time.getElapsedTimeSinceApplicationStartInSeconds();
         double endTime;
+        double deltaTime = -1;
 
         while (!glfwWindowShouldClose(glfwWindow)) {
-            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+            glClearColor((float) red, (float) green, (float) blue, 0.0f);
             glClear(GL_COLOR_BUFFER_BIT); // clear the framebuffer
 
             glfwSwapBuffers(glfwWindow); // swap the color buffers
+
+            if (deltaTime >= 0) {
+                currentScene.update(deltaTime);
+            }
 
             // Poll for window events. The key callback above will only be
             // invoked during this call.
             glfwPollEvents();
 
             endTime = Time.getElapsedTimeSinceApplicationStartInSeconds();
-            var timePerFrame = endTime - startTime;
+            deltaTime = endTime - startTime;
             startTime = endTime;
         }
     }
@@ -122,5 +139,17 @@ public class Nova2dWindow {
     private void freeWindowCallbacksAndDestroyWindow() {
         glfwFreeCallbacks(glfwWindow);
         glfwDestroyWindow(glfwWindow);
+    }
+
+    public void changeColorBy(double redOffset, double greenOffset, double blueOffset) {
+        red += redOffset;
+        green += greenOffset;
+        blue += blueOffset;
+    }
+
+    public void changeColorTo(double red, double green, double blue) {
+        this.red = red;
+        this.green = green;
+        this.blue = blue;
     }
 }
