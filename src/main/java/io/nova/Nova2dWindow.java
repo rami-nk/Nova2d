@@ -3,7 +3,6 @@ package io.nova;
 import io.nova.scene.LevelEditorScene;
 import io.nova.scene.LevelScene;
 import io.nova.scene.MenuScene;
-import io.nova.scene.Scene;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -48,6 +47,10 @@ public class Nova2dWindow {
     private static void terminateGLFWAndFreeErrorCallback() {
         glfwTerminate();
         Objects.requireNonNull(glfwSetErrorCallback(null)).free();
+    }
+
+    public static void main(String[] args) {
+        Nova2dWindow.getInstance().run();
     }
 
     public void run() {
@@ -120,6 +123,10 @@ public class Nova2dWindow {
         while (!glfwWindowShouldClose(glfwWindow)) {
             glClearColor((float) red, (float) green, (float) blue, 0.0f);
             glClear(GL_COLOR_BUFFER_BIT); // clear the framebuffer
+
+            if (KeyListener.isKeyPressed(GLFW_KEY_SPACE)) {
+                System.out.println("Space is pressed");
+            }
 
             glfwSwapBuffers(glfwWindow); // swap the color buffers
 
