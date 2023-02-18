@@ -124,10 +124,6 @@ public class Nova2dWindow {
             glClearColor((float) red, (float) green, (float) blue, 0.0f);
             glClear(GL_COLOR_BUFFER_BIT); // clear the framebuffer
 
-            if (KeyListener.isKeyPressed(GLFW_KEY_SPACE)) {
-                System.out.println("Space is pressed");
-            }
-
             glfwSwapBuffers(glfwWindow); // swap the color buffers
 
             var currentScene = menuScene.getCurrentScene();
