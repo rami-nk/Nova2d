@@ -1,7 +1,7 @@
-package io.nova.scene;
+package io.nova.core.scene;
 
-import io.nova.KeyListener;
-import io.nova.Nova2dWindow;
+import io.nova.core.listener.KeyListener;
+import io.nova.core.Nova2dWindow;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;

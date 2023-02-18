@@ -1,4 +1,4 @@
-package io.nova.shader;
+package io.nova.core.shader;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

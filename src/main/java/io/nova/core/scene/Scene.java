@@ -1,4 +1,4 @@
-package io.nova.scene;
+package io.nova.core.scene;
 
 public abstract class Scene {
 

@@ -1,6 +1,8 @@
-package io.nova;
+package io.nova.core;
 
-import io.nova.shader.Shader;
+import io.nova.core.buffer.IndexBuffer;
+import io.nova.core.buffer.VertexArray;
+import io.nova.core.shader.Shader;
 
 import static org.lwjgl.opengl.GL30.*;
 
