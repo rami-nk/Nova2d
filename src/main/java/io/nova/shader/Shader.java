@@ -3,6 +3,7 @@ package io.nova.shader;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Objects;
 
 import static org.lwjgl.opengl.GL20.*;
@@ -78,6 +79,7 @@ public class Shader {
 
             String line = reader.readLine();
             String[] shaderSource = new String[ShaderType.values().length - 1];
+            Arrays.fill(shaderSource, "");
             ShaderType type = ShaderType.NONE;
             while (!Objects.isNull(line)) {
                 if (line.contains("#shader")) {

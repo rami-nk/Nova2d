@@ -7,7 +7,7 @@ public class SimpleSquareScene extends Scene {
     private final Shader shader;
 
     SimpleSquareScene() {
-        shader = new Shader("shaders/default.glsl");
+        shader = new Shader("src/main/resources/shaders/default.glsl");
         shader.bind();
     }
 
