@@ -1,5 +1,6 @@
 package io.nova;
 
+
 import static org.lwjgl.opengl.GL11.*;
 
 class VertexBufferElement {

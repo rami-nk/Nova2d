@@ -1,11 +1,6 @@
 package io.nova;
 
-import org.lwjgl.BufferUtils;
-
-import static org.lwjgl.opengl.ARBVertexArrayObject.glBindVertexArray;
-import static org.lwjgl.opengl.ARBVertexArrayObject.glGenVertexArrays;
-import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
+import static org.lwjgl.opengl.GL30.*;
 
 public class VertexArray {
 
@@ -13,6 +8,7 @@ public class VertexArray {
 
     public VertexArray() {
         rendererId = glGenVertexArrays();
+        bind();
     }
 
     public void addBuffer(final VertexBuffer vertexBuffer, final VertexBufferLayout vertexBufferLayout) {
@@ -22,14 +18,17 @@ public class VertexArray {
         var elements = vertexBufferLayout.getElements();
         int offset = 0;
         int index = 0;
+        int stride = 0;
         for (var element : elements) {
-            var floatBuffer = BufferUtils.createFloatBuffer(1);
-            floatBuffer.put(1.0f);
+            stride += element.getCount() * VertexBufferElement.getSizeOfType(element.getType());
+        }
+        for (var element : elements) {
+            glVertexAttribPointer(index, element.getCount(), element.getType(), element.getNormalized(), vertexBufferLayout.getStride(), offset);
             glEnableVertexAttribArray(index);
-            glVertexAttribPointer(index, element.getCount(), element.getType(), element.getNormalized(), offset, floatBuffer);
             offset += element.getCount() * VertexBufferElement.getSizeOfType(element.getType());
             index++;
         }
+
     }
 
     public void bind() {

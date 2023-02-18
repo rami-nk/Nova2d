@@ -3,10 +3,11 @@ package io.nova;
 import io.nova.scene.LevelEditorScene;
 import io.nova.scene.LevelScene;
 import io.nova.scene.MenuScene;
-import io.nova.scene.SimpleTriangleScene;
+import io.nova.scene.SimpleColoredSquareScene;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GLUtil;
 
 import java.util.Objects;
 
@@ -89,6 +90,7 @@ public class Nova2dWindow {
         glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
         glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback);
 
+
         // Make the OpenGL context current
         glfwMakeContextCurrent(glfwWindow);
         // Enable v-sync
@@ -104,13 +106,15 @@ public class Nova2dWindow {
         // bindings available for use.
         GL.createCapabilities();
 
+        GLUtil.setupDebugMessageCallback();
+
         // Register Scenes
         menuScene = new MenuScene(null);
         menuScene.setCurrentScene(menuScene);
 
         menuScene.registerScene("LevelEditor", LevelEditorScene.class);
         menuScene.registerScene("LevelScene", LevelScene.class);
-        menuScene.registerScene("SimpleTriangle", SimpleTriangleScene.class);
+        menuScene.registerScene("SimpleColoredSquare", SimpleColoredSquareScene.class);
         menuScene.printInfo();
     }
 

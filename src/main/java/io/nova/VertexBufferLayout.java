@@ -3,7 +3,7 @@ package io.nova;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_FLOAT;
 
 public class VertexBufferLayout {
 
