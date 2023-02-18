@@ -3,7 +3,7 @@ package io.nova;
 import io.nova.scene.LevelEditorScene;
 import io.nova.scene.LevelScene;
 import io.nova.scene.MenuScene;
-import io.nova.scene.SimpleSquareScene;
+import io.nova.scene.SimpleTriangleScene;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -24,20 +24,19 @@ public class Nova2dWindow {
     private long glfwWindow;
     private double red, green, blue;
     private MenuScene menuScene;
-    private Renderer renderer;
 
     private Nova2dWindow(String title, int height, int width) {
         this.title = title;
         this.height = height;
         this.width = width;
-        this.red = 0.0f;
-        this.green = 0.0f;
-        this.blue = 0.0f;
+        this.red = 1.0f;
+        this.green = 1.0f;
+        this.blue = 1.0f;
     }
 
     public static Nova2dWindow getInstance() {
         if (Objects.isNull(nova2dWindow)) {
-            nova2dWindow = new Nova2dWindow("Nova2d", 300, 300);
+            nova2dWindow = new Nova2dWindow("Nova2d", 500, 500);
         }
         return nova2dWindow;
     }
@@ -105,16 +104,13 @@ public class Nova2dWindow {
         // bindings available for use.
         GL.createCapabilities();
 
-        // Create Renderer
-        renderer = new Renderer();
-
         // Register Scenes
         menuScene = new MenuScene(null);
         menuScene.setCurrentScene(menuScene);
 
         menuScene.registerScene("LevelEditor", LevelEditorScene.class);
         menuScene.registerScene("LevelScene", LevelScene.class);
-        menuScene.registerScene("SimpleSquareScene", SimpleSquareScene.class);
+        menuScene.registerScene("SimpleTriangle", SimpleTriangleScene.class);
         menuScene.printInfo();
     }
 
@@ -130,8 +126,8 @@ public class Nova2dWindow {
             // invoked during this call.
             glfwPollEvents();
 
-            renderer.setClearColor((float) red, (float) green, (float) blue, 0.0f);
-            renderer.clear();
+            Renderer.setClearColor((float) red, (float) green, (float) blue, 0.0f);
+            Renderer.clear();
 
             var currentScene = menuScene.getCurrentScene();
             if (!Objects.isNull(currentScene) && deltaTime >= 0) {

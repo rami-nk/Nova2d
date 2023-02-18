@@ -51,7 +51,7 @@ public class MenuScene extends Scene {
 
     @Override
     public void render() {
-        Nova2dWindow.getInstance().changeColorTo(0.0, 0.0, 0.0);
+        Nova2dWindow.getInstance().changeColorTo(1.0, 1.0, 1.0);
     }
 
     public void setCurrentScene(Scene currentScene) {

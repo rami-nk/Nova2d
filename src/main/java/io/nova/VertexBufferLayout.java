@@ -16,7 +16,7 @@ public class VertexBufferLayout {
     }
 
     public void pushFloat(int count) {
-        elements.add(new VertexBufferElement(GL_FLOAT, count, (char) GL_FALSE));
+        elements.add(new VertexBufferElement(GL_FLOAT, count, false));
         stride += count * VertexBufferElement.getSizeOfType(GL_FLOAT);
     }
 
