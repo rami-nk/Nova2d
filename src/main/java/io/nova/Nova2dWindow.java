@@ -1,5 +1,8 @@
 package io.nova;
 
+import io.nova.scene.LevelEditorScene;
+import io.nova.scene.LevelScene;
+import io.nova.scene.MenuScene;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -18,11 +21,16 @@ public class Nova2dWindow {
     private final int height;
     private final String title;
     private long glfwWindow;
+    private double red, green, blue;
+    private MenuScene menuScene;
 
     private Nova2dWindow(String title, int height, int width) {
         this.title = title;
         this.height = height;
         this.width = width;
+        this.red = 0.0f;
+        this.green = 0.0f;
+        this.blue = 0.0f;
     }
 
     public static Nova2dWindow getInstance() {
@@ -95,30 +103,63 @@ public class Nova2dWindow {
         // creates the GLCapabilities instance and makes the OpenGL
         // bindings available for use.
         GL.createCapabilities();
+
+        // Register Scenes
+        menuScene = new MenuScene(null);
+        menuScene.setCurrentScene(menuScene);
+
+        menuScene.registerScene("LevelEditor", LevelEditorScene.class);
+        menuScene.registerScene("LevelScene", LevelScene.class);
+        menuScene.printInfo();
     }
 
     private void loop() {
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
-        while (!glfwWindowShouldClose(glfwWindow)) {
+        double startTime = Time.getElapsedTimeSinceApplicationStartInSeconds();
+        double endTime;
+        double deltaTime = -1;
 
-            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        while (!glfwWindowShouldClose(glfwWindow) && !KeyListener.isKeyPressed(GLFW_KEY_ESCAPE)) {
+            // Poll for window events. The key callback above will only be
+            // invoked during this call.
+            glfwPollEvents();
+
+            glClearColor((float) red, (float) green, (float) blue, 0.0f);
             glClear(GL_COLOR_BUFFER_BIT); // clear the framebuffer
 
-            if (KeyListener.isKeyPressed(GLFW_KEY_SPACE)) {
-                System.out.println("Space is pressed");
+            var currentScene = menuScene.getCurrentScene();
+            if (!Objects.isNull(currentScene) && deltaTime >= 0) {
+                currentScene.update(deltaTime);
+                currentScene.render();
+
+                if (KeyListener.isKeyPressed(GLFW_KEY_BACKSPACE) && currentScene != menuScene) {
+                    menuScene.setCurrentScene(menuScene);
+                }
             }
 
             glfwSwapBuffers(glfwWindow); // swap the color buffers
 
-            // Poll for window events. The key callback above will only be
-            // invoked during this call.
-            glfwPollEvents();
+            endTime = Time.getElapsedTimeSinceApplicationStartInSeconds();
+            deltaTime = endTime - startTime;
+            startTime = endTime;
         }
     }
 
     private void freeWindowCallbacksAndDestroyWindow() {
         glfwFreeCallbacks(glfwWindow);
         glfwDestroyWindow(glfwWindow);
+    }
+
+    public void changeColorBy(double redOffset, double greenOffset, double blueOffset) {
+        red += redOffset;
+        green += greenOffset;
+        blue += blueOffset;
+    }
+
+    public void changeColorTo(double red, double green, double blue) {
+        this.red = red;
+        this.green = green;
+        this.blue = blue;
     }
 }
