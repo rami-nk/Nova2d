@@ -24,6 +24,7 @@ public class Nova2dWindow {
     private long glfwWindow;
     private double red, green, blue;
     private MenuScene menuScene;
+    private Renderer renderer;
 
     private Nova2dWindow(String title, int height, int width) {
         this.title = title;
@@ -104,6 +105,9 @@ public class Nova2dWindow {
         // bindings available for use.
         GL.createCapabilities();
 
+        // Create Renderer
+        renderer = new Renderer();
+
         // Register Scenes
         menuScene = new MenuScene(null);
         menuScene.setCurrentScene(menuScene);
@@ -126,8 +130,8 @@ public class Nova2dWindow {
             // invoked during this call.
             glfwPollEvents();
 
-            glClearColor((float) red, (float) green, (float) blue, 0.0f);
-            glClear(GL_COLOR_BUFFER_BIT); // clear the framebuffer
+            renderer.setClearColor((float) red, (float) green, (float) blue, 0.0f);
+            renderer.clear();
 
             var currentScene = menuScene.getCurrentScene();
             if (!Objects.isNull(currentScene) && deltaTime >= 0) {
