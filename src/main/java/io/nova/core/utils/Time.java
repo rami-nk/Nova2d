@@ -1,4 +1,4 @@
-package io.nova;
+package io.nova.core.utils;
 
 public class Time {
     public static double applicationStartTime = System.nanoTime();

@@ -1,9 +1,12 @@
-package io.nova;
+package io.nova.core;
 
-import io.nova.scene.LevelEditorScene;
-import io.nova.scene.LevelScene;
-import io.nova.scene.MenuScene;
-import io.nova.scene.SimpleColoredSquareScene;
+import io.nova.core.listener.KeyListener;
+import io.nova.core.listener.MouseListener;
+import io.nova.core.scene.LevelEditorScene;
+import io.nova.core.scene.LevelScene;
+import io.nova.core.scene.MenuScene;
+import io.nova.core.scene.SimpleColoredSquareScene;
+import io.nova.core.utils.Time;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;

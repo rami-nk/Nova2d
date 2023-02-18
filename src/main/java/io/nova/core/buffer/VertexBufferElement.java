@@ -1,4 +1,4 @@
-package io.nova;
+package io.nova.core.buffer;
 
 
 import static org.lwjgl.opengl.GL11.*;
