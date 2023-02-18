@@ -120,7 +120,7 @@ public class Nova2dWindow {
         double endTime;
         double deltaTime = -1;
 
-        while (!glfwWindowShouldClose(glfwWindow)) {
+        while (!glfwWindowShouldClose(glfwWindow) && !KeyListener.isKeyPressed(GLFW_KEY_ESCAPE)) {
             glClearColor((float) red, (float) green, (float) blue, 0.0f);
             glClear(GL_COLOR_BUFFER_BIT); // clear the framebuffer
 
