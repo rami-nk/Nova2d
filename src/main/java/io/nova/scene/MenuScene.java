@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_1;
+
 public class MenuScene extends Scene {
 
     private final Map<String, Supplier<Scene>> scenes;
@@ -39,7 +41,7 @@ public class MenuScene extends Scene {
 
     @Override
     public void update(double deltaTime) {
-        int index = 49;
+        int index = GLFW_KEY_1;
         for (var scene : scenes.entrySet()) {
             if (KeyListener.isKeyPressed(index++)) {
                 currentScene = scene.getValue().get();
