@@ -121,10 +121,12 @@ public class Nova2dWindow {
         double deltaTime = -1;
 
         while (!glfwWindowShouldClose(glfwWindow) && !KeyListener.isKeyPressed(GLFW_KEY_ESCAPE)) {
+            // Poll for window events. The key callback above will only be
+            // invoked during this call.
+            glfwPollEvents();
+
             glClearColor((float) red, (float) green, (float) blue, 0.0f);
             glClear(GL_COLOR_BUFFER_BIT); // clear the framebuffer
-
-            glfwSwapBuffers(glfwWindow); // swap the color buffers
 
             var currentScene = menuScene.getCurrentScene();
             if (!Objects.isNull(currentScene) && deltaTime >= 0) {
@@ -136,9 +138,7 @@ public class Nova2dWindow {
                 }
             }
 
-            // Poll for window events. The key callback above will only be
-            // invoked during this call.
-            glfwPollEvents();
+            glfwSwapBuffers(glfwWindow); // swap the color buffers
 
             endTime = Time.getElapsedTimeSinceApplicationStartInSeconds();
             deltaTime = endTime - startTime;
