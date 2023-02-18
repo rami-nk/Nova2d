@@ -45,7 +45,16 @@ public class Shader {
         glShaderSource(id, source);
         glCompileShader(id);
 
-        // TODO: Error handling
+        int result = glGetShaderi(id, GL_COMPILE_STATUS);
+
+        if (result == GL_FALSE) {
+            String message = glGetShaderInfoLog(id, glGetShaderi(id, GL_INFO_LOG_LENGTH));
+            System.err.printf("Failed to compile %s shader!\n%s",
+                    type == ShaderType.VERTEX.ordinal() ? "vertex" : "fragment",
+                    message);
+            glDeleteShader(id);
+            return 0;
+        }
 
         return id;
     }
