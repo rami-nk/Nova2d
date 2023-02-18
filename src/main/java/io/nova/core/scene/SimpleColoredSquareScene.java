@@ -1,7 +1,11 @@
-package io.nova.scene;
+package io.nova.core.scene;
 
-import io.nova.*;
-import io.nova.shader.Shader;
+import io.nova.core.Renderer;
+import io.nova.core.buffer.IndexBuffer;
+import io.nova.core.buffer.VertexArray;
+import io.nova.core.buffer.VertexBuffer;
+import io.nova.core.buffer.VertexBufferLayout;
+import io.nova.core.shader.Shader;
 
 public class SimpleColoredSquareScene extends Scene {
 

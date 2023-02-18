@@ -1,4 +1,4 @@
-package io.nova;
+package io.nova.core.buffer;
 
 import org.lwjgl.BufferUtils;
 

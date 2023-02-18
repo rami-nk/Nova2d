@@ -1,6 +1,6 @@
-package io.nova.scene;
+package io.nova.core.scene;
 
-import io.nova.Nova2dWindow;
+import io.nova.core.Nova2dWindow;
 
 public class LevelScene extends Scene {
 
