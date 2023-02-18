@@ -10,15 +10,13 @@ import static org.lwjgl.opengl.GL30.*;
 public class IndexBuffer {
 
     private final int rendererId;
-    private int count;
+    private final int count;
 
     public IndexBuffer(final int[] data) {
         rendererId = glGenBuffers();
         bind();
-        IntBuffer elementBuffer = BufferUtils.createIntBuffer(data.length);
-        elementBuffer.put(data).flip();
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, elementBuffer, GL_STATIC_DRAW);
-        count = elementBuffer.capacity();
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, data, GL_STATIC_DRAW);
+        count = data.length;
     }
 
     public void bind() {
