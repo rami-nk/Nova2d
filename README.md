@@ -1,8 +1,8 @@
 <div align="center">
 
-<img width="500" src="images/Nova2d-logo-dark.png" alt="nova2d-log">
+![alt text](images/Nova2d-logo-white.png)
 
-
+# Nova2d
 2d Game Engine
 </div>
 
