@@ -1,9 +1,5 @@
 package io.nova.core.buffer;
 
-import org.lwjgl.BufferUtils;
-
-import java.nio.FloatBuffer;
-
 import static org.lwjgl.opengl.GL30.*;
 
 public class VertexBuffer {
@@ -11,9 +7,9 @@ public class VertexBuffer {
     private final int rendererId;
 
     public VertexBuffer(final float[] data) {
-       rendererId = glGenBuffers();
-       bind();
-       glBufferData(GL_ARRAY_BUFFER, data, GL_STATIC_DRAW);
+        rendererId = glGenBuffers();
+        bind();
+        glBufferData(GL_ARRAY_BUFFER, data, GL_STATIC_DRAW);
     }
 
     public void bind() {

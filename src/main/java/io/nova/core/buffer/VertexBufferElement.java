@@ -1,6 +1,5 @@
 package io.nova.core.buffer;
 
-
 import static org.lwjgl.opengl.GL11.*;
 
 class VertexBufferElement {
@@ -41,4 +40,3 @@ class VertexBufferElement {
         return normalized;
     }
 }
-
