@@ -13,7 +13,7 @@ import java.util.Objects;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.GL_TRUE;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Nova2dWindow {
@@ -106,6 +106,9 @@ public class Nova2dWindow {
         // bindings available for use.
         GL.createCapabilities();
 
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
         GLUtil.setupDebugMessageCallback();
 
         // Register Scenes
@@ -116,6 +119,7 @@ public class Nova2dWindow {
         menuScene.registerScene("LevelScene", LevelScene.class);
         menuScene.registerScene("SimpleColoredSquare", SimpleColoredSquareScene.class);
         menuScene.registerScene("OpenGlLogoScene", OpenGlLogoScene.class);
+        menuScene.registerScene("Nova2dLogoScene", Nova2dLogoScene.class);
         menuScene.printInfo();
     }
 
