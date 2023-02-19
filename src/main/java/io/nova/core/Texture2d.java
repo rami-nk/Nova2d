@@ -8,12 +8,12 @@ import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.stb.STBImage.stbi_image_free;
 import static org.lwjgl.stb.STBImage.stbi_load;
 
-public class Texture {
+public class Texture2d {
 
     private final String filepath;
     private final int rendererId;
 
-    public Texture(String filepath) {
+    public Texture2d(String filepath) {
         this.filepath = filepath;
         rendererId = glGenTextures();
         bind();

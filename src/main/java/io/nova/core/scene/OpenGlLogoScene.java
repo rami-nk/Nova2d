@@ -1,7 +1,7 @@
 package io.nova.core.scene;
 
 import io.nova.core.Renderer;
-import io.nova.core.Texture;
+import io.nova.core.Texture2d;
 import io.nova.core.buffer.IndexBuffer;
 import io.nova.core.buffer.VertexArray;
 import io.nova.core.buffer.VertexBuffer;
@@ -15,7 +15,7 @@ public class OpenGlLogoScene extends Scene {
     private final VertexArray vertexArray;
     private final Shader shader;
     private final IndexBuffer indexBuffer;
-    private final Texture texture;
+    private final Texture2d texture;
 
     OpenGlLogoScene() {
         float[] vertices = {
@@ -38,7 +38,7 @@ public class OpenGlLogoScene extends Scene {
         vertexArray.addBuffer(vertexBuffer, layout);
 
         shader = new Shader("src/main/resources/shaders/openGlLogo.glsl");
-        texture = new Texture("src/main/resources/textures/openGlLogo.png");
+        texture = new Texture2d("src/main/resources/textures/openGlLogo.png");
 
         shader.setUniformTexture("u_Texture", 0);
         texture.activate(GL_TEXTURE0);
