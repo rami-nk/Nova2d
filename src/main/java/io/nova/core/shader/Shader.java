@@ -1,6 +1,7 @@
 package io.nova.core.shader;
 
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 
 import java.io.BufferedReader;
@@ -24,6 +25,7 @@ public class Shader {
         ShaderProgramSource source = parseShader(filePath);
         rendererId = createShader(source.vertexSource(), source.fragmentSource());
         uniformLocationCache = new HashMap<>();
+        bind();
     }
 
     public void bind() {
@@ -36,6 +38,18 @@ public class Shader {
 
     public void setUniformMat4f(final String name, final Matrix4f mat4f) {
         glUniformMatrix4fv(getUniformLocation(name), false, mat4f.get(BufferUtils.createFloatBuffer(16)));
+    }
+
+    public void setUniformVec2f(final String name, final Vector2f vec2f) {
+        glUniform2fv(getUniformLocation(name), vec2f.get(BufferUtils.createFloatBuffer(2)));
+    }
+
+    public void setUniformInt(final String name, final int value) {
+        glUniform1i(getUniformLocation(name), value);
+    }
+
+    public void setUniformTexture(final String name, final int slot) {
+        setUniformInt(name, slot);
     }
 
     private int getUniformLocation(final String name) {

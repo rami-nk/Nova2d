@@ -31,12 +31,21 @@ public class Texture {
     private static void loadAndUploadTexture(String filepath) {
         var width = BufferUtils.createIntBuffer(1);
         var height = BufferUtils.createIntBuffer(1);
-        var channels = BufferUtils.createIntBuffer(1);
-        var textureBytes = stbi_load(filepath, width, height, channels, 0);
+        var channel = BufferUtils.createIntBuffer(1);
+        var textureBytes = stbi_load(filepath, width, height, channel, 0);
 
         if (!Objects.isNull(textureBytes)) {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width.get(), height.get(),
-                    0, GL_RGBA, GL_UNSIGNED_BYTE, textureBytes);
+            int internalFormat = 0;
+            int channelValue = channel.get();
+            if (channelValue == 4) {
+                internalFormat = GL_RGBA;
+            } else if (channelValue == 3) {
+                internalFormat = GL_RGB;
+            } else {
+                System.err.println("Format not supported!");
+            }
+            glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width.get(), height.get(),
+                    0, internalFormat, GL_UNSIGNED_BYTE, textureBytes);
             stbi_image_free(textureBytes);
         } else {
             System.err.printf("Could not load texture for %s", filepath);
@@ -48,6 +57,10 @@ public class Texture {
     }
 
     public void unbind() {
-        glBindTexture(GL_TEXTURE_2D, rendererId);
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+
+    public void activate(int slot) {
+        glActiveTexture(slot);
     }
 }
