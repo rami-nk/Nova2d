@@ -20,10 +20,10 @@ public class Nova2dLogoScene extends Scene {
 
     Nova2dLogoScene() {
         float[] vertices = {
-                0.5f, -0.5f, 0, 1, 1,
-                -0.5f, 0.5f, 0, 0, 0,
-                0.5f, 0.5f, 0, 1, 0,
-                -0.5f, -0.5f, 0, 0, 1,
+                0.65f, -0.5f, 0, 1, 1,
+                -0.65f, 0.5f, 0, 0, 0,
+                0.65f, 0.5f, 0, 1, 0,
+                -0.65f, -0.5f, 0, 0, 1,
         };
 
         int[] elementArray = {2, 1, 0, 0, 1, 3};
