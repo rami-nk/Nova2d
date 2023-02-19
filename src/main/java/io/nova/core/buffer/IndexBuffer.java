@@ -1,10 +1,5 @@
 package io.nova.core.buffer;
 
-
-import org.lwjgl.BufferUtils;
-
-import java.nio.IntBuffer;
-
 import static org.lwjgl.opengl.GL30.*;
 
 public class IndexBuffer {
