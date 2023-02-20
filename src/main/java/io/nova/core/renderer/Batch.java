@@ -38,7 +38,7 @@ public class Batch {
 
     public void start() {
         vertexArray = new VertexArray();
-        VertexBuffer vertexBuffer = new VertexBuffer(vertices, GL_DYNAMIC_DRAW);
+        vertexBuffer = new VertexBuffer(vertices, GL_DYNAMIC_DRAW);
 
         var indices = generateIndices();
         indexBuffer = new IndexBuffer(indices);
@@ -48,7 +48,7 @@ public class Batch {
         layout.pushFloat(COLOR_ELEMENTS_NUM);
         vertexArray.addBuffer(vertexBuffer, layout);
 
-        shader = new Shader("src/main/resources/default.glsl");
+        shader = new Shader("src/main/resources/shaders/default.glsl");
     }
 
     public void render() {
@@ -71,14 +71,41 @@ public class Batch {
         // add properties to local properties array
         loadVertexProperties(index);
 
-        if (numberOfSprites > maxBatchSize) {
+        if (numberOfSprites >= maxBatchSize) {
             hasRoom = false;
         }
     }
 
     private void loadVertexProperties(int index) {
-        var spriteRenderer = sprites[index];
+        var sprite = sprites[index];
         int offset = index * ELEMENTS_PER_SPRITE * ELEMENTS_PER_VERTEX;
+
+        var color = sprite.getColor();
+
+        // Add vertices with the appropriate properties
+        float xAdd = 1.0f;
+        float yAdd = 1.0f;
+        for (int i=0; i < 4; i++) {
+            if (i == 1) {
+                yAdd = 0.0f;
+            } else if (i == 2) {
+                xAdd = 0.0f;
+            } else if (i == 3) {
+                yAdd = 1.0f;
+            }
+
+            // Load position
+            vertices[offset] = sprite.getGameObject().getPosition().x + xAdd;
+            vertices[offset + 1] = sprite.getGameObject().getPosition().y + yAdd;
+
+            // Load color
+            vertices[offset + 2] = color.x;
+            vertices[offset + 3] = color.y;
+            vertices[offset + 4] = color.z;
+            vertices[offset + 5] = color.w;
+
+            offset += ELEMENTS_PER_VERTEX;
+        }
     }
 
     private int[] generateIndices() {

@@ -10,6 +10,10 @@ public abstract class Component {
 
     public abstract void update(double deltaTime);
 
+    public GameObject getGameObject() {
+        return gameObject;
+    }
+
     public void start() {
 
     }

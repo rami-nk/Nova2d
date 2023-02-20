@@ -1,14 +1,18 @@
 package io.nova.core;
 
+import org.joml.Vector2f;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameObject {
 
     private final List<Component> components;
+    private Vector2f position;
 
-    public GameObject() {
+    public GameObject(Vector2f position) {
         components = new ArrayList<>();
+        this.position = position;
     }
 
     public <T extends Component> T getComponent(Class<T> clazz) {
@@ -44,5 +48,13 @@ public class GameObject {
         for (var component : components) {
             component.start();
         }
+    }
+
+    public Vector2f getPosition() {
+        return position;
+    }
+
+    public void setPosition(Vector2f position) {
+        this.position = position;
     }
 }
