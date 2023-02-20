@@ -21,15 +21,16 @@ public class SimpleColoredSquareScene extends Scene {
 
     SimpleColoredSquareScene() {
         camera = new Camera(500, 500, new Vector2f());
-        vertexArray = new VertexArray();
         float[] vertices = {
                 300, 200, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
                 200, 300, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
                 300, 300, 0, 1.0f, 0.0f, 0.0f, 1.0f,
                 200, 200, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f,
         };
-        VertexBuffer vertexBuffer = new VertexBuffer(vertices);
         int[] elementArray = {2, 1, 0, 0, 1, 3};
+
+        vertexArray = new VertexArray();
+        VertexBuffer vertexBuffer = new VertexBuffer(vertices);
         indexBuffer = new IndexBuffer(elementArray);
 
         var layout = new VertexBufferLayout();
