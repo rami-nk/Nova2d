@@ -1,15 +1,15 @@
-package io.nova.core;
+package io.nova.core.renderer;
 
 import io.nova.core.buffer.IndexBuffer;
 import io.nova.core.buffer.VertexArray;
 import io.nova.core.buffer.VertexBuffer;
 import io.nova.core.buffer.VertexBufferLayout;
-import io.nova.core.components.SpriteRenderer;
+import io.nova.core.components.Sprite;
 import io.nova.core.shader.Shader;
 
 import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
 
-public class RenderBatch {
+public class Batch {
 
     private static final int POSITION_ELEMENTS_NUM = 2;
     private static final int COLOR_ELEMENTS_NUM = 4;
@@ -18,7 +18,7 @@ public class RenderBatch {
 
     private float[] vertices;
     private int maxBatchSize;
-    private SpriteRenderer[] sprites;
+    private Sprite[] sprites;
     private int numberOfSprites;
     private boolean hasRoom;
     private VertexArray vertexArray;
@@ -26,12 +26,12 @@ public class RenderBatch {
     private IndexBuffer indexBuffer;
     private Shader shader;
 
-    public RenderBatch(int maxBatchSize) {
-        hasRoom = false;
+    public Batch(int maxBatchSize) {
+        hasRoom = true;
         numberOfSprites = 0;
 
         this.maxBatchSize = maxBatchSize;
-        this.sprites = new SpriteRenderer[maxBatchSize];
+        this.sprites = new Sprite[maxBatchSize];
 
         this.vertices = new float[ELEMENTS_PER_VERTEX * ELEMENTS_PER_SPRITE * maxBatchSize];
     }
@@ -63,9 +63,9 @@ public class RenderBatch {
         Renderer.draw(vertexArray, indexBuffer, shader);
     }
 
-    public void addSprite(SpriteRenderer spriteRenderer) {
+    public void addSprite(Sprite sprite) {
         int index = numberOfSprites;
-        sprites[index] = spriteRenderer;
+        sprites[index] = sprite;
         numberOfSprites++;
 
         // add properties to local properties array
@@ -94,5 +94,9 @@ public class RenderBatch {
             indices[index + 5] = 1 + offset;
         }
         return indices;
+    }
+
+    public boolean hasRoom() {
+        return hasRoom;
     }
 }

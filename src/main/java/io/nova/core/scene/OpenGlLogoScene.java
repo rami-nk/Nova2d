@@ -1,6 +1,6 @@
 package io.nova.core.scene;
 
-import io.nova.core.Renderer;
+import io.nova.core.renderer.Renderer;
 import io.nova.core.Texture2d;
 import io.nova.core.buffer.IndexBuffer;
 import io.nova.core.buffer.VertexArray;

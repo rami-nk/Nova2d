@@ -1,7 +1,7 @@
 package io.nova.core.scene;
 
 import io.nova.core.Camera;
-import io.nova.core.Renderer;
+import io.nova.core.renderer.Renderer;
 import io.nova.core.buffer.IndexBuffer;
 import io.nova.core.buffer.VertexArray;
 import io.nova.core.buffer.VertexBuffer;
