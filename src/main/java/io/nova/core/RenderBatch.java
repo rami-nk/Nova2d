@@ -68,6 +68,7 @@ public class RenderBatch {
         sprites[index] = spriteRenderer;
         numberOfSprites++;
 
+        // add properties to local properties array
         loadVertexProperties(index);
 
         if (numberOfSprites > maxBatchSize) {
