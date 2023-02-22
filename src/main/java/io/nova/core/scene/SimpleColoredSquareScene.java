@@ -1,14 +1,16 @@
 package io.nova.core.scene;
 
 import io.nova.core.Camera;
-import io.nova.core.Renderer;
 import io.nova.core.buffer.IndexBuffer;
 import io.nova.core.buffer.VertexArray;
 import io.nova.core.buffer.VertexBuffer;
 import io.nova.core.buffer.VertexBufferLayout;
 import io.nova.core.listener.KeyListener;
+import io.nova.core.renderer.Renderer;
 import io.nova.core.shader.Shader;
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -20,41 +22,49 @@ public class SimpleColoredSquareScene extends Scene {
     private final Camera camera;
 
     SimpleColoredSquareScene() {
-        camera = new Camera(500, 500, new Vector2f());
-        vertexArray = new VertexArray();
+        camera = new Camera();
+
         float[] vertices = {
-                300, 200, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-                200, 300, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-                300, 300, 0, 1.0f, 0.0f, 0.0f, 1.0f,
-                200, 200, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+                -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 1.0f,
+                -0.5f, 0.5f, 1.0f, 0.0f, 1.0f, 1.0f,
+                0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f,
+                0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 1.0f,
         };
+        int[] elementArray = {3, 2, 0, 0, 2, 1};
+
+        vertexArray = new VertexArray();
         VertexBuffer vertexBuffer = new VertexBuffer(vertices);
-        int[] elementArray = {2, 1, 0, 0, 1, 3};
         indexBuffer = new IndexBuffer(elementArray);
 
         var layout = new VertexBufferLayout();
-        layout.pushFloat(3);
+        layout.pushFloat(2);
         layout.pushFloat(4);
         vertexArray.addBuffer(vertexBuffer, layout);
         shader = new Shader("src/main/resources/shaders/default.glsl");
-        shader.bind();
     }
 
     @Override
     public void update(double deltaTime) {
         var speed = 100;
         if (KeyListener.isKeyPressed(GLFW_KEY_RIGHT)) {
-            camera.getPosition().x -= deltaTime * speed;
+            camera.move(new Vector2f((float)(-deltaTime * speed), 0));
         } else if (KeyListener.isKeyPressed(GLFW_KEY_UP)) {
-            camera.getPosition().y -= deltaTime * speed;
+            camera.move(new Vector2f(0, (float)(-deltaTime * speed)));
         } else if (KeyListener.isKeyPressed(GLFW_KEY_DOWN)) {
-            camera.getPosition().y += deltaTime * speed;
+            camera.move(new Vector2f(0, (float)(deltaTime * speed)));
         } else if (KeyListener.isKeyPressed(GLFW_KEY_LEFT)) {
-            camera.getPosition().x += deltaTime * speed;
+            camera.move(new Vector2f((float)(deltaTime * speed), 0));
         }
 
+        var positionOfObjectInWorld = new Vector2f(0, 0);
+        var scaleOfObjectInWorld = new Vector2f(400, 400);
+
+        var modelMatrix = new Matrix4f()
+                .translate(new Vector3f(positionOfObjectInWorld, 0))
+                .scale(new Vector3f(scaleOfObjectInWorld, 1));
+
         shader.setUniformMat4f("uProjection", camera.getProjectionMatrix());
-        shader.setUniformMat4f("uView", camera.getViewMatrix());
+        shader.setUniformMat4f("uModel", modelMatrix);
     }
 
     @Override

@@ -23,7 +23,9 @@ public class MenuScene extends Scene {
     public <T extends Scene> void registerScene(String name, Class<T> clazz) {
         scenes.put(name, () -> {
             try {
-                return clazz.getDeclaredConstructor().newInstance();
+                var instance = clazz.getDeclaredConstructor().newInstance();
+                instance.start();
+                return instance;
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                      NoSuchMethodException e) {
                 throw new RuntimeException(e);
