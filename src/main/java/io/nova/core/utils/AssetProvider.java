@@ -5,6 +5,7 @@ import io.nova.core.shader.Shader;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class AssetProvider {
 
@@ -19,6 +20,24 @@ public class AssetProvider {
             return shaders.get(fullPath);
         }
         return null;
+    }
+
+    public static Shader getOrElseUploadShader(String name) {
+        var shader = getShader(name);
+        if (Objects.isNull(shader)) {
+            uploadShader(name);
+            return getShader(name);
+        }
+        return shader;
+    }
+
+    public static Texture2d getOrElseUploadTexture(String name) {
+        var texture = getTexture(name);
+        if (Objects.isNull(texture)) {
+            uploadTexture(name);
+            return getTexture(name);
+        }
+        return texture;
     }
 
     public static Texture2d getTexture(String name) {
