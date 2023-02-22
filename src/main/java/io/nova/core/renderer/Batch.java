@@ -9,6 +9,7 @@ import io.nova.core.components.Sprite;
 import io.nova.core.shader.Shader;
 
 import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
+
 public class Batch {
 
     private static final int POSITION_ELEMENTS_NUM = 2;
