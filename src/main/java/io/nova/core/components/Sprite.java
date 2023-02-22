@@ -1,6 +1,5 @@
 package io.nova.core.components;
 
-import io.nova.core.Component;
 import org.joml.Vector4f;
 
 public class Sprite extends Component {

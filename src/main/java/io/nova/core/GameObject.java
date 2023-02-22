@@ -1,5 +1,6 @@
 package io.nova.core;
 
+import io.nova.core.components.Component;
 import org.joml.Vector2f;
 
 import java.util.ArrayList;

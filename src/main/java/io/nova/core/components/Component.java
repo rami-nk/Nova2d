@@ -1,4 +1,6 @@
-package io.nova.core;
+package io.nova.core.components;
+
+import io.nova.core.GameObject;
 
 public abstract class Component {
 
