@@ -1,5 +1,6 @@
 package io.nova.core.renderer;
 
+import io.nova.core.Camera;
 import io.nova.core.GameObject;
 import io.nova.core.components.Sprite;
 
@@ -41,9 +42,9 @@ public class BatchRenderer {
         }
     }
 
-    public void render() {
+    public void render(Camera camera) {
         for (var batch : batches) {
-            batch.render();
+            batch.render(camera);
         }
     }
 }

@@ -174,4 +174,12 @@ public class Nova2dWindow {
         this.green = green;
         this.blue = blue;
     }
+
+    public static int getWidth() {
+        return getInstance().width;
+    }
+
+    public static int getHeight() {
+        return getInstance().height;
+    }
 }

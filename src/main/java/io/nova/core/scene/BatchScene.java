@@ -1,14 +1,26 @@
 package io.nova.core.scene;
 
-
+import io.nova.core.Camera;
 import io.nova.core.GameObject;
 import io.nova.core.components.Sprite;
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 public class BatchScene extends Scene {
 
+    private final Camera camera;
+
     BatchScene() {
+        camera = new Camera(new Vector2f(0, 0));
+
+        var model = new Matrix4f();
+        var view = new Matrix4f();
+        view.translate(new Vector3f(0.0f, 0.0f, -3.0f));
+        var projectionMatrix = new Matrix4f();
+        projectionMatrix.ortho(0.0f, 400.0f, 0.0f, 400.0f, 0.1f, 100.0f);
+
 
         int xOffset = 10;
         int yOffset = 10;
@@ -42,6 +54,6 @@ public class BatchScene extends Scene {
 
     @Override
     public void render() {
-        getBatchRenderer().render();
+        getBatchRenderer().render(camera);
     }
 }

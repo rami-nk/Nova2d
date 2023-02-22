@@ -1,5 +1,6 @@
 package io.nova.core.renderer;
 
+import io.nova.core.Camera;
 import io.nova.core.buffer.IndexBuffer;
 import io.nova.core.buffer.VertexArray;
 import io.nova.core.buffer.VertexBuffer;
@@ -8,7 +9,6 @@ import io.nova.core.components.Sprite;
 import io.nova.core.shader.Shader;
 
 import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
-
 public class Batch {
 
     private static final int POSITION_ELEMENTS_NUM = 2;
@@ -51,7 +51,7 @@ public class Batch {
         shader = new Shader("src/main/resources/shaders/default.glsl");
     }
 
-    public void render() {
+    public void render(Camera camera) {
         // TODO: only rebuffer specific spride
         vertexBuffer.bind();
         vertexBuffer.reBufferData(vertices);
@@ -83,15 +83,15 @@ public class Batch {
         var color = sprite.getColor();
 
         // Add vertices with the appropriate properties
-        float xAdd = 1.0f;
-        float yAdd = 1.0f;
+        float xAdd = 3;
+        float yAdd = 3;
         for (int i=0; i < 4; i++) {
             if (i == 1) {
                 yAdd = 0.0f;
             } else if (i == 2) {
                 xAdd = 0.0f;
             } else if (i == 3) {
-                yAdd = 1.0f;
+                yAdd = 3;
             }
 
             // Load position
