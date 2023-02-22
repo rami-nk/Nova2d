@@ -2,6 +2,7 @@ package io.nova.core;
 
 import io.nova.core.listener.KeyListener;
 import io.nova.core.listener.MouseListener;
+import io.nova.core.renderer.Renderer;
 import io.nova.core.scene.*;
 import io.nova.core.utils.Time;
 import org.lwjgl.Version;
@@ -120,6 +121,7 @@ public class Nova2dWindow {
         menuScene.registerScene("SimpleColoredSquare", SimpleColoredSquareScene.class);
         menuScene.registerScene("OpenGlLogoScene", OpenGlLogoScene.class);
         menuScene.registerScene("Nova2dLogoScene", Nova2dLogoScene.class);
+        menuScene.registerScene("BatchScene", BatchScene.class);
         menuScene.printInfo();
     }
 
@@ -171,5 +173,13 @@ public class Nova2dWindow {
         this.red = red;
         this.green = green;
         this.blue = blue;
+    }
+
+    public static int getWidth() {
+        return getInstance().width;
+    }
+
+    public static int getHeight() {
+        return getInstance().height;
     }
 }

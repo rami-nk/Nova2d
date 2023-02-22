@@ -1,4 +1,4 @@
-package io.nova.core;
+package io.nova.core.renderer;
 
 import io.nova.core.buffer.IndexBuffer;
 import io.nova.core.buffer.VertexArray;
