@@ -9,10 +9,12 @@ public class GameObject {
 
     private final List<Component> components;
     private Vector2f position;
+    private Vector2f size;
 
-    public GameObject(Vector2f position) {
+    public GameObject(Vector2f position, Vector2f size) {
         components = new ArrayList<>();
         this.position = position;
+        this.size = size;
     }
 
     public <T extends Component> T getComponent(Class<T> clazz) {
@@ -56,5 +58,9 @@ public class GameObject {
 
     public void setPosition(Vector2f position) {
         this.position = position;
+    }
+
+    public Vector2f getSize() {
+        return size;
     }
 }

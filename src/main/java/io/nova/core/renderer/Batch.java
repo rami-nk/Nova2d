@@ -48,7 +48,7 @@ public class Batch {
         layout.pushFloat(COLOR_ELEMENTS_NUM);
         vertexArray.addBuffer(vertexBuffer, layout);
 
-        shader = new Shader("src/main/resources/shaders/default.glsl");
+        shader = new Shader("src/main/resources/shaders/defaultBatch.glsl");
     }
 
     public void render(Camera camera) {
@@ -56,9 +56,10 @@ public class Batch {
         vertexBuffer.bind();
         vertexBuffer.reBufferData(vertices);
 
-        shader.bind();
-
         vertexArray.bind();
+
+        shader.bind();
+        shader.setUniformMat4f("uProjection", camera.getProjectionMatrix());
 
         Renderer.draw(vertexArray, indexBuffer, shader);
     }
@@ -83,20 +84,20 @@ public class Batch {
         var color = sprite.getColor();
 
         // Add vertices with the appropriate properties
-        float xAdd = 3;
-        float yAdd = 3;
+        float xAdd = 1;
+        float yAdd = 1;
         for (int i=0; i < 4; i++) {
             if (i == 1) {
                 yAdd = 0.0f;
             } else if (i == 2) {
                 xAdd = 0.0f;
             } else if (i == 3) {
-                yAdd = 3;
+                yAdd = 1;
             }
 
             // Load position
-            vertices[offset] = sprite.getGameObject().getPosition().x + xAdd;
-            vertices[offset + 1] = sprite.getGameObject().getPosition().y + yAdd;
+            vertices[offset] = sprite.getGameObject().getPosition().x + (xAdd * sprite.getGameObject().getSize().x);
+            vertices[offset + 1] = sprite.getGameObject().getPosition().y + (yAdd * sprite.getGameObject().getSize().y);
 
             // Load color
             vertices[offset + 2] = color.x;

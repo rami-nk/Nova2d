@@ -11,7 +11,6 @@ import io.nova.core.shader.Shader;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -23,16 +22,15 @@ public class SimpleColoredSquareScene extends Scene {
     private final Camera camera;
 
     SimpleColoredSquareScene() {
-        var VEC2_ZERO = new Vector2f(0, 0);
-        camera = new Camera(VEC2_ZERO);
+        camera = new Camera();
 
         float[] vertices = {
                 -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 1.0f,
-                0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f,
                 -0.5f, 0.5f, 1.0f, 0.0f, 1.0f, 1.0f,
+                0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f,
                 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 1.0f,
         };
-        int[] elementArray = {2, 1, 0, 0, 1, 3};
+        int[] elementArray = {3, 2, 0, 0, 2, 1};
 
         vertexArray = new VertexArray();
         VertexBuffer vertexBuffer = new VertexBuffer(vertices);

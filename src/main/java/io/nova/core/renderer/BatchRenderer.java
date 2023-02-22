@@ -18,9 +18,9 @@ public class BatchRenderer {
     }
 
     public void add(GameObject gameObject) {
-        var spriteRenderer = gameObject.getComponent(Sprite.class);
-        if (!Objects.isNull(spriteRenderer)) {
-            add(spriteRenderer);
+        var sprite = gameObject.getComponent(Sprite.class);
+        if (!Objects.isNull(sprite)) {
+            add(sprite);
         }
     }
 

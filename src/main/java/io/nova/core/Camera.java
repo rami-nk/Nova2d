@@ -8,7 +8,18 @@ public class Camera {
     private final Matrix4f viewMatrix;
     private final Matrix4f modelMatrix;
     private final Vector2f focusPosition;
-    private float zoom;
+    private final float zoom;
+
+    /**
+     * Creates a camera with a zoom of 1 and a focusPosition of (0 | 0).
+     */
+    public Camera() {
+        this.zoom = 1.0f;
+        this.focusPosition = new Vector2f(0.0f, 0.0f);
+
+        this.viewMatrix = new Matrix4f();
+        this.modelMatrix = new Matrix4f();
+    }
 
     public Camera(Vector2f focusPosition) {
         this.zoom = 1.0f;
