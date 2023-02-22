@@ -7,6 +7,7 @@ import io.nova.core.buffer.VertexArray;
 import io.nova.core.buffer.VertexBuffer;
 import io.nova.core.buffer.VertexBufferLayout;
 import io.nova.core.shader.Shader;
+import io.nova.core.utils.AssetProvider;
 
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 
@@ -38,8 +39,8 @@ public class Nova2dLogoScene extends Scene {
 
         vertexArray.addBuffer(vertexBuffer, layout);
 
-        shader = new Shader("src/main/resources/shaders/simpleTexture.glsl");
-        texture = new Texture2d("images/Nova2d-logo-white.png");
+        shader = AssetProvider.getOrElseUploadShader("simpleTexture.glsl");
+        texture = AssetProvider.getOrElseUploadTexture("Nova2d-logo-white.png");
 
         shader.setUniformTexture("u_Texture", 0);
         texture.activate(GL_TEXTURE0);

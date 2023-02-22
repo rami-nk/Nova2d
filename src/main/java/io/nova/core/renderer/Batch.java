@@ -7,8 +7,10 @@ import io.nova.core.buffer.VertexBuffer;
 import io.nova.core.buffer.VertexBufferLayout;
 import io.nova.core.components.Sprite;
 import io.nova.core.shader.Shader;
+import io.nova.core.utils.AssetProvider;
 
 import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
+
 public class Batch {
 
     private static final int POSITION_ELEMENTS_NUM = 2;
@@ -48,7 +50,7 @@ public class Batch {
         layout.pushFloat(COLOR_ELEMENTS_NUM);
         vertexArray.addBuffer(vertexBuffer, layout);
 
-        shader = new Shader("src/main/resources/shaders/defaultBatch.glsl");
+        shader = AssetProvider.getOrElseUploadShader("defaultBatch.glsl");
     }
 
     public void render(Camera camera) {
