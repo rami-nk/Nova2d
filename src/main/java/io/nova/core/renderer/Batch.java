@@ -89,7 +89,7 @@ public class Batch {
     }
 
     public void render(Camera camera) {
-        // TODO: only rebuffer specific spride
+        // TODO: only rebuffer specific sprite
         vertexBuffer.bind();
         vertexBuffer.reBufferData(vertices);
 
