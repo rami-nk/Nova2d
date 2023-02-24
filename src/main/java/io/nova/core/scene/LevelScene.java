@@ -13,11 +13,17 @@ public class LevelScene extends Scene {
     LevelScene() {
         camera = new Camera();
 
+        final String nova2dLogoTextureId = "Nova2d-logo-white.png";
+        final String openGlLogoTextureId = "openGlLogo.png";
+
+        TextureProvider.uploadTexture(nova2dLogoTextureId);
+        TextureProvider.uploadTexture(openGlLogoTextureId);
+
         var nova2dLogo = new GameObject(
                 new Vector2f(-150, -150),
                 new Vector2f(150, 150));
         nova2dLogo.addComponent(
-                new Sprite(TextureProvider.uploadTexture("Nova2d-logo-white.png"))
+                new Sprite(nova2dLogoTextureId)
         );
         addGameObjectToScene(nova2dLogo);
 
@@ -25,7 +31,7 @@ public class LevelScene extends Scene {
                 new Vector2f(0, 0),
                 new Vector2f(150, 150));
         openGlLogo.addComponent(
-                new Sprite(TextureProvider.uploadTexture("openGlLogo.png"))
+                new Sprite(openGlLogoTextureId)
         );
         addGameObjectToScene(openGlLogo);
 
@@ -33,7 +39,7 @@ public class LevelScene extends Scene {
                 new Vector2f(0, -150),
                 new Vector2f(150, 150));
         nova2dLogo2.addComponent(
-                new Sprite(TextureProvider.uploadTexture("Nova2d-logo-white.png"))
+                new Sprite(nova2dLogoTextureId)
         );
         addGameObjectToScene(nova2dLogo2);
     }
