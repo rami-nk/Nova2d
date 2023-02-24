@@ -71,15 +71,14 @@ public class Batch {
         sprites[index] = sprite;
         numberOfSprites++;
 
-        // add properties to local properties array
-        loadVertexProperties(index);
+        setVertexProperties(index);
 
         if (numberOfSprites >= maxBatchSize) {
             hasRoom = false;
         }
     }
 
-    private void loadVertexProperties(int index) {
+    private void setVertexProperties(int index) {
         var sprite = sprites[index];
         int offset = index * ELEMENTS_PER_SPRITE * ELEMENTS_PER_VERTEX;
 
@@ -97,11 +96,11 @@ public class Batch {
                 yAdd = 1;
             }
 
-            // Load position
+            // set position
             vertices[offset] = sprite.getGameObject().getPosition().x + (xAdd * sprite.getGameObject().getSize().x);
             vertices[offset + 1] = sprite.getGameObject().getPosition().y + (yAdd * sprite.getGameObject().getSize().y);
 
-            // Load color
+            // set color
             vertices[offset + 2] = color.x;
             vertices[offset + 3] = color.y;
             vertices[offset + 4] = color.z;
