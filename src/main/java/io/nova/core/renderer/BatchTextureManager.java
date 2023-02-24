@@ -1,19 +1,20 @@
 package io.nova.core.renderer;
 
 import io.nova.core.Texture2d;
+import io.nova.core.utils.TextureProvider;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-public class TextureSlotsManager {
+public class BatchTextureManager {
 
     public static final int MAX_TEXTURES = 16;
     public final List<Integer> textureIds;
 
     private int occupiedSlots;
 
-    public TextureSlotsManager() {
+    public BatchTextureManager() {
         textureIds = new ArrayList<>();
         occupiedSlots = 0;
     }
@@ -46,6 +47,10 @@ public class TextureSlotsManager {
             }
         }
         return -1;
+    }
+
+    public Texture2d getTexture(int textureId) {
+        return TextureProvider.getTexture(textureId);
     }
 
     public boolean hasSlots() {

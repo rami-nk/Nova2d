@@ -9,7 +9,6 @@ import io.nova.core.buffer.VertexBufferLayout;
 import io.nova.core.components.Sprite;
 import io.nova.core.shader.Shader;
 import io.nova.core.utils.ShaderProvider;
-import io.nova.core.utils.TextureProvider;
 
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
@@ -36,7 +35,7 @@ public class Batch {
     private VertexBuffer vertexBuffer;
     private IndexBuffer indexBuffer;
     private Shader shader;
-    private final TextureSlotsManager textureSlotsManager;
+    private final BatchTextureManager batchTextureManager;
 
     public Batch(int maxBatchSize) {
         hasRoom = true;
@@ -46,14 +45,14 @@ public class Batch {
         this.sprites = new Sprite[maxBatchSize];
 
         this.vertices = new float[ELEMENTS_PER_VERTEX * VERTICES_PER_SPRITE * maxBatchSize];
-        this.textureSlotsManager = new TextureSlotsManager();
+        this.batchTextureManager = new BatchTextureManager();
     }
 
     private void bindTextures() {
         int i = 0;
         for (var sprite : sprites) {
             if (sprite != null && sprite.getTextureId() !=Texture2d.RESERVED_TEXTURE_SLOT_ID) {
-                var texture = TextureProvider.getTexture(sprite.getTextureId());
+                var texture = batchTextureManager.getTexture(sprite.getTextureId());
                 assert texture != null;
                 texture.activate(GL_TEXTURE0 + i);
                 texture.bind();
@@ -65,7 +64,7 @@ public class Batch {
     private void unbindTextures() {
         for (var sprite : sprites) {
             if (sprite != null && sprite.getTextureId() !=Texture2d.RESERVED_TEXTURE_SLOT_ID) {
-                var texture = TextureProvider.getTexture(sprite.getTextureId());
+                var texture = batchTextureManager.getTexture(sprite.getTextureId());
                 assert texture != null;
                 texture.unbind();
             }
@@ -101,8 +100,8 @@ public class Batch {
         shader.bind();
         shader.setUniformMat4f("u_Projection", camera.getProjectionMatrix());
 
-        if (textureSlotsManager.hasSlots()) {
-            shader.setUniformTextureArray("u_Textures", textureSlotsManager.getTextureSlots());
+        if (batchTextureManager.hasSlots()) {
+            shader.setUniformTextureArray("u_Textures", batchTextureManager.getTextureSlots());
         }
 
         Renderer.draw(vertexArray, indexBuffer, shader);
@@ -115,7 +114,7 @@ public class Batch {
         sprites[index] = sprite;
         numberOfSprites++;
 
-        textureSlotsManager.add(sprite.getTextureId());
+        batchTextureManager.add(sprite.getTextureId());
 
         setVertexProperties(index);
 
@@ -157,7 +156,7 @@ public class Batch {
             vertices[offset + 7] = sprite.getTextureCoordinates()[i].y;
 
             // set texture id
-            vertices[offset + 8] = textureSlotsManager.getTextureSlot(sprite.getTextureId());
+            vertices[offset + 8] = batchTextureManager.getTextureSlot(sprite.getTextureId());
 
             offset += ELEMENTS_PER_VERTEX;
         }
