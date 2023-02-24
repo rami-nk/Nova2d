@@ -16,18 +16,19 @@ public class BatchScene extends Scene {
     private final Camera camera;
 
     BatchScene() {
-        camera = new Camera(new Vector2f(250, 250));
+        camera = new Camera();
 
-        float sizeX = Nova2dWindow.getWidth() / 100.0f;
-        float sizeY = Nova2dWindow.getHeight() / 100.0f;
+        float objectWidth = Nova2dWindow.getWidth() / 100.0f;
+        float objectHeight = Nova2dWindow.getHeight() / 100.0f;
+        float offset = -250.0f;
 
         for (int x=0; x < 100; x++) {
             for (int y=0; y < 100; y++) {
-                float xPos = (x * sizeX);
-                float yPos = (y * sizeY);
+                float xPos = offset + (x * objectWidth);
+                float yPos = offset + (y * objectHeight);
 
-                var gameObject = new GameObject(new Vector2f(xPos, yPos), new Vector2f(sizeX, sizeY));
-                gameObject.addComponent(new Sprite(new Vector4f(xPos / Nova2dWindow.getWidth(), yPos / Nova2dWindow.getHeight(), 1, 1)));
+                var gameObject = new GameObject(new Vector2f(xPos, yPos), new Vector2f(objectWidth, objectHeight));
+                gameObject.addComponent(new Sprite(new Vector4f((objectWidth * x) / Nova2dWindow.getWidth(), (objectHeight * y) / Nova2dWindow.getHeight(), 1, 1)));
                 this.addGameObjectToScene(gameObject);
             }
         }

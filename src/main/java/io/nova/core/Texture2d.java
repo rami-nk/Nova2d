@@ -10,6 +10,7 @@ import static org.lwjgl.stb.STBImage.stbi_load;
 
 public class Texture2d {
 
+    public static final String RESERVED_TEXTURE_SLOT_ID = "RESERVED";
     private final String filepath;
     private final int rendererId;
 

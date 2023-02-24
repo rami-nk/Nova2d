@@ -1,13 +1,33 @@
 package io.nova.core.components;
 
+import io.nova.core.Texture2d;
+import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 public class Sprite extends Component {
 
-    private Vector4f color;
+    private final Vector4f color;
+    private Vector2f[] textureCoordinates;
+    private String textureId = Texture2d.RESERVED_TEXTURE_SLOT_ID;
 
     public Sprite(Vector4f color) {
         this.color = color;
+        this.textureCoordinates = defaultTextureCoordinates();
+    }
+
+    public Sprite(Vector4f color, Vector2f[] textureCoordinates) {
+        this(color);
+        this.textureCoordinates = textureCoordinates;
+    }
+
+    public Sprite(Vector4f color, String textureId) {
+        this(color);
+        this.textureId = textureId;
+    }
+
+    public Sprite(String textureId) {
+        this(new Vector4f(1.0f, 1.0f, 1.0f, 1.0f));
+        this.textureId = textureId;
     }
 
     @Override
@@ -15,7 +35,28 @@ public class Sprite extends Component {
 
     }
 
+    public Vector2f[] getTextureCoordinates() {
+        return textureCoordinates;
+    }
+
+    public void setTextureCoordinates(Vector2f[] textureCoordinates) {
+        this.textureCoordinates = textureCoordinates;
+    }
+
     public Vector4f getColor() {
         return color;
+    }
+
+    public String getTextureId() {
+        return textureId;
+    }
+
+    private Vector2f[] defaultTextureCoordinates() {
+        return new Vector2f[]{
+                new Vector2f(1, 0),
+                new Vector2f(1, 1),
+                new Vector2f(0, 1),
+                new Vector2f(0, 0),
+        };
     }
 }
