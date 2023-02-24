@@ -90,8 +90,21 @@ public class Batch {
 
     public void render(Camera camera) {
         // TODO: only rebuffer specific sprite
-        vertexBuffer.bind();
-        vertexBuffer.reBufferData(vertices);
+
+        boolean reBufferVertices = false;
+        for (int index=0; index < numberOfSprites; index++) {
+            var sprite = sprites[index];
+            if (sprite.isDirty()) {
+                setVertexProperties(index);
+                sprite.setClean();
+                reBufferVertices = true;
+            }
+        }
+
+        if (reBufferVertices) {
+            vertexBuffer.bind();
+            vertexBuffer.reBufferData(vertices);
+        }
 
         vertexArray.bind();
 
@@ -142,8 +155,8 @@ public class Batch {
             }
 
             // set position
-            vertices[offset] = sprite.getGameObject().getPosition().x + (xAdd * sprite.getGameObject().getSize().x);
-            vertices[offset + 1] = sprite.getGameObject().getPosition().y + (yAdd * sprite.getGameObject().getSize().y);
+            vertices[offset] = sprite.getPosition().x + (xAdd * sprite.getSize().x);
+            vertices[offset + 1] = sprite.getPosition().y + (yAdd * sprite.getSize().y);
 
             // set color
             vertices[offset + 2] = color.x;

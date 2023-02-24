@@ -48,6 +48,7 @@ public class Sprite extends Component {
 
     public void setTextureCoordinates(Vector2f[] textureCoordinates) {
         this.textureCoordinates = textureCoordinates;
+        setDirty();
     }
 
     public Vector4f getColor() {
@@ -65,5 +66,20 @@ public class Sprite extends Component {
                 new Vector2f(0, 0),
                 new Vector2f(0, 1),
         };
+    }
+
+    public void setSprite(Sprite sprite) {
+        if (!this.equals(sprite)) {
+            this.textureId = sprite.getTextureId();
+            this.textureCoordinates = sprite.getTextureCoordinates();
+            this.position = sprite.getPosition();
+            this.size = sprite.getSize();
+            setDirty();
+        }
+    }
+
+    public void setPosition(Vector2f position) {
+        this.position.set(position);
+        setDirty();
     }
 }
