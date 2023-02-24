@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-public class LocalBatchTextureProvider {
+public class TextureSlotsManager {
 
     public static final int MAX_TEXTURES = 16;
     public final List<String> textureIds;
 
     private int occupiedSlots;
 
-    public LocalBatchTextureProvider() {
+    public TextureSlotsManager() {
         textureIds = new ArrayList<>();
         occupiedSlots = 0;
     }

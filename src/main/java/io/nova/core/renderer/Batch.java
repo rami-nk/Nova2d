@@ -36,7 +36,7 @@ public class Batch {
     private VertexBuffer vertexBuffer;
     private IndexBuffer indexBuffer;
     private Shader shader;
-    private final LocalBatchTextureProvider localBatchTextureProvider;
+    private final TextureSlotsManager textureSlotsManager;
 
     public Batch(int maxBatchSize) {
         hasRoom = true;
@@ -46,7 +46,7 @@ public class Batch {
         this.sprites = new Sprite[maxBatchSize];
 
         this.vertices = new float[ELEMENTS_PER_VERTEX * VERTICES_PER_SPRITE * maxBatchSize];
-        this.localBatchTextureProvider = new LocalBatchTextureProvider();
+        this.textureSlotsManager = new TextureSlotsManager();
     }
 
     private void bindTextures() {
@@ -101,8 +101,8 @@ public class Batch {
         shader.bind();
         shader.setUniformMat4f("u_Projection", camera.getProjectionMatrix());
 
-        if (localBatchTextureProvider.hasSlots()) {
-            shader.setUniformTextureArray("u_Textures", localBatchTextureProvider.getTextureSlots());
+        if (textureSlotsManager.hasSlots()) {
+            shader.setUniformTextureArray("u_Textures", textureSlotsManager.getTextureSlots());
         }
 
         Renderer.draw(vertexArray, indexBuffer, shader);
@@ -115,7 +115,7 @@ public class Batch {
         sprites[index] = sprite;
         numberOfSprites++;
 
-        localBatchTextureProvider.add(sprite.getTextureId());
+        textureSlotsManager.add(sprite.getTextureId());
 
         setVertexProperties(index);
 
@@ -157,7 +157,7 @@ public class Batch {
             vertices[offset + 7] = sprite.getTextureCoordinates()[i].y;
 
             // set texture id
-            vertices[offset + 8] = localBatchTextureProvider.getTextureSlot(sprite.getTextureId());
+            vertices[offset + 8] = textureSlotsManager.getTextureSlot(sprite.getTextureId());
 
             offset += ELEMENTS_PER_VERTEX;
         }
