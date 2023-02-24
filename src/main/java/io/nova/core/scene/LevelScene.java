@@ -3,8 +3,12 @@ package io.nova.core.scene;
 import io.nova.core.Camera;
 import io.nova.core.GameObject;
 import io.nova.core.components.Sprite;
+import io.nova.core.listener.KeyListener;
 import io.nova.core.utils.TextureProvider;
 import org.joml.Vector2f;
+
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
 
 public class LevelScene extends Scene {
 
@@ -43,6 +47,11 @@ public class LevelScene extends Scene {
 
     @Override
     public void update(double deltaTime) {
+        if (KeyListener.isKeyPressed(GLFW_KEY_UP)) {
+            camera.zoom((float) (1.0f + 1.0f * deltaTime));
+        } else if (KeyListener.isKeyPressed(GLFW_KEY_DOWN)) {
+            camera.zoom((float) (1.0f - 1.0f * deltaTime));
+        }
     }
 
     @Override
