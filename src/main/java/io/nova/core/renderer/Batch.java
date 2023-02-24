@@ -52,7 +52,7 @@ public class Batch {
     private void bindTextures() {
         int i = 0;
         for (var sprite : sprites) {
-            if (sprite != null && !sprite.getTextureId().equals(Texture2d.RESERVED_TEXTURE_SLOT_ID)) {
+            if (sprite != null && sprite.getTextureId() !=Texture2d.RESERVED_TEXTURE_SLOT_ID) {
                 var texture = TextureProvider.getTexture(sprite.getTextureId());
                 assert texture != null;
                 texture.activate(GL_TEXTURE0 + i);
@@ -64,7 +64,7 @@ public class Batch {
 
     private void unbindTextures() {
         for (var sprite : sprites) {
-            if (sprite != null && !sprite.getTextureId().equals(Texture2d.RESERVED_TEXTURE_SLOT_ID)) {
+            if (sprite != null && sprite.getTextureId() !=Texture2d.RESERVED_TEXTURE_SLOT_ID) {
                 var texture = TextureProvider.getTexture(sprite.getTextureId());
                 assert texture != null;
                 texture.unbind();

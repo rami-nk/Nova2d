@@ -12,8 +12,7 @@ public class Nova2dLogoScene extends Scene {
 
     Nova2dLogoScene() {
         camera = new Camera(500, 500);
-        var textureId = "Nova2d-logo-white.png";
-        TextureProvider.uploadTexture(textureId);
+        var textureId = TextureProvider.uploadTexture("Nova2d-logo-white.png");
 
         var gameObject = new GameObject(
                 new Vector2f(-206, -160),

@@ -9,7 +9,7 @@ import java.util.stream.IntStream;
 public class TextureSlotsManager {
 
     public static final int MAX_TEXTURES = 16;
-    public final List<String> textureIds;
+    public final List<Integer> textureIds;
 
     private int occupiedSlots;
 
@@ -18,8 +18,8 @@ public class TextureSlotsManager {
         occupiedSlots = 0;
     }
 
-    public void add(String textureId) {
-        if (!textureId.equals(Texture2d.RESERVED_TEXTURE_SLOT_ID)) {
+    public void add(int textureId) {
+        if (textureId != Texture2d.RESERVED_TEXTURE_SLOT_ID) {
             if (textureIds.size() >= MAX_TEXTURES) {
                 System.err.println("Maximal texture slot limit reached!");
                 System.err.printf("Texture %s could be not added!", textureId);
@@ -36,8 +36,8 @@ public class TextureSlotsManager {
         return IntStream.range(0, textureIds.size()).toArray();
     }
 
-    public float getTextureSlot(String textureId) {
-        if (textureId.equals(Texture2d.RESERVED_TEXTURE_SLOT_ID)) {
+    public float getTextureSlot(int textureId) {
+        if (textureId == Texture2d.RESERVED_TEXTURE_SLOT_ID) {
             return -1;
         }
         for (int i=0; i < textureIds.size(); i++) {

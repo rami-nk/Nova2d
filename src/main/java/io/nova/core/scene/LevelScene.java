@@ -13,11 +13,8 @@ public class LevelScene extends Scene {
     LevelScene() {
         camera = new Camera();
 
-        final String nova2dLogoTextureId = "Nova2d-logo-white.png";
-        final String openGlLogoTextureId = "openGlLogo.png";
-
-        TextureProvider.uploadTexture(nova2dLogoTextureId);
-        TextureProvider.uploadTexture(openGlLogoTextureId);
+        var nova2dLogoTextureId = TextureProvider.uploadTexture("Nova2d-logo-white.png");
+        var openGlLogoTextureId = TextureProvider.uploadTexture("openGlLogo.png");
 
         var nova2dLogo = new GameObject(
                 new Vector2f(-150, -150),

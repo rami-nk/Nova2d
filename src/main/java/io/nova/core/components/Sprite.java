@@ -8,7 +8,7 @@ public class Sprite extends Component {
 
     private final Vector4f color;
     private Vector2f[] textureCoordinates;
-    private String textureId = Texture2d.RESERVED_TEXTURE_SLOT_ID;
+    private int textureId = Texture2d.RESERVED_TEXTURE_SLOT_ID;
 
     public Sprite(Vector4f color) {
         this.color = color;
@@ -20,12 +20,12 @@ public class Sprite extends Component {
         this.textureCoordinates = textureCoordinates;
     }
 
-    public Sprite(Vector4f color, String textureId) {
+    public Sprite(Vector4f color, int textureId) {
         this(color);
         this.textureId = textureId;
     }
 
-    public Sprite(String textureId) {
+    public Sprite(int textureId) {
         this(new Vector4f(1.0f, 1.0f, 1.0f, 1.0f));
         this.textureId = textureId;
     }
@@ -47,7 +47,7 @@ public class Sprite extends Component {
         return color;
     }
 
-    public String getTextureId() {
+    public int getTextureId() {
         return textureId;
     }
 
