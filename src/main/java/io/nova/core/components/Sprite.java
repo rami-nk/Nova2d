@@ -8,11 +8,12 @@ public class Sprite extends Component {
 
     private final Vector4f color;
     private Vector2f[] textureCoordinates;
-    private int textureId = Texture2d.RESERVED_TEXTURE_SLOT_ID;
+    private int textureId;
 
     public Sprite(Vector4f color) {
         this.color = color;
         this.textureCoordinates = defaultTextureCoordinates();
+        textureId = Texture2d.RESERVED_TEXTURE_SLOT_ID;
     }
 
     public Sprite(Vector4f color, Vector2f[] textureCoordinates) {
@@ -28,6 +29,12 @@ public class Sprite extends Component {
     public Sprite(int textureId) {
         this(new Vector4f(1.0f, 1.0f, 1.0f, 1.0f));
         this.textureId = textureId;
+    }
+
+    public Sprite(int textureId, Vector2f[] textureCoordinates) {
+        this.textureId = textureId;
+        this.textureCoordinates = textureCoordinates;
+        this.color = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
     }
 
     @Override
@@ -53,10 +60,10 @@ public class Sprite extends Component {
 
     private Vector2f[] defaultTextureCoordinates() {
         return new Vector2f[]{
-                new Vector2f(1, 0),
                 new Vector2f(1, 1),
-                new Vector2f(0, 1),
+                new Vector2f(1, 0),
                 new Vector2f(0, 0),
+                new Vector2f(0, 1),
         };
     }
 }

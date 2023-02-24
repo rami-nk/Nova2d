@@ -122,6 +122,7 @@ public class Nova2dWindow {
         menuScene.registerScene("OpenGlLogoScene", OpenGlLogoScene.class);
         menuScene.registerScene("Nova2dLogoScene", Nova2dLogoScene.class);
         menuScene.registerScene("BatchScene", BatchScene.class);
+        menuScene.registerScene("SpriteSheetScene", SpriteSheetScene.class);
         menuScene.printInfo();
     }
 

@@ -5,14 +5,15 @@ import org.lwjgl.BufferUtils;
 import java.util.Objects;
 
 import static org.lwjgl.opengl.GL30.*;
-import static org.lwjgl.stb.STBImage.stbi_image_free;
-import static org.lwjgl.stb.STBImage.stbi_load;
+import static org.lwjgl.stb.STBImage.*;
 
 public class Texture2d {
 
     public static final int RESERVED_TEXTURE_SLOT_ID = -1;
     private final String filepath;
     private final int rendererId;
+    private int width;
+    private int height;
 
     public Texture2d(String filepath) {
         this.filepath = filepath;
@@ -29,13 +30,19 @@ public class Texture2d {
         loadAndUploadTexture(filepath);
     }
 
-    private static void loadAndUploadTexture(String filepath) {
+    private void loadAndUploadTexture(String filepath) {
         var width = BufferUtils.createIntBuffer(1);
         var height = BufferUtils.createIntBuffer(1);
         var channel = BufferUtils.createIntBuffer(1);
+
+        stbi_set_flip_vertically_on_load(true);
+
         var textureBytes = stbi_load(filepath, width, height, channel, 0);
 
         if (!Objects.isNull(textureBytes)) {
+            this.width = width.get(0);
+            this.height = height.get(0);
+
             int internalFormat = 0;
             int channelValue = channel.get();
             if (channelValue == 4) {
@@ -63,5 +70,13 @@ public class Texture2d {
 
     public void activate(int slot) {
         glActiveTexture(slot);
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 }
