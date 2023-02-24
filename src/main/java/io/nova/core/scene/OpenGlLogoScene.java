@@ -7,7 +7,8 @@ import io.nova.core.buffer.VertexArray;
 import io.nova.core.buffer.VertexBuffer;
 import io.nova.core.buffer.VertexBufferLayout;
 import io.nova.core.shader.Shader;
-import io.nova.core.utils.AssetProvider;
+import io.nova.core.utils.ShaderProvider;
+import io.nova.core.utils.TextureProvider;
 
 import static org.lwjgl.opengl.GL30.GL_TEXTURE0;
 
@@ -38,8 +39,8 @@ public class OpenGlLogoScene extends Scene {
 
         vertexArray.addBuffer(vertexBuffer, layout);
 
-        shader = AssetProvider.getOrElseUploadShader("simpleTexture.glsl");
-        texture = AssetProvider.getOrElseUploadTexture("openGlLogo.png");
+        shader = ShaderProvider.getOrElseUploadShader("simpleTexture.glsl");
+        texture = TextureProvider.getOrElseUploadTexture("openGlLogo.png");
 
         shader.setUniformTexture("u_Texture", 0);
         texture.activate(GL_TEXTURE0);

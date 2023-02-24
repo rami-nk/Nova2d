@@ -8,7 +8,7 @@ import io.nova.core.buffer.VertexBufferLayout;
 import io.nova.core.listener.KeyListener;
 import io.nova.core.renderer.Renderer;
 import io.nova.core.shader.Shader;
-import io.nova.core.utils.AssetProvider;
+import io.nova.core.utils.ShaderProvider;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -41,7 +41,7 @@ public class SimpleColoredSquareScene extends Scene {
         layout.pushFloat(2);
         layout.pushFloat(4);
         vertexArray.addBuffer(vertexBuffer, layout);
-        shader = AssetProvider.getOrElseUploadShader("default.glsl");
+        shader = ShaderProvider.getOrElseUploadShader("default.glsl");
     }
 
     @Override
