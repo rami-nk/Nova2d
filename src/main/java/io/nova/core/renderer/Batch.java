@@ -1,6 +1,7 @@
 package io.nova.core.renderer;
 
 import io.nova.core.Camera;
+import io.nova.core.Texture2d;
 import io.nova.core.buffer.IndexBuffer;
 import io.nova.core.buffer.VertexArray;
 import io.nova.core.buffer.VertexBuffer;
@@ -9,8 +10,6 @@ import io.nova.core.components.Sprite;
 import io.nova.core.shader.Shader;
 import io.nova.core.utils.ShaderProvider;
 import io.nova.core.utils.TextureProvider;
-
-import java.util.Objects;
 
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
@@ -48,10 +47,16 @@ public class Batch {
         this.vertices = new float[ELEMENTS_PER_VERTEX * VERTICES_PER_SPRITE * maxBatchSize];
     }
 
-    private static void bindTextures() {
-        for (int i = 0; i < TextureProvider.getNumberOfTextures(); i++) {
-            Objects.requireNonNull(TextureProvider.getTexture(i)).activate(GL_TEXTURE0 + i);
-            Objects.requireNonNull(TextureProvider.getTexture(i)).bind();
+    private void bindTextures() {
+        int i = 0;
+        for (var sprite : sprites) {
+            if (sprite != null && sprite.getTextureId() != Texture2d.RESERVED_TEXTURE_SLOT_ID) {
+                var texture = TextureProvider.getTexture(sprite.getTextureId());
+                assert texture != null;
+                texture.activate(GL_TEXTURE0 + i);
+                texture.bind();
+                i++;
+            }
         }
     }
 

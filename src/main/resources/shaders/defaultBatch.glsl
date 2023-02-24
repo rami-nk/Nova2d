@@ -36,7 +36,7 @@ out vec4 color;
 void main()
 {
     int id = int(f_TextureId);
-    if (id == 0) {
+    if (id == -1) {
         color = f_Color;
     } else {
         color = texture(u_Textures[int(f_TextureId)], f_TextureCoordinates);

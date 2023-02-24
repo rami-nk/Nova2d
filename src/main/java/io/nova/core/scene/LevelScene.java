@@ -3,8 +3,8 @@ package io.nova.core.scene;
 import io.nova.core.Camera;
 import io.nova.core.GameObject;
 import io.nova.core.components.Sprite;
+import io.nova.core.utils.TextureProvider;
 import org.joml.Vector2f;
-import org.joml.Vector4f;
 
 public class LevelScene extends Scene {
 
@@ -17,7 +17,7 @@ public class LevelScene extends Scene {
                 new Vector2f(-150, -150),
                 new Vector2f(150, 150));
         nova2dLogo.addComponent(
-                new Sprite(new Vector4f(0, 0, 0, 1))
+                new Sprite(TextureProvider.uploadTexture("Nova2d-logo-white.png"))
         );
         addGameObjectToScene(nova2dLogo);
 
@@ -25,9 +25,17 @@ public class LevelScene extends Scene {
                 new Vector2f(0, 0),
                 new Vector2f(150, 150));
         openGlLogo.addComponent(
-                new Sprite(new Vector4f(0, 0, 0, 1))
+                new Sprite(TextureProvider.uploadTexture("openGlLogo.png"))
         );
         addGameObjectToScene(openGlLogo);
+
+        var nova2dLogo2 = new GameObject(
+                new Vector2f(0, -150),
+                new Vector2f(150, 150));
+        nova2dLogo2.addComponent(
+                new Sprite(TextureProvider.uploadTexture("Nova2d-logo-white.png"))
+        );
+        addGameObjectToScene(nova2dLogo2);
     }
 
     @Override

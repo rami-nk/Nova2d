@@ -3,6 +3,7 @@ package io.nova.core.utils;
 import io.nova.core.Texture2d;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.IntStream;
@@ -12,23 +13,37 @@ public class TextureProvider {
     public static final int MAX_TEXTURES = 16;
 
     private static final String TEXTURE_PATH_PREFIX = "src/main/resources/textures/";
-    private static final Map<String, Texture2d> textures = new HashMap<>();
+    private static final Map<String, Texture2d> textures = new LinkedHashMap<>();
     private static final Map<String, Integer> indices = new HashMap<>();
 
     private static int current = 0;
 
-    public static Texture2d uploadTexture(String name) {
+    public static int uploadTexture(String name) {
+        if (textures.size() >= MAX_TEXTURES) {
+            System.err.println("Maximum texture slot limit achieved!");
+            return -1;
+        }
         var path = TEXTURE_PATH_PREFIX + name;
+        if (textures.containsKey(path)) {
+            return getTextureId(path);
+        }
         var texture = new Texture2d(path);
         textures.put(path, texture);
-        indices.put(path, current++);
-        return texture;
+        var currentTextureId = current;
+        indices.put(path, currentTextureId);
+        current++;
+        return currentTextureId;
+    }
+
+    private static Texture2d uploadAndGetTexture(String name) {
+        var id = uploadTexture(name);
+        return getTexture(id);
     }
 
     public static Texture2d getOrElseUploadTexture(String name) {
         var texture = getTexture(name);
         if (Objects.isNull(texture)) {
-            return uploadTexture(name);
+            return uploadAndGetTexture(name);
         }
         return texture;
     }
@@ -50,12 +65,8 @@ public class TextureProvider {
         return textures.get(key);
     }
 
-    public static int getTextureId(String name) {
-        var path = TEXTURE_PATH_PREFIX + name;
-        if (textures.containsKey(path)) {
-            return indices.get(path);
-        }
-        return -1;
+    private static int getTextureId(String path) {
+        return indices.get(path);
     }
 
     public static int getNumberOfTextures() {
