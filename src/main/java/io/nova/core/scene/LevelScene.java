@@ -14,12 +14,20 @@ public class LevelScene extends Scene {
         camera = new Camera();
 
         var nova2dLogo = new GameObject(
-                new Vector2f(-75, -75),
+                new Vector2f(-150, -150),
                 new Vector2f(150, 150));
         nova2dLogo.addComponent(
                 new Sprite(new Vector4f(0, 0, 0, 1))
         );
         addGameObjectToScene(nova2dLogo);
+
+        var openGlLogo = new GameObject(
+                new Vector2f(0, 0),
+                new Vector2f(150, 150));
+        openGlLogo.addComponent(
+                new Sprite(new Vector4f(0, 0, 0, 1))
+        );
+        addGameObjectToScene(openGlLogo);
     }
 
     @Override
