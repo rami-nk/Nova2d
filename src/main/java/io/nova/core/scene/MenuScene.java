@@ -47,6 +47,7 @@ public class MenuScene extends Scene {
         for (var scene : scenes.entrySet()) {
             if (KeyListener.isKeyPressed(index++)) {
                 currentScene = scene.getValue().get();
+                return;
             }
         }
     }
