@@ -5,6 +5,7 @@ import io.nova.core.Texture2d;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 public class TextureProvider {
 
@@ -55,5 +56,13 @@ public class TextureProvider {
             return indices.get(path);
         }
         return -1;
+    }
+
+    public static int getNumberOfTextures() {
+        return textures.size();
+    }
+
+    public static int[] getIndices() {
+        return IntStream.range(0, textures.size()).toArray();
     }
 }

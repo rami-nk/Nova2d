@@ -52,6 +52,14 @@ public class Shader {
         setUniformInt(name, slot);
     }
 
+    public void setUniformIntArray(final String name, final int[] values) {
+        glUniform1iv(getUniformLocation(name), values);
+    }
+
+    public void setUniformTextureArray(final String name, final int[] slots) {
+        setUniformIntArray(name, slots);
+    }
+
     private int getUniformLocation(final String name) {
         if (uniformLocationCache.containsKey(name)) {
             return uniformLocationCache.get(name);

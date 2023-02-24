@@ -46,6 +46,10 @@ public class Sprite extends Component {
         return color;
     }
 
+    public int getTextureId() {
+        return textureId;
+    }
+
     private Vector2f[] defaultTextureCoordinates() {
         return new Vector2f[]{
                 new Vector2f(1, 1),
