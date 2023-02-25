@@ -135,13 +135,13 @@ public class Nova2dWindow {
         menuScene = new MenuScene(null);
         menuScene.setCurrentScene(menuScene);
 
-        menuScene.registerScene("LevelEditor", LevelEditorScene.class);
-        menuScene.registerScene("LevelScene", LevelScene.class);
-        menuScene.registerScene("SimpleColoredSquare", SimpleColoredSquareScene.class);
-        menuScene.registerScene("OpenGlLogoScene", OpenGlLogoScene.class);
-        menuScene.registerScene("Nova2dLogoScene", Nova2dLogoScene.class);
-        menuScene.registerScene("BatchScene", BatchScene.class);
-        menuScene.registerScene("SpriteSheetScene", SpriteSheetScene.class);
+        menuScene.registerScene("Clear color", ClearColorScene.class);
+        menuScene.registerScene("Zoom texture", ZoomTextureScene.class);
+        menuScene.registerScene("Simple colored square", SimpleColoredSquareScene.class);
+        menuScene.registerScene("OpenGL logo", OpenGlLogoScene.class);
+        menuScene.registerScene("Nova2d logo", Nova2dLogoScene.class);
+        menuScene.registerScene("Batch", BatchScene.class);
+        menuScene.registerScene("Sprite sheet", SpriteSheetScene.class);
     }
 
     private void loop() {

@@ -10,11 +10,11 @@ import org.joml.Vector2f;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
 
-public class LevelScene extends Scene {
+public class ZoomTextureScene extends Scene {
 
     private final Camera camera;
 
-    LevelScene() {
+    ZoomTextureScene() {
         camera = new Camera();
 
         var nova2dLogoTextureId = TextureProvider.uploadTexture("Nova2d-logo-white.png");
