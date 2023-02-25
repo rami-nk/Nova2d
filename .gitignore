@@ -38,9 +38,6 @@ bin/
 ### Mac OS ###
 .DS_Store
 
-### imgui
-/imgui.ini
-
 ### libs
 libs
 
