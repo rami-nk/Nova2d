@@ -45,6 +45,7 @@ public class MenuScene extends Scene {
         for (var scene : scenes.entrySet()) {
             if (ImGui.button(scene.getKey())) {
                 currentScene = scene.getValue().get();
+                return;
             }
         }
     }
