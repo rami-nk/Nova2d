@@ -24,6 +24,12 @@ val jomlVersion = "1.10.5"
 val lwjglNatives = "natives-macos-arm64"
 
 dependencies {
+    // IMGUI
+    implementation(fileTree("libs/imgui") {
+        include("*.jar")
+    })
+
+    // LWJGL
     implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
     implementation("org.lwjgl", "lwjgl")
     implementation("org.lwjgl", "lwjgl-assimp")
@@ -41,4 +47,3 @@ dependencies {
     runtimeOnly("org.lwjgl", "lwjgl-stb", classifier = lwjglNatives)
     implementation("org.joml", "joml", jomlVersion)
 }
-

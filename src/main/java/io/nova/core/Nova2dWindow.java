@@ -1,5 +1,7 @@
 package io.nova.core;
 
+import imgui.ImGui;
+import io.nova.core.imgui.ImGuiLayer;
 import io.nova.core.listener.KeyListener;
 import io.nova.core.listener.MouseListener;
 import io.nova.core.renderer.Renderer;
@@ -26,6 +28,7 @@ public class Nova2dWindow {
     private long glfwWindow;
     private double red, green, blue;
     private MenuScene menuScene;
+    private ImGuiLayer imGuiLayer;
 
     private Nova2dWindow(String title, int height, int width) {
         this.title = title;
@@ -52,14 +55,27 @@ public class Nova2dWindow {
         Objects.requireNonNull(glfwSetErrorCallback(null)).free();
     }
 
+    public static int getWidth() {
+        return getInstance().width;
+    }
+
+    public static int getHeight() {
+        return getInstance().height;
+    }
+
     public void run() {
         printVersion();
 
         init();
         loop();
 
+        dispose();
+    }
+
+    private void dispose() {
         freeWindowCallbacksAndDestroyWindow();
         terminateGLFWAndFreeErrorCallback();
+        imGuiLayer.dispose();
     }
 
     private void init() {
@@ -107,6 +123,9 @@ public class Nova2dWindow {
         // bindings available for use.
         GL.createCapabilities();
 
+        imGuiLayer = new ImGuiLayer(glfwWindow);
+        imGuiLayer.init();
+
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -116,14 +135,13 @@ public class Nova2dWindow {
         menuScene = new MenuScene(null);
         menuScene.setCurrentScene(menuScene);
 
-        menuScene.registerScene("LevelEditor", LevelEditorScene.class);
-        menuScene.registerScene("LevelScene", LevelScene.class);
-        menuScene.registerScene("SimpleColoredSquare", SimpleColoredSquareScene.class);
-        menuScene.registerScene("OpenGlLogoScene", OpenGlLogoScene.class);
-        menuScene.registerScene("Nova2dLogoScene", Nova2dLogoScene.class);
-        menuScene.registerScene("BatchScene", BatchScene.class);
-        menuScene.registerScene("SpriteSheetScene", SpriteSheetScene.class);
-        menuScene.printInfo();
+        menuScene.registerScene("Clear color", ClearColorScene.class);
+        menuScene.registerScene("Zoom texture", ZoomTextureScene.class);
+        menuScene.registerScene("Simple colored square", SimpleColoredSquareScene.class);
+        menuScene.registerScene("OpenGL logo", OpenGlLogoScene.class);
+        menuScene.registerScene("Nova2d logo", Nova2dLogoScene.class);
+        menuScene.registerScene("Batch", BatchScene.class);
+        menuScene.registerScene("Sprite sheet", SpriteSheetScene.class);
     }
 
     private void loop() {
@@ -141,15 +159,28 @@ public class Nova2dWindow {
             Renderer.setClearColor((float) red, (float) green, (float) blue, 0.0f);
             Renderer.clear();
 
+            imGuiLayer.startFrame();
+
             var currentScene = menuScene.getCurrentScene();
             if (!Objects.isNull(currentScene) && deltaTime >= 0) {
                 currentScene.update(deltaTime);
                 currentScene.render();
 
+
+                ImGui.begin("Nova2d");
+                if (currentScene != menuScene && ImGui.button("<-")) {
+                    menuScene.setCurrentScene(menuScene);
+                }
+
+                currentScene.imGuiRender();
+                ImGui.end();
+
                 if (KeyListener.isKeyPressed(GLFW_KEY_BACKSPACE) && currentScene != menuScene) {
                     menuScene.setCurrentScene(menuScene);
                 }
             }
+
+            imGuiLayer.endFrame();
 
             glfwSwapBuffers(glfwWindow); // swap the color buffers
 
@@ -174,13 +205,5 @@ public class Nova2dWindow {
         this.red = red;
         this.green = green;
         this.blue = blue;
-    }
-
-    public static int getWidth() {
-        return getInstance().width;
-    }
-
-    public static int getHeight() {
-        return getInstance().height;
     }
 }
