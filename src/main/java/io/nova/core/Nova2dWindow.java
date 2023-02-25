@@ -55,6 +55,14 @@ public class Nova2dWindow {
         Objects.requireNonNull(glfwSetErrorCallback(null)).free();
     }
 
+    public static int getWidth() {
+        return getInstance().width;
+    }
+
+    public static int getHeight() {
+        return getInstance().height;
+    }
+
     public void run() {
         printVersion();
 
@@ -134,7 +142,6 @@ public class Nova2dWindow {
         menuScene.registerScene("Nova2dLogoScene", Nova2dLogoScene.class);
         menuScene.registerScene("BatchScene", BatchScene.class);
         menuScene.registerScene("SpriteSheetScene", SpriteSheetScene.class);
-        menuScene.printInfo();
     }
 
     private void loop() {
@@ -158,14 +165,12 @@ public class Nova2dWindow {
                 currentScene.render();
 
                 imGuiLayer.startFrame();
-                // Do imgui rendering here
-                ImGui.begin("First window");
 
-                if (ImGui.button("click me")) {
-                    System.out.println("You clicked me");
+                if (currentScene != menuScene && ImGui.button("<-")) {
+                    menuScene.setCurrentScene(menuScene);
                 }
 
-                ImGui.end();
+                currentScene.imGuiRender();
                 imGuiLayer.endFrame();
 
                 if (KeyListener.isKeyPressed(GLFW_KEY_BACKSPACE) && currentScene != menuScene) {
@@ -196,13 +201,5 @@ public class Nova2dWindow {
         this.red = red;
         this.green = green;
         this.blue = blue;
-    }
-
-    public static int getWidth() {
-        return getInstance().width;
-    }
-
-    public static int getHeight() {
-        return getInstance().height;
     }
 }

@@ -47,6 +47,10 @@ public abstract class Scene {
 
     public abstract void render();
 
+    public void imGuiRender() {
+
+    }
+
     public BatchRenderer getBatchRenderer() {
         return batchRenderer;
     }

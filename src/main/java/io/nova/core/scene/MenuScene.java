@@ -1,14 +1,12 @@
 package io.nova.core.scene;
 
-import io.nova.core.listener.KeyListener;
+import imgui.ImGui;
 import io.nova.core.Nova2dWindow;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
-
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_1;
 
 public class MenuScene extends Scene {
 
@@ -33,28 +31,26 @@ public class MenuScene extends Scene {
         });
     }
 
-    public void printInfo() {
-        int index = 1;
-        for (var scene : scenes.entrySet()) {
-            System.out.println("Press " + index++ + " for " + scene.getKey());
-        }
-        System.out.println("Press BACKSPACE to go back to Menu");
-    }
-
     @Override
     public void update(double deltaTime) {
-        int index = GLFW_KEY_1;
-        for (var scene : scenes.entrySet()) {
-            if (KeyListener.isKeyPressed(index++)) {
-                currentScene = scene.getValue().get();
-                return;
-            }
-        }
     }
 
     @Override
     public void render() {
-        Nova2dWindow.getInstance().changeColorTo(1.0, 1.0, 1.0);
+        Nova2dWindow.getInstance().changeColorTo(0.0, 0.0, 0.0);
+    }
+
+    @Override
+    public void imGuiRender() {
+        ImGui.begin("Menu");
+
+        for (var scene : scenes.entrySet()) {
+            if (ImGui.button(scene.getKey())) {
+                currentScene = scene.getValue().get();
+            }
+        }
+
+        ImGui.end();
     }
 
     public void setCurrentScene(Scene currentScene) {
