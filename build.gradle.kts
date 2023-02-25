@@ -22,14 +22,14 @@ tasks.getByName<Test>("test") {
 val lwjglVersion = "3.3.1"
 val jomlVersion = "1.10.5"
 val lwjglNatives = "natives-macos-arm64"
+val imguiNatives = "macos"
 val imguiVersion = "1.86.7"
 
 dependencies {
     // IMGUI
-    implementation("io.github.spair:imgui-java-binding:$imguiVersion")
-    implementation( "io.github.spair:imgui-java-lwjgl3:$imguiVersion")
-
-    implementation( "io.github.spair:imgui-java-natives-macos:$imguiVersion")
+    implementation(fileTree("libs/imgui") {
+        include("*.jar")
+    })
 
     // LWJGL
     implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))

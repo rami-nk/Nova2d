@@ -1,5 +1,7 @@
 package io.nova.core;
 
+import imgui.ImGui;
+import io.nova.core.imgui.ImGuiLayer;
 import io.nova.core.listener.KeyListener;
 import io.nova.core.listener.MouseListener;
 import io.nova.core.renderer.Renderer;
@@ -26,6 +28,7 @@ public class Nova2dWindow {
     private long glfwWindow;
     private double red, green, blue;
     private MenuScene menuScene;
+    private ImGuiLayer imGuiLayer;
 
     private Nova2dWindow(String title, int height, int width) {
         this.title = title;
@@ -58,8 +61,13 @@ public class Nova2dWindow {
         init();
         loop();
 
+        dispose();
+    }
+
+    private void dispose() {
         freeWindowCallbacksAndDestroyWindow();
         terminateGLFWAndFreeErrorCallback();
+        imGuiLayer.dispose();
     }
 
     private void init() {
@@ -107,6 +115,9 @@ public class Nova2dWindow {
         // bindings available for use.
         GL.createCapabilities();
 
+        imGuiLayer = new ImGuiLayer(glfwWindow);
+        imGuiLayer.init();
+
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -145,6 +156,17 @@ public class Nova2dWindow {
             if (!Objects.isNull(currentScene) && deltaTime >= 0) {
                 currentScene.update(deltaTime);
                 currentScene.render();
+
+                imGuiLayer.startFrame();
+                // Do imgui rendering here
+                ImGui.begin("First window");
+
+                if (ImGui.button("click me")) {
+                    System.out.println("You clicked me");
+                }
+
+                ImGui.end();
+                imGuiLayer.endFrame();
 
                 if (KeyListener.isKeyPressed(GLFW_KEY_BACKSPACE) && currentScene != menuScene) {
                     menuScene.setCurrentScene(menuScene);
