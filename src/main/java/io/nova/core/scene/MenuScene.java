@@ -42,15 +42,11 @@ public class MenuScene extends Scene {
 
     @Override
     public void imGuiRender() {
-        ImGui.begin("Menu");
-
         for (var scene : scenes.entrySet()) {
             if (ImGui.button(scene.getKey())) {
                 currentScene = scene.getValue().get();
             }
         }
-
-        ImGui.end();
     }
 
     public void setCurrentScene(Scene currentScene) {

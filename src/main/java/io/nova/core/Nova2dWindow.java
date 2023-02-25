@@ -159,24 +159,28 @@ public class Nova2dWindow {
             Renderer.setClearColor((float) red, (float) green, (float) blue, 0.0f);
             Renderer.clear();
 
+            imGuiLayer.startFrame();
+
             var currentScene = menuScene.getCurrentScene();
             if (!Objects.isNull(currentScene) && deltaTime >= 0) {
                 currentScene.update(deltaTime);
                 currentScene.render();
 
-                imGuiLayer.startFrame();
 
+                ImGui.begin("Nova2d");
                 if (currentScene != menuScene && ImGui.button("<-")) {
                     menuScene.setCurrentScene(menuScene);
                 }
 
                 currentScene.imGuiRender();
-                imGuiLayer.endFrame();
+                ImGui.end();
 
                 if (KeyListener.isKeyPressed(GLFW_KEY_BACKSPACE) && currentScene != menuScene) {
                     menuScene.setCurrentScene(menuScene);
                 }
             }
+
+            imGuiLayer.endFrame();
 
             glfwSwapBuffers(glfwWindow); // swap the color buffers
 
