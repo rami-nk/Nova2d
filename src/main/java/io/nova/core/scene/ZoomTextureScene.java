@@ -3,21 +3,22 @@ package io.nova.core.scene;
 import io.nova.core.Camera;
 import io.nova.core.GameObject;
 import io.nova.core.components.Sprite;
+import io.nova.core.listener.KeyListener;
 import io.nova.core.utils.TextureProvider;
 import org.joml.Vector2f;
 
-public class LevelScene extends Scene {
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
+
+public class ZoomTextureScene extends Scene {
 
     private final Camera camera;
 
-    LevelScene() {
+    ZoomTextureScene() {
         camera = new Camera();
 
-        final String nova2dLogoTextureId = "Nova2d-logo-white.png";
-        final String openGlLogoTextureId = "openGlLogo.png";
-
-        TextureProvider.uploadTexture(nova2dLogoTextureId);
-        TextureProvider.uploadTexture(openGlLogoTextureId);
+        var nova2dLogoTextureId = TextureProvider.uploadTexture("Nova2d-logo-white.png");
+        var openGlLogoTextureId = TextureProvider.uploadTexture("openGlLogo.png");
 
         var nova2dLogo = new GameObject(
                 new Vector2f(-150, -150),
@@ -46,6 +47,11 @@ public class LevelScene extends Scene {
 
     @Override
     public void update(double deltaTime) {
+        if (KeyListener.isKeyPressed(GLFW_KEY_UP)) {
+            camera.zoom((float) (1.0f + 1.0f * deltaTime));
+        } else if (KeyListener.isKeyPressed(GLFW_KEY_DOWN)) {
+            camera.zoom((float) (1.0f - 1.0f * deltaTime));
+        }
     }
 
     @Override

@@ -9,7 +9,6 @@ import io.nova.core.buffer.VertexBufferLayout;
 import io.nova.core.components.Sprite;
 import io.nova.core.shader.Shader;
 import io.nova.core.utils.ShaderProvider;
-import io.nova.core.utils.TextureProvider;
 
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
@@ -36,7 +35,7 @@ public class Batch {
     private VertexBuffer vertexBuffer;
     private IndexBuffer indexBuffer;
     private Shader shader;
-    private final LocalBatchTextureProvider localBatchTextureProvider;
+    private final BatchTextureManager batchTextureManager;
 
     public Batch(int maxBatchSize) {
         hasRoom = true;
@@ -46,14 +45,14 @@ public class Batch {
         this.sprites = new Sprite[maxBatchSize];
 
         this.vertices = new float[ELEMENTS_PER_VERTEX * VERTICES_PER_SPRITE * maxBatchSize];
-        this.localBatchTextureProvider = new LocalBatchTextureProvider();
+        this.batchTextureManager = new BatchTextureManager();
     }
 
     private void bindTextures() {
         int i = 0;
         for (var sprite : sprites) {
-            if (sprite != null && !sprite.getTextureId().equals(Texture2d.RESERVED_TEXTURE_SLOT_ID)) {
-                var texture = TextureProvider.getTexture(sprite.getTextureId());
+            if (sprite != null && sprite.getTextureId() !=Texture2d.RESERVED_TEXTURE_SLOT_ID) {
+                var texture = batchTextureManager.getTexture(sprite.getTextureId());
                 assert texture != null;
                 texture.activate(GL_TEXTURE0 + i);
                 texture.bind();
@@ -64,8 +63,8 @@ public class Batch {
 
     private void unbindTextures() {
         for (var sprite : sprites) {
-            if (sprite != null && !sprite.getTextureId().equals(Texture2d.RESERVED_TEXTURE_SLOT_ID)) {
-                var texture = TextureProvider.getTexture(sprite.getTextureId());
+            if (sprite != null && sprite.getTextureId() !=Texture2d.RESERVED_TEXTURE_SLOT_ID) {
+                var texture = batchTextureManager.getTexture(sprite.getTextureId());
                 assert texture != null;
                 texture.unbind();
             }
@@ -90,9 +89,22 @@ public class Batch {
     }
 
     public void render(Camera camera) {
-        // TODO: only rebuffer specific spride
-        vertexBuffer.bind();
-        vertexBuffer.reBufferData(vertices);
+        // TODO: only rebuffer specific sprite
+
+        boolean reBufferVertices = false;
+        for (int index=0; index < numberOfSprites; index++) {
+            var sprite = sprites[index];
+            if (sprite.isDirty()) {
+                setVertexProperties(index);
+                sprite.setClean();
+                reBufferVertices = true;
+            }
+        }
+
+        if (reBufferVertices) {
+            vertexBuffer.bind();
+            vertexBuffer.reBufferData(vertices);
+        }
 
         vertexArray.bind();
 
@@ -101,8 +113,8 @@ public class Batch {
         shader.bind();
         shader.setUniformMat4f("u_Projection", camera.getProjectionMatrix());
 
-        if (localBatchTextureProvider.hasSlots()) {
-            shader.setUniformTextureArray("u_Textures", localBatchTextureProvider.getTextureSlots());
+        if (batchTextureManager.hasSlots()) {
+            shader.setUniformTextureArray("u_Textures", batchTextureManager.getTextureSlots());
         }
 
         Renderer.draw(vertexArray, indexBuffer, shader);
@@ -115,7 +127,7 @@ public class Batch {
         sprites[index] = sprite;
         numberOfSprites++;
 
-        localBatchTextureProvider.add(sprite.getTextureId());
+        batchTextureManager.add(sprite.getTextureId());
 
         setVertexProperties(index);
 
@@ -143,8 +155,8 @@ public class Batch {
             }
 
             // set position
-            vertices[offset] = sprite.getGameObject().getPosition().x + (xAdd * sprite.getGameObject().getSize().x);
-            vertices[offset + 1] = sprite.getGameObject().getPosition().y + (yAdd * sprite.getGameObject().getSize().y);
+            vertices[offset] = sprite.getPosition().x + (xAdd * sprite.getSize().x);
+            vertices[offset + 1] = sprite.getPosition().y + (yAdd * sprite.getSize().y);
 
             // set color
             vertices[offset + 2] = color.x;
@@ -157,7 +169,7 @@ public class Batch {
             vertices[offset + 7] = sprite.getTextureCoordinates()[i].y;
 
             // set texture id
-            vertices[offset + 8] = localBatchTextureProvider.getTextureSlot(sprite.getTextureId());
+            vertices[offset + 8] = batchTextureManager.getTextureSlot(sprite.getTextureId());
 
             offset += ELEMENTS_PER_VERTEX;
         }

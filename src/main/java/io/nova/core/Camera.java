@@ -52,6 +52,11 @@ public class Camera {
         return projectionMatrix.mul(zoomMatrix);
     }
 
+    public void zoom(float factor) {
+        zoom *= factor;
+    }
+
+
     public Vector2f getFocusPosition() {
         return focusPosition;
     }
