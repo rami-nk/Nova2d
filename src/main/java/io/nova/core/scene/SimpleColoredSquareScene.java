@@ -5,7 +5,6 @@ import io.nova.core.buffer.IndexBuffer;
 import io.nova.core.buffer.VertexArray;
 import io.nova.core.buffer.VertexBuffer;
 import io.nova.core.buffer.VertexBufferLayout;
-import io.nova.core.listener.KeyListener;
 import io.nova.core.renderer.Renderer;
 import io.nova.core.shader.Shader;
 import io.nova.core.utils.ShaderProvider;
@@ -46,16 +45,17 @@ public class SimpleColoredSquareScene extends Scene {
 
     @Override
     public void update(double deltaTime) {
-        var speed = 100;
-        if (KeyListener.isKeyPressed(GLFW_KEY_RIGHT)) {
-            camera.move(new Vector2f((float)(-deltaTime * speed), 0));
-        } else if (KeyListener.isKeyPressed(GLFW_KEY_UP)) {
-            camera.move(new Vector2f(0, (float)(-deltaTime * speed)));
-        } else if (KeyListener.isKeyPressed(GLFW_KEY_DOWN)) {
-            camera.move(new Vector2f(0, (float)(deltaTime * speed)));
-        } else if (KeyListener.isKeyPressed(GLFW_KEY_LEFT)) {
-            camera.move(new Vector2f((float)(deltaTime * speed), 0));
-        }
+        // TODO: event handling
+//        var speed = 100;
+//        if (KeyListener.isKeyPressed(GLFW_KEY_RIGHT)) {
+//            camera.move(new Vector2f((float)(-deltaTime * speed), 0));
+//        } else if (KeyListener.isKeyPressed(GLFW_KEY_UP)) {
+//            camera.move(new Vector2f(0, (float)(-deltaTime * speed)));
+//        } else if (KeyListener.isKeyPressed(GLFW_KEY_DOWN)) {
+//            camera.move(new Vector2f(0, (float)(deltaTime * speed)));
+//        } else if (KeyListener.isKeyPressed(GLFW_KEY_LEFT)) {
+//            camera.move(new Vector2f((float)(deltaTime * speed), 0));
+//        }
 
         var positionOfObjectInWorld = new Vector2f(0, 0);
         var scaleOfObjectInWorld = new Vector2f(400, 400);

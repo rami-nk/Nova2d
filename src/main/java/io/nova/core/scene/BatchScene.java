@@ -4,7 +4,6 @@ import io.nova.core.Camera;
 import io.nova.core.GameObject;
 import io.nova.core.application.Application;
 import io.nova.core.components.Sprite;
-import io.nova.core.listener.KeyListener;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
@@ -36,16 +35,17 @@ public class BatchScene extends Scene {
 
     @Override
     public void update(double deltaTime) {
-        var speed = 100;
-        if (KeyListener.isKeyPressed(GLFW_KEY_RIGHT)) {
-            camera.move(new Vector2f((float)(-deltaTime * speed), 0));
-        } else if (KeyListener.isKeyPressed(GLFW_KEY_UP)) {
-            camera.move(new Vector2f(0, (float)(-deltaTime * speed)));
-        } else if (KeyListener.isKeyPressed(GLFW_KEY_DOWN)) {
-            camera.move(new Vector2f(0, (float)(deltaTime * speed)));
-        } else if (KeyListener.isKeyPressed(GLFW_KEY_LEFT)) {
-            camera.move(new Vector2f((float)(deltaTime * speed), 0));
-        }
+        // TODO: event handling
+//        var speed = 100;
+//        if (KeyListener.isKeyPressed(GLFW_KEY_RIGHT)) {
+//            camera.move(new Vector2f((float)(-deltaTime * speed), 0));
+//        } else if (KeyListener.isKeyPressed(GLFW_KEY_UP)) {
+//            camera.move(new Vector2f(0, (float)(-deltaTime * speed)));
+//        } else if (KeyListener.isKeyPressed(GLFW_KEY_DOWN)) {
+//            camera.move(new Vector2f(0, (float)(deltaTime * speed)));
+//        } else if (KeyListener.isKeyPressed(GLFW_KEY_LEFT)) {
+//            camera.move(new Vector2f((float)(deltaTime * speed), 0));
+//        }
 
         for (GameObject gameObject : getGameObjects()) {
             gameObject.update(deltaTime);

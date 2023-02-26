@@ -1,11 +1,9 @@
 package io.nova.core.application;
 
 public class ApplicationCommandLineArgs {
-    private final int count;
     private final String[] args;
 
-    public ApplicationCommandLineArgs(int count, String[] args) {
-        this.count = count;
+    public ApplicationCommandLineArgs(String[] args) {
         this.args = args;
     }
 

@@ -3,7 +3,6 @@ package io.nova.core.scene;
 import io.nova.core.Camera;
 import io.nova.core.GameObject;
 import io.nova.core.components.Sprite;
-import io.nova.core.listener.KeyListener;
 import io.nova.core.utils.TextureProvider;
 import org.joml.Vector2f;
 
@@ -47,11 +46,12 @@ public class ZoomTextureScene extends Scene {
 
     @Override
     public void update(double deltaTime) {
-        if (KeyListener.isKeyPressed(GLFW_KEY_UP)) {
-            camera.zoom((float) (1.0f + 1.0f * deltaTime));
-        } else if (KeyListener.isKeyPressed(GLFW_KEY_DOWN)) {
-            camera.zoom((float) (1.0f - 1.0f * deltaTime));
-        }
+        // TODO: event handling
+//        if (KeyListener.isKeyPressed(GLFW_KEY_UP)) {
+//            camera.zoom((float) (1.0f + 1.0f * deltaTime));
+//        } else if (KeyListener.isKeyPressed(GLFW_KEY_DOWN)) {
+//            camera.zoom((float) (1.0f - 1.0f * deltaTime));
+//        }
     }
 
     @Override

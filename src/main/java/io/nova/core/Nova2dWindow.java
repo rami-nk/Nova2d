@@ -1,16 +1,24 @@
 package io.nova.core;
 
-import io.nova.core.listener.KeyListener;
-import io.nova.core.listener.MouseListener;
+import io.nova.core.window.EventCallback;
 import io.nova.core.window.Window;
 import io.nova.core.window.WindowProps;
 import io.nova.event.Event;
+import io.nova.event.key.KeyPressedEvent;
+import io.nova.event.key.KeyReleasedEvent;
+import io.nova.event.mouse.MouseButtonPressed;
+import io.nova.event.mouse.MouseButtonReleasedEvent;
+import io.nova.event.mouse.MouseMovedEvent;
+import io.nova.event.mouse.MouseScrolledEvent;
+import io.nova.event.window.WindowClosedEvent;
+import io.nova.event.window.WindowResizeEvent;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLUtil;
+import org.lwjgl.system.MemoryUtil;
+import org.lwjgl.system.jni.JNINativeInterface;
 
 import java.util.Objects;
-import java.util.function.Function;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -19,70 +27,19 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Nova2dWindow implements Window {
 
-    private String title;
-    private int width;
-    private int height;
-    private boolean vsyncEnabled;
-
+    private WindowData windowData;
+    private long windowDataPointer;
     private long glfwWindow;
 
-    @Override
-    public void onUpdate() {
-        glfwPollEvents();
-        glfwSwapBuffers(glfwWindow);
-    }
-
-    @Override
-    public <T extends Event> void setEventCallback(Function<T, Boolean> eventCallback) {
-
-    }
-
-    @Override
-    public void setVsync(boolean enabled) {
-        if (enabled) {
-            glfwSwapInterval(1);
-        } else {
-            glfwSwapInterval(0);
-        }
-        vsyncEnabled = enabled;
-    }
-
-    @Override
-    public boolean isVsync() {
-        return vsyncEnabled;
-    }
-
-    @Override
-    public void shutdown() {
-        glfwFreeCallbacks(glfwWindow);
-        glfwDestroyWindow(glfwWindow);
-        glfwTerminate();
-        Objects.requireNonNull(glfwSetErrorCallback(null)).free();
-    }
-
-    @Override
-    public long getNativeWindow() {
-        return glfwWindow;
-    }
-
-    @Override
-    public int getWidth() {
-        return this.width;
-    }
-
-    @Override
-    public int getHeight() {
-        return this.height;
-    }
-
     public Nova2dWindow(WindowProps props) {
+        windowData = new WindowData();
         init(props);
     }
 
     private void init(WindowProps props) {
-        this.title = props.getName();
-        this.width = props.getWidth();
-        this.height = props.getHeight();
+        windowData.setTitle(props.getTitle());
+        windowData.setWidth(props.getWidth());
+        windowData.setHeight(props.getHeight());
 
         // Set up an error callback. The default implementation
         // will print the error message in System.err.
@@ -103,15 +60,73 @@ public class Nova2dWindow implements Window {
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
         // Create the window
-        glfwWindow = glfwCreateWindow(width, height, title, NULL, NULL);
+        glfwWindow = glfwCreateWindow(windowData.getWidth(), windowData.getHeight(), windowData.getTitle(), NULL, NULL);
         if (glfwWindow == NULL) {
             throw new RuntimeException("Failed to create the GLFW window");
         }
 
-        glfwSetCursorPosCallback(glfwWindow, MouseListener::cursorPositionCallback);
-        glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
-        glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
-        glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback);
+        windowDataPointer = JNINativeInterface.NewGlobalRef(windowData);
+        glfwSetWindowUserPointer(glfwWindow, windowDataPointer);
+
+        // Setup event callbacks
+        glfwSetWindowSizeCallback(glfwWindow, (glfwWindowPointer, width, height) -> {
+            var windowDataPointer = glfwGetWindowUserPointer(glfwWindowPointer);
+            var data = (WindowData) MemoryUtil.memGlobalRefToObject(windowDataPointer);
+            data.setWidth(width);
+            data.setHeight(height);
+
+            var event = new WindowResizeEvent(data.getWidth(), data.getHeight());
+            data.getEventCallback().accept(event);
+        });
+
+        glfwSetWindowCloseCallback(glfwWindow, (glfwWindowPointer) -> {
+            var windowDataPointer = glfwGetWindowUserPointer(glfwWindowPointer);
+            var data = (WindowData) MemoryUtil.memGlobalRefToObject(windowDataPointer);
+
+            var event = new WindowClosedEvent();
+            data.getEventCallback().dispatch(event);
+        });
+
+        glfwSetKeyCallback(glfwWindow, (glfwWindowPointer, key, scancode, action, mods) -> {
+            var windowDataPointer = glfwGetWindowUserPointer(glfwWindowPointer);
+            var data = (WindowData) MemoryUtil.memGlobalRefToObject(windowDataPointer);
+
+            Event event = null;
+            switch (action) {
+                case GLFW_PRESS -> event = new KeyPressedEvent(key);
+                case GLFW_RELEASE -> event = new KeyReleasedEvent(key);
+                case GLFW_REPEAT -> event = new KeyPressedEvent(key, true);
+            }
+            data.getEventCallback().dispatch(event);
+        });
+
+        glfwSetMouseButtonCallback(glfwWindow, (glfwWindowPointer, button, action, mods) -> {
+            var windowDataPointer = glfwGetWindowUserPointer(glfwWindowPointer);
+            var data = (WindowData) MemoryUtil.memGlobalRefToObject(windowDataPointer);
+
+            Event event = null;
+            switch (action) {
+                case GLFW_PRESS -> event = new MouseButtonPressed(button);
+                case GLFW_RELEASE -> event = new MouseButtonReleasedEvent(button);
+            }
+            data.getEventCallback().dispatch(event);
+        });
+
+        glfwSetScrollCallback(glfwWindow, (glfwWindowPointer, xOffset, yOffset) -> {
+            var windowDataPointer = glfwGetWindowUserPointer(glfwWindowPointer);
+            var data = (WindowData) MemoryUtil.memGlobalRefToObject(windowDataPointer);
+
+            var event = new MouseScrolledEvent((float) xOffset, (float) yOffset);
+            data.getEventCallback().dispatch(event);
+        });
+
+        glfwSetCursorPosCallback(glfwWindow, (glfwWindowPointer, xPos, yPos) -> {
+            var windowDataPointer = glfwGetWindowUserPointer(glfwWindowPointer);
+            var data = (WindowData) MemoryUtil.memGlobalRefToObject(windowDataPointer);
+
+            var event = new MouseMovedEvent((float) xPos, (float) yPos);
+            data.getEventCallback().dispatch(event);
+        });
 
         // Make the OpenGL context current
         glfwMakeContextCurrent(glfwWindow);
@@ -133,5 +148,55 @@ public class Nova2dWindow implements Window {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         GLUtil.setupDebugMessageCallback();
+    }
+
+    @Override
+    public void onUpdate() {
+        glfwPollEvents();
+        glfwSwapBuffers(glfwWindow);
+    }
+
+    @Override
+    public void setEventCallback(EventCallback eventCallback) {
+        this.windowData.setEventCallback(eventCallback);
+    }
+
+    @Override
+    public boolean isVsync() {
+        return windowData.isvSyncEnabled();
+    }
+
+    @Override
+    public void setVsync(boolean enabled) {
+        if (enabled) {
+            glfwSwapInterval(1);
+        } else {
+            glfwSwapInterval(0);
+        }
+        windowData.setVSyncEnabled(enabled);
+    }
+
+    @Override
+    public void shutdown() {
+        JNINativeInterface.DeleteGlobalRef(windowDataPointer);
+        glfwFreeCallbacks(glfwWindow);
+        glfwDestroyWindow(glfwWindow);
+        glfwTerminate();
+        Objects.requireNonNull(glfwSetErrorCallback(null)).free();
+    }
+
+    @Override
+    public long getNativeWindow() {
+        return glfwWindow;
+    }
+
+    @Override
+    public int getWidth() {
+        return windowData.getWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return windowData.getHeight();
     }
 }

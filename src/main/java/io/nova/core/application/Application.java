@@ -2,20 +2,19 @@ package io.nova.core.application;
 
 import imgui.ImGui;
 import io.nova.core.imgui.ImGuiLayer;
-import io.nova.core.listener.KeyListener;
 import io.nova.core.renderer.Renderer;
 import io.nova.core.scene.*;
 import io.nova.core.utils.Time;
 import io.nova.core.window.Window;
 import io.nova.core.window.WindowFactory;
 import io.nova.core.window.WindowProps;
+import io.nova.event.Event;
+import io.nova.event.EventDispatcher;
 import io.nova.event.window.WindowClosedEvent;
 import io.nova.event.window.WindowResizeEvent;
 import org.joml.Vector3f;
 
 import java.util.Objects;
-
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_BACKSPACE;
 
 public class Application {
 
@@ -25,23 +24,26 @@ public class Application {
     private boolean running;
     private Vector3f color;
     private MenuScene menuScene;
-    private Scene currentScene;
     private ImGuiLayer imGuiLayer;
-    public Application(ApplicationSpecification specification) {
+
+    private Application() {
+
+    }
+
+    public void init(ApplicationSpecification specification) {
         this.specification = specification;
 
-        application = this;
-        if (specification != null) {
-            if (specification.getWorkingDirectory().isEmpty()) {
-                var currentDir = System.getProperty("user.dir");
-                specification.setWorkingDirectory(currentDir);
-            }
+        if (specification.getWorkingDirectory().isEmpty()) {
+            var currentDir = System.getProperty("user.dir");
+            specification.setWorkingDirectory(currentDir);
         }
 
         color = new Vector3f(0.5f, 0.5f, 0.5f);
 
         window = WindowFactory.create(new WindowProps());
-        running = true;
+        window.setEventCallback(Application::onEvent);
+
+        isRunning(true);
 
         imGuiLayer = new ImGuiLayer(window.getNativeWindow());
         imGuiLayer.init();
@@ -61,21 +63,27 @@ public class Application {
 
     public static Application getInstance() {
         if (Objects.isNull(application)) {
-            application = new Application(null);
+            application = new Application();
         }
         return application;
     }
 
+    public static void onEvent(Event event) {
+        var dispatcher = new EventDispatcher(event);
+        dispatcher.dispatch(WindowClosedEvent.class, Application::onWindowClosed);
+    }
+
+    private static boolean onWindowClosed(WindowClosedEvent event) {
+        Application.getInstance().isRunning(false);
+        return true;
+    }
+
+    private static boolean onWindowResize(WindowResizeEvent event) {
+        return true;
+    }
+
     public static Window getWindow() {
         return getInstance().window;
-    }
-
-    private boolean onWindowClosed(WindowClosedEvent event) {
-        return false;
-    }
-
-    private boolean onWindowResize(WindowResizeEvent event) {
-        return false;
     }
 
     public void run() {
@@ -98,13 +106,8 @@ public class Application {
             if (currentScene != menuScene && ImGui.button("<-")) {
                 menuScene.setCurrentScene(menuScene);
             }
-
             currentScene.imGuiRender();
             ImGui.end();
-
-            if (KeyListener.isKeyPressed(GLFW_KEY_BACKSPACE) && currentScene != menuScene) {
-                menuScene.setCurrentScene(menuScene);
-            }
 
             imGuiLayer.endFrame();
 
@@ -115,16 +118,15 @@ public class Application {
             startTime = endTime;
         }
 
+        shutdown();
+    }
+
+    private void shutdown() {
         window.shutdown();
-        // TODO: Create shutdown method
         imGuiLayer.dispose();
     }
 
-    public void onEvent() {
-
-    }
-
-    public long getWindowPointer() {
-        return window.getNativeWindow();
+    private void isRunning(boolean running) {
+        this.running = running;
     }
 }
