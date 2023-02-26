@@ -37,11 +37,6 @@ public class Sprite extends Component {
         this.color = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
     }
 
-    @Override
-    public void update(double deltaTime) {
-
-    }
-
     public Vector2f[] getTextureCoordinates() {
         return textureCoordinates;
     }

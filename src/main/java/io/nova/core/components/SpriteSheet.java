@@ -1,6 +1,5 @@
 package io.nova.core.components;
 
-import io.nova.core.utils.TextureProvider;
 import org.joml.Vector2f;
 
 import java.util.ArrayList;
@@ -10,8 +9,6 @@ public class SpriteSheet extends Component {
 
     private List<Sprite> sprites;
     private int textureId;
-    private int width;
-    private int height;
     private int numberOfSprites;
     private int xSpacing;
     private int ySpacing;
@@ -26,10 +23,6 @@ public class SpriteSheet extends Component {
         this.numberOfSprites = numberOfSprites;
         this.xSpacing = xSpacing;
         this.ySpacing = ySpacing;
-
-        var texture = TextureProvider.getTexture(textureId);
-        this.width = texture.getWidth();
-        this.height = texture.getHeight();
 
         for (int n = 0; n < numberOfSprites; n++) {
             var w = 1.0f / numberOfSprites;
@@ -46,10 +39,5 @@ public class SpriteSheet extends Component {
 
     public List<Sprite> getSprites() {
         return sprites;
-    }
-
-    @Override
-    public void update(double deltaTime) {
-
     }
 }

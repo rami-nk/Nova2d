@@ -25,7 +25,9 @@ public abstract class Component {
         isDirty = false;
     }
 
-    public abstract void update(double deltaTime);
+    public void update(double deltaTime) {
+
+    }
 
     public GameObject getGameObject() {
         return gameObject;
