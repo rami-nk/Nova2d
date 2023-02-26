@@ -1,6 +1,7 @@
 package io.nova.core.application;
 
 import imgui.ImGui;
+import io.nova.core.layer.LayerStack;
 import io.nova.imgui.ImGuiLayer;
 import io.nova.renderer.Renderer;
 import io.nova.utils.Time;
@@ -22,6 +23,8 @@ public class Application {
     private static Application application;
     private Window window;
     private boolean running;
+    private LayerStack layerStack;
+
     private Vector3f color;
     private MenuScene menuScene;
     private ImGuiLayer imGuiLayer;
@@ -32,6 +35,7 @@ public class Application {
 
     public void init(ApplicationSpecification specification) {
         this.specification = specification;
+        this.layerStack = new LayerStack();
 
         if (specification.getWorkingDirectory().isEmpty()) {
             var currentDir = System.getProperty("user.dir");
@@ -92,6 +96,10 @@ public class Application {
         double deltaTime = -1;
 
         while (running) {
+
+            for (var layer : layerStack.getLayers()) {
+                layer.onUpdate();
+            }
 
             Renderer.setClearColor(color.x, color.y, color.z, 0.0f);
             Renderer.clear();
