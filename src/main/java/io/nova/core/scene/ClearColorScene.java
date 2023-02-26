@@ -2,6 +2,11 @@ package io.nova.core.scene;
 
 import imgui.ImGui;
 import io.nova.core.Nova2dWindow;
+import io.nova.core.application.Application;
+
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11C.glClearColor;
 
 public class ClearColorScene extends Scene {
 
@@ -17,7 +22,9 @@ public class ClearColorScene extends Scene {
 
     @Override
     public void render() {
-        Nova2dWindow.getInstance().changeColorTo(color[0], color[1], color[2]);
+        // TODO: Remove that from here
+        glClearColor(color[0], color[1], color[2], 0);
+        glClear(GL_COLOR_BUFFER_BIT);
     }
 
     @Override

@@ -2,11 +2,16 @@ package io.nova.core.scene;
 
 import imgui.ImGui;
 import io.nova.core.Nova2dWindow;
+import io.nova.core.application.Application;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
+
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11C.glClearColor;
 
 public class MenuScene extends Scene {
 
@@ -37,7 +42,9 @@ public class MenuScene extends Scene {
 
     @Override
     public void render() {
-        Nova2dWindow.getInstance().changeColorTo(0.0, 0.0, 0.0);
+        // TODO: Remove that from here
+        glClearColor(0, 0, 0, 0);
+        glClear(GL_COLOR_BUFFER_BIT);
     }
 
     @Override

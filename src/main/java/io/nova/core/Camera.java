@@ -1,5 +1,6 @@
 package io.nova.core;
 
+import io.nova.core.application.Application;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 
@@ -16,8 +17,8 @@ public class Camera {
     public Camera() {
         this.zoom = 1.0f;
         this.focusPosition = new Vector2f(0.0f, 0.0f);
-        this.width = Nova2dWindow.getWidth();
-        this.height = Nova2dWindow.getHeight();
+        this.width = Application.getWindow().getWidth();
+        this.height = Application.getWindow().getHeight();
     }
 
     public Camera(Vector2f focusPosition) {

@@ -15,7 +15,7 @@ public interface Window {
     void setVsync(boolean enabled);
     boolean isVsync();
 
-    Object getNativeWindow();
+    void shutdown();
 
-    Window create(final WindowProps props);
+    long getNativeWindow();
 }

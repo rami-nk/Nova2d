@@ -1,84 +1,89 @@
 package io.nova.core;
 
-import imgui.ImGui;
-import io.nova.core.imgui.ImGuiLayer;
 import io.nova.core.listener.KeyListener;
 import io.nova.core.listener.MouseListener;
-import io.nova.core.renderer.Renderer;
-import io.nova.core.scene.*;
-import io.nova.core.utils.Time;
-import org.lwjgl.Version;
+import io.nova.core.window.Window;
+import io.nova.core.window.WindowProps;
+import io.nova.event.Event;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLUtil;
 
 import java.util.Objects;
+import java.util.function.Function;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public class Nova2dWindow {
+public class Nova2dWindow implements Window {
 
-    private static Nova2dWindow nova2dWindow;
-    private final int width;
-    private final int height;
-    private final String title;
+    private String title;
+    private int width;
+    private int height;
+    private boolean vsyncEnabled;
+
     private long glfwWindow;
-    private double red, green, blue;
-    private MenuScene menuScene;
-    private ImGuiLayer imGuiLayer;
 
-    private Nova2dWindow(String title, int height, int width) {
-        this.title = title;
-        this.height = height;
-        this.width = width;
-        this.red = 1.0f;
-        this.green = 1.0f;
-        this.blue = 1.0f;
+    @Override
+    public void onUpdate() {
+        glfwPollEvents();
+        glfwSwapBuffers(glfwWindow);
     }
 
-    public static Nova2dWindow getInstance() {
-        if (Objects.isNull(nova2dWindow)) {
-            nova2dWindow = new Nova2dWindow("Nova2d", 500, 500);
+    @Override
+    public <T extends Event> void setEventCallback(Function<T, Boolean> eventCallback) {
+
+    }
+
+    @Override
+    public void setVsync(boolean enabled) {
+        if (enabled) {
+            glfwSwapInterval(1);
+        } else {
+            glfwSwapInterval(0);
         }
-        return nova2dWindow;
+        vsyncEnabled = enabled;
     }
 
-    private static void printVersion() {
-        System.out.printf("Hello LWJGL %s !%n", Version.getVersion());
+    @Override
+    public boolean isVsync() {
+        return vsyncEnabled;
     }
 
-    private static void terminateGLFWAndFreeErrorCallback() {
+    @Override
+    public void shutdown() {
+        glfwFreeCallbacks(glfwWindow);
+        glfwDestroyWindow(glfwWindow);
         glfwTerminate();
         Objects.requireNonNull(glfwSetErrorCallback(null)).free();
     }
 
-    public static int getWidth() {
-        return getInstance().width;
+    @Override
+    public long getNativeWindow() {
+        return glfwWindow;
     }
 
-    public static int getHeight() {
-        return getInstance().height;
+    @Override
+    public int getWidth() {
+        return this.width;
     }
 
-    public void run() {
-        printVersion();
-
-        init();
-        loop();
-
-        dispose();
+    @Override
+    public int getHeight() {
+        return this.height;
     }
 
-    private void dispose() {
-        freeWindowCallbacksAndDestroyWindow();
-        terminateGLFWAndFreeErrorCallback();
-        imGuiLayer.dispose();
+    public Nova2dWindow(WindowProps props) {
+        init(props);
     }
 
-    private void init() {
+    private void init(WindowProps props) {
+        this.title = props.getName();
+        this.width = props.getWidth();
+        this.height = props.getHeight();
+
         // Set up an error callback. The default implementation
         // will print the error message in System.err.
         GLFWErrorCallback.createPrint(System.err).set();
@@ -111,7 +116,7 @@ public class Nova2dWindow {
         // Make the OpenGL context current
         glfwMakeContextCurrent(glfwWindow);
         // Enable v-sync
-        glfwSwapInterval(1);
+        setVsync(true);
 
         // Make the window visible
         glfwShowWindow(glfwWindow);
@@ -123,87 +128,10 @@ public class Nova2dWindow {
         // bindings available for use.
         GL.createCapabilities();
 
-        imGuiLayer = new ImGuiLayer(glfwWindow);
-        imGuiLayer.init();
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         GLUtil.setupDebugMessageCallback();
-
-        // Register Scenes
-        menuScene = new MenuScene(null);
-        menuScene.setCurrentScene(menuScene);
-
-        menuScene.registerScene("Clear color", ClearColorScene.class);
-        menuScene.registerScene("Zoom texture", ZoomTextureScene.class);
-        menuScene.registerScene("Simple colored square", SimpleColoredSquareScene.class);
-        menuScene.registerScene("OpenGL logo", OpenGlLogoScene.class);
-        menuScene.registerScene("Nova2d logo", Nova2dLogoScene.class);
-        menuScene.registerScene("Batch", BatchScene.class);
-        menuScene.registerScene("Sprite sheet", SpriteSheetScene.class);
-    }
-
-    private void loop() {
-        // Run the rendering loop until the user has attempted to close
-        // the window or has pressed the ESCAPE key.
-        double startTime = Time.getElapsedTimeSinceApplicationStartInSeconds();
-        double endTime;
-        double deltaTime = -1;
-
-        while (!glfwWindowShouldClose(glfwWindow) && !KeyListener.isKeyPressed(GLFW_KEY_ESCAPE)) {
-            // Poll for window events. The key callback above will only be
-            // invoked during this call.
-            glfwPollEvents();
-
-            Renderer.setClearColor((float) red, (float) green, (float) blue, 0.0f);
-            Renderer.clear();
-
-            imGuiLayer.startFrame();
-
-            var currentScene = menuScene.getCurrentScene();
-            if (!Objects.isNull(currentScene) && deltaTime >= 0) {
-                currentScene.update(deltaTime);
-                currentScene.render();
-
-
-                ImGui.begin("Nova2d");
-                if (currentScene != menuScene && ImGui.button("<-")) {
-                    menuScene.setCurrentScene(menuScene);
-                }
-
-                currentScene.imGuiRender();
-                ImGui.end();
-
-                if (KeyListener.isKeyPressed(GLFW_KEY_BACKSPACE) && currentScene != menuScene) {
-                    menuScene.setCurrentScene(menuScene);
-                }
-            }
-
-            imGuiLayer.endFrame();
-
-            glfwSwapBuffers(glfwWindow); // swap the color buffers
-
-            endTime = Time.getElapsedTimeSinceApplicationStartInSeconds();
-            deltaTime = endTime - startTime;
-            startTime = endTime;
-        }
-    }
-
-    private void freeWindowCallbacksAndDestroyWindow() {
-        glfwFreeCallbacks(glfwWindow);
-        glfwDestroyWindow(glfwWindow);
-    }
-
-    public void changeColorBy(double redOffset, double greenOffset, double blueOffset) {
-        red += redOffset;
-        green += greenOffset;
-        blue += blueOffset;
-    }
-
-    public void changeColorTo(double red, double green, double blue) {
-        this.red = red;
-        this.green = green;
-        this.blue = blue;
     }
 }

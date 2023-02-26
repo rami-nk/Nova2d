@@ -2,7 +2,7 @@ package io.nova.core.scene;
 
 import io.nova.core.Camera;
 import io.nova.core.GameObject;
-import io.nova.core.Nova2dWindow;
+import io.nova.core.application.Application;
 import io.nova.core.components.Sprite;
 import io.nova.core.listener.KeyListener;
 import org.joml.Vector2f;
@@ -18,8 +18,8 @@ public class BatchScene extends Scene {
     BatchScene() {
         camera = new Camera();
 
-        float objectWidth = Nova2dWindow.getWidth() / 100.0f;
-        float objectHeight = Nova2dWindow.getHeight() / 100.0f;
+        float objectWidth = Application.getWindow().getWidth() / 100.0f;
+        float objectHeight = Application.getWindow().getHeight() / 100.0f;
         float offset = -250.0f;
 
         for (int x=0; x < 100; x++) {
@@ -28,7 +28,7 @@ public class BatchScene extends Scene {
                 float yPos = offset + (y * objectHeight);
 
                 var gameObject = new GameObject(new Vector2f(xPos, yPos), new Vector2f(objectWidth, objectHeight));
-                gameObject.addComponent(new Sprite(new Vector4f((objectWidth * x) / Nova2dWindow.getWidth(), (objectHeight * y) / Nova2dWindow.getHeight(), 1, 1)));
+                gameObject.addComponent(new Sprite(new Vector4f((objectWidth * x) / Application.getWindow().getWidth(), (objectHeight * y) / Application.getWindow().getHeight(), 1, 1)));
                 this.addGameObjectToScene(gameObject);
             }
         }
