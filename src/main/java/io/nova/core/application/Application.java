@@ -1,10 +1,7 @@
 package io.nova.core.application;
 
-import imgui.ImGui;
+import io.nova.core.layer.Layer;
 import io.nova.core.layer.LayerStack;
-import io.nova.imgui.Nova2dImGui;
-import io.nova.renderer.Renderer;
-import io.nova.utils.Time;
 import io.nova.core.window.Window;
 import io.nova.core.window.WindowFactory;
 import io.nova.core.window.WindowProps;
@@ -12,9 +9,12 @@ import io.nova.event.Event;
 import io.nova.event.EventDispatcher;
 import io.nova.event.window.WindowClosedEvent;
 import io.nova.event.window.WindowResizeEvent;
+import io.nova.imgui.ImGuiLayer;
 import io.nova.scenes.*;
+import io.nova.utils.Time;
 import org.joml.Vector3f;
 
+import java.util.Iterator;
 import java.util.Objects;
 
 public class Application {
@@ -27,15 +27,34 @@ public class Application {
 
     private Vector3f color;
     private MenuScene menuScene;
-    private Nova2dImGui nova2dImGui;
 
     private Application() {
 
     }
 
+    public static void onEvent(Event event) {
+        var dispatcher = new EventDispatcher(event);
+        dispatcher.dispatch(WindowClosedEvent.class, Application::onWindowClosed);
+        dispatcher.dispatch(WindowResizeEvent.class, Application::onWindowResize);
+
+        for (Iterator<Layer> it = application.layerStack.getLayers().descendingIterator(); it.hasNext(); ) {
+            var layer = it.next();
+            if (event.isHandled()) {
+                break;
+            }
+            layer.onEvent(event);
+        }
+    }
+
+    public static Application getInstance() {
+        if (Objects.isNull(application)) {
+            application = new Application();
+        }
+        return application;
+    }
+
     public void init(ApplicationSpecification specification) {
         this.specification = specification;
-        this.layerStack = new LayerStack();
 
         if (specification.getWorkingDirectory().isEmpty()) {
             var currentDir = System.getProperty("user.dir");
@@ -47,13 +66,11 @@ public class Application {
         window = WindowFactory.create(new WindowProps());
         window.setEventCallback(Application::onEvent);
 
-        isRunning(true);
-
-        nova2dImGui = new Nova2dImGui(window.getNativeWindow());
-        nova2dImGui.init();
+        layerStack = new LayerStack();
+        pushOverlay(new ImGuiLayer());
 
         // Register Scenes
-        menuScene = new MenuScene(null);
+        menuScene = new MenuScene();
         menuScene.setCurrentScene(menuScene);
 
         menuScene.registerScene("Clear color", ClearColorScene.class);
@@ -63,18 +80,8 @@ public class Application {
         menuScene.registerScene("Nova2d logo", Nova2dLogoScene.class);
         menuScene.registerScene("Batch", BatchScene.class);
         menuScene.registerScene("Sprite sheet", SpriteSheetScene.class);
-    }
 
-    public static Application getInstance() {
-        if (Objects.isNull(application)) {
-            application = new Application();
-        }
-        return application;
-    }
-
-    public static void onEvent(Event event) {
-        var dispatcher = new EventDispatcher(event);
-        dispatcher.dispatch(WindowClosedEvent.class, Application::onWindowClosed);
+        isRunning(true);
     }
 
     private static boolean onWindowClosed(WindowClosedEvent event) {
@@ -101,24 +108,6 @@ public class Application {
                 layer.onUpdate();
             }
 
-            Renderer.setClearColor(color.x, color.y, color.z, 0.0f);
-            Renderer.clear();
-
-            nova2dImGui.startFrame();
-
-            var currentScene = menuScene.getCurrentScene();
-            currentScene.update(deltaTime);
-            currentScene.render();
-
-            ImGui.begin("Nova2d");
-            if (currentScene != menuScene && ImGui.button("<-")) {
-                menuScene.setCurrentScene(menuScene);
-            }
-            currentScene.imGuiRender();
-            ImGui.end();
-
-            nova2dImGui.endFrame();
-
             window.onUpdate();
 
             endTime = Time.getElapsedTimeSinceApplicationStartInSeconds();
@@ -129,9 +118,21 @@ public class Application {
         shutdown();
     }
 
+    public void pushOverlay(Layer layer) {
+        layerStack.pushOverlay(layer);
+        layer.onAttach();
+    }
+
+    public void pushLayer(Layer layer) {
+        layerStack.pushLayer(layer);
+        layer.onAttach();
+    }
+
     private void shutdown() {
         window.shutdown();
-        nova2dImGui.dispose();
+        for (var layer : layerStack.getLayers()) {
+            layer.onDetach();
+        }
     }
 
     private void isRunning(boolean running) {

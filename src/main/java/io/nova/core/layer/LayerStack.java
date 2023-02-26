@@ -1,15 +1,16 @@
 package io.nova.core.layer;
 
-import java.util.Stack;
+import java.util.Deque;
+import java.util.LinkedList;
 
 public class LayerStack {
 
-    private final Stack<Layer> layers;
-    private final Stack<Layer> overlays;
+    private final Deque<Layer> layers;
+    private final Deque<Layer> overlays;
 
     public LayerStack() {
-        layers = new Stack<>();
-        overlays = new Stack<>();
+        layers = new LinkedList<>();
+        overlays = new LinkedList<>();
     }
 
     public void pushLayer(Layer layer) {
@@ -18,6 +19,7 @@ public class LayerStack {
 
     public void pushOverlay(Layer layer) {
         overlays.push(layer);
+        layer.onAttach();
     }
 
     public void popLayer() {
@@ -28,8 +30,8 @@ public class LayerStack {
         overlays.pop();
     }
 
-    public Stack<Layer> getLayers() {
-        var returnStack = new Stack<Layer>();
+    public Deque<Layer> getLayers() {
+        var returnStack = new LinkedList<Layer>();
         returnStack.addAll(layers);
         returnStack.addAll(overlays);
         return returnStack;

@@ -6,13 +6,17 @@ import io.nova.event.EventType;
 
 public class WindowResizeEvent extends Event {
 
-    private final int width;
-    private final int height;
+    private int width;
+    private int height;
 
     public WindowResizeEvent(int width, int height) {
         this.width = width;
         this.height = height;
         this.eventType = EventType.WindowResize;
+    }
+
+    public WindowResizeEvent() {
+
     }
 
     @Override

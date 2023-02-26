@@ -22,6 +22,10 @@ public class MenuScene extends Scene {
         this.scenes = new HashMap<>();
     }
 
+    public MenuScene() {
+        this.scenes = new HashMap<>();
+    }
+
     public <T extends Scene> void registerScene(String name, Class<T> clazz) {
         scenes.put(name, () -> {
             try {

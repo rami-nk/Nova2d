@@ -10,6 +10,10 @@ public class ApplicationSpecification {
         this("Nova2d", workingDirectory, commandLineArgs);
     }
 
+    public ApplicationSpecification(ApplicationCommandLineArgs commandLineArgs) {
+        this("Nova2d", "", commandLineArgs);
+    }
+
     public ApplicationSpecification(String name, String workingDirectory, ApplicationCommandLineArgs commandLineArgs) {
         this.name = name;
         this.workingDirectory = workingDirectory;
