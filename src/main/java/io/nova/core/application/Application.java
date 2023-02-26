@@ -2,7 +2,7 @@ package io.nova.core.application;
 
 import imgui.ImGui;
 import io.nova.core.layer.LayerStack;
-import io.nova.imgui.ImGuiLayer;
+import io.nova.imgui.Nova2dImGui;
 import io.nova.renderer.Renderer;
 import io.nova.utils.Time;
 import io.nova.core.window.Window;
@@ -27,7 +27,7 @@ public class Application {
 
     private Vector3f color;
     private MenuScene menuScene;
-    private ImGuiLayer imGuiLayer;
+    private Nova2dImGui nova2dImGui;
 
     private Application() {
 
@@ -49,8 +49,8 @@ public class Application {
 
         isRunning(true);
 
-        imGuiLayer = new ImGuiLayer(window.getNativeWindow());
-        imGuiLayer.init();
+        nova2dImGui = new Nova2dImGui(window.getNativeWindow());
+        nova2dImGui.init();
 
         // Register Scenes
         menuScene = new MenuScene(null);
@@ -104,7 +104,7 @@ public class Application {
             Renderer.setClearColor(color.x, color.y, color.z, 0.0f);
             Renderer.clear();
 
-            imGuiLayer.startFrame();
+            nova2dImGui.startFrame();
 
             var currentScene = menuScene.getCurrentScene();
             currentScene.update(deltaTime);
@@ -117,7 +117,7 @@ public class Application {
             currentScene.imGuiRender();
             ImGui.end();
 
-            imGuiLayer.endFrame();
+            nova2dImGui.endFrame();
 
             window.onUpdate();
 
@@ -131,7 +131,7 @@ public class Application {
 
     private void shutdown() {
         window.shutdown();
-        imGuiLayer.dispose();
+        nova2dImGui.dispose();
     }
 
     private void isRunning(boolean running) {

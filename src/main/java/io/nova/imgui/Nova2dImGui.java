@@ -4,12 +4,12 @@ import imgui.ImGui;
 import imgui.flag.ImGuiConfigFlags;
 import org.lwjgl.glfw.GLFW;
 
-public class ImGuiLayer {
+public class Nova2dImGui {
     private final ImGuiImplGlfw imGuiGlfw;
     private final ImGuiImplGl3 imGuiImplGl3;
     private final long glfwWindow;
 
-    public ImGuiLayer(long glfwWindow) {
+    public Nova2dImGui(long glfwWindow) {
         this.glfwWindow = glfwWindow;
         imGuiGlfw = new ImGuiImplGlfw();
         imGuiImplGl3 = new ImGuiImplGl3();
