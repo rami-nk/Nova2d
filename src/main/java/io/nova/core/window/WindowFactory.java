@@ -1,6 +1,6 @@
 package io.nova.core.window;
 
-import io.nova.core.Nova2dWindow;
+import io.nova.window.Nova2dWindow;
 
 public class WindowFactory {
 

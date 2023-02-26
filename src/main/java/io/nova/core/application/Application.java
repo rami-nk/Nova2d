@@ -1,10 +1,9 @@
 package io.nova.core.application;
 
 import imgui.ImGui;
-import io.nova.core.imgui.ImGuiLayer;
-import io.nova.core.renderer.Renderer;
-import io.nova.core.scene.*;
-import io.nova.core.utils.Time;
+import io.nova.imgui.ImGuiLayer;
+import io.nova.renderer.Renderer;
+import io.nova.utils.Time;
 import io.nova.core.window.Window;
 import io.nova.core.window.WindowFactory;
 import io.nova.core.window.WindowProps;
@@ -12,6 +11,7 @@ import io.nova.event.Event;
 import io.nova.event.EventDispatcher;
 import io.nova.event.window.WindowClosedEvent;
 import io.nova.event.window.WindowResizeEvent;
+import io.nova.scenes.*;
 import org.joml.Vector3f;
 
 import java.util.Objects;
