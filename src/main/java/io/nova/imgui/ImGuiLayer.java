@@ -1,6 +1,7 @@
 package io.nova.imgui;
 
 import imgui.ImGui;
+import imgui.flag.ImGuiBackendFlags;
 import imgui.flag.ImGuiConfigFlags;
 import io.nova.core.application.Application;
 import io.nova.core.layer.Layer;
@@ -18,6 +19,7 @@ public class ImGuiLayer extends Layer {
         ImGui.createContext();
         var io = ImGui.getIO();
         io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
+        io.addConfigFlags(ImGuiConfigFlags.DockingEnable);
 
         var glfwWindow = Application.getWindow().getNativeWindow();
         imGuiImplGlfw.init(glfwWindow, true);
