@@ -5,6 +5,8 @@ import io.nova.event.EventType;
 
 public class KeyReleasedEvent extends KeyEvent {
 
+    public KeyReleasedEvent() { }
+
     public KeyReleasedEvent(int keyCode) {
         super(keyCode);
         this.eventType = EventType.KeyReleased;

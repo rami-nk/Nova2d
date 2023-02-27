@@ -5,12 +5,13 @@ import java.util.function.Function;
 
 public class EventDispatcher {
 
-    private Event event;
+    private final Event event;
 
     public EventDispatcher(Event event) {
         this.event = event;
     }
 
+    // TODO: refactor this function
     public <T extends Event> boolean dispatch(final Class<T> clazz, final Function<T, Boolean> func) {
         T e = null;
         try {

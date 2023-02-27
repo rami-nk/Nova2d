@@ -1,5 +1,6 @@
 package io.nova.core.application;
 
+import imgui.ImGui;
 import io.nova.core.layer.Layer;
 import io.nova.core.layer.LayerStack;
 import io.nova.core.window.Window;
@@ -14,7 +15,6 @@ import io.nova.scenes.*;
 import io.nova.utils.Time;
 import org.joml.Vector3f;
 
-import java.util.Iterator;
 import java.util.Objects;
 
 public class Application {
@@ -27,21 +27,24 @@ public class Application {
 
     private Vector3f color;
     private MenuScene menuScene;
+    private ImGuiLayer imGuiLayer;
 
     private Application() {
 
     }
 
-    public static void onEvent(Event event) {
+    public void onEvent(Event event) {
         var dispatcher = new EventDispatcher(event);
-        dispatcher.dispatch(WindowClosedEvent.class, Application::onWindowClosed);
-        dispatcher.dispatch(WindowResizeEvent.class, Application::onWindowResize);
+        dispatcher.dispatch(WindowClosedEvent.class, this::onWindowClosed);
+        dispatcher.dispatch(WindowResizeEvent.class, this::onWindowResize);
 
-        for (Iterator<Layer> it = application.layerStack.getLayers().descendingIterator(); it.hasNext(); ) {
-            var layer = it.next();
+        System.out.println(event);
+
+        for (int i = application.layerStack.getLayers().size(); i-- > 0; ) {
             if (event.isHandled()) {
                 break;
             }
+            var layer = application.layerStack.getLayers().get(i);
             layer.onEvent(event);
         }
     }
@@ -64,10 +67,11 @@ public class Application {
         color = new Vector3f(0.5f, 0.5f, 0.5f);
 
         window = WindowFactory.create(new WindowProps());
-        window.setEventCallback(Application::onEvent);
+        window.setEventCallback(this::onEvent);
 
         layerStack = new LayerStack();
-        pushOverlay(new ImGuiLayer());
+        imGuiLayer = new ImGuiLayer();
+        pushOverlay(imGuiLayer);
 
         // Register Scenes
         menuScene = new MenuScene();
@@ -84,12 +88,12 @@ public class Application {
         isRunning(true);
     }
 
-    private static boolean onWindowClosed(WindowClosedEvent event) {
+    private boolean onWindowClosed(WindowClosedEvent event) {
         Application.getInstance().isRunning(false);
         return true;
     }
 
-    private static boolean onWindowResize(WindowResizeEvent event) {
+    private boolean onWindowResize(WindowResizeEvent event) {
         return true;
     }
 
@@ -107,6 +111,14 @@ public class Application {
             for (var layer : layerStack.getLayers()) {
                 layer.onUpdate();
             }
+
+            imGuiLayer.begin();
+            ImGui.begin("window");
+            if (ImGui.button("press me")) {
+                System.out.println("You impressed me!");
+            }
+            ImGui.end();
+            imGuiLayer.end();
 
             window.onUpdate();
 

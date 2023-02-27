@@ -6,8 +6,10 @@ import io.nova.event.EventType;
 
 public class MouseMovedEvent extends Event {
 
-    private final float mouseX;
-    private final float mouseY;
+    private float mouseX;
+    private float mouseY;
+
+    public MouseMovedEvent() { }
 
     public MouseMovedEvent(float x, float y) {
         this.mouseX = x;

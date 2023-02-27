@@ -6,8 +6,10 @@ import io.nova.event.EventType;
 
 public class MouseScrolledEvent extends Event {
 
-    private final float xOffset;
-    private final float yOffset;
+    private float xOffset;
+    private float yOffset;
+
+    public MouseScrolledEvent() { }
 
     public MouseScrolledEvent(float xOffset, float yOffset) {
         this.xOffset = xOffset;

@@ -5,7 +5,9 @@ import io.nova.event.EventType;
 
 public class KeyPressedEvent extends KeyEvent {
 
-    private final boolean isRepeat;
+    private boolean isRepeat;
+
+    public KeyPressedEvent() { }
 
     public KeyPressedEvent(int keyCode) {
         this(keyCode, false);

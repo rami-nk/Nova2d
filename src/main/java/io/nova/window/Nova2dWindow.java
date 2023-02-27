@@ -6,7 +6,7 @@ import io.nova.core.window.WindowProps;
 import io.nova.event.Event;
 import io.nova.event.key.KeyPressedEvent;
 import io.nova.event.key.KeyReleasedEvent;
-import io.nova.event.mouse.MouseButtonPressed;
+import io.nova.event.mouse.MouseButtonPressedEvent;
 import io.nova.event.mouse.MouseButtonReleasedEvent;
 import io.nova.event.mouse.MouseMovedEvent;
 import io.nova.event.mouse.MouseScrolledEvent;
@@ -106,7 +106,7 @@ public class Nova2dWindow implements Window {
 
             Event event = null;
             switch (action) {
-                case GLFW_PRESS -> event = new MouseButtonPressed(button);
+                case GLFW_PRESS -> event = new MouseButtonPressedEvent(button);
                 case GLFW_RELEASE -> event = new MouseButtonReleasedEvent(button);
             }
             data.getEventCallback().dispatch(event);

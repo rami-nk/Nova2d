@@ -4,7 +4,9 @@ import io.nova.event.Event;
 
 public abstract class KeyEvent extends Event {
 
-    private final int keyCode;
+    private int keyCode;
+
+    public KeyEvent() { }
 
     public KeyEvent(int keyCode) {
         this.keyCode = keyCode;
