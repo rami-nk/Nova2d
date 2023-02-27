@@ -11,11 +11,15 @@ import io.nova.event.EventDispatcher;
 import io.nova.event.window.WindowClosedEvent;
 import io.nova.event.window.WindowResizeEvent;
 import io.nova.imgui.ImGuiLayer;
+import io.nova.renderer.Renderer;
 import io.nova.scenes.*;
 import io.nova.utils.Time;
+import io.nova.window.Input;
 import org.joml.Vector3f;
 
 import java.util.Objects;
+
+import static io.nova.core.KeyCodes.NV_KEY_ESCAPE;
 
 public class Application {
 
@@ -104,17 +108,24 @@ public class Application {
         double endTime;
         double deltaTime = -1;
 
-        while (running) {
+        while (running && !Input.isKeyPressed(NV_KEY_ESCAPE)) {
+
+            Renderer.setClearColor(color.x, color.y, color.z, 0.0f);
+            Renderer.clear();
 
             for (var layer : layerStack.getLayers()) {
                 layer.onUpdate();
             }
 
-            imGuiLayer.begin();
+            imGuiLayer.startFrame();
             ImGui.begin("window");
 
+            if (ImGui.button("press me")) {
+                System.out.println("Button pressed!");
+            }
+
             ImGui.end();
-            imGuiLayer.end();
+            imGuiLayer.endFrame();
 
             window.onUpdate();
 
