@@ -1,11 +1,15 @@
 package io.nova.scenes;
 
+import io.nova.components.Sprite;
 import io.nova.renderer.Camera;
 import io.nova.components.GameObject;
 import io.nova.core.Scene;
 import io.nova.utils.TextureProvider;
 import io.nova.components.SpriteSheet;
+import io.nova.window.WindowInput;
 import org.joml.Vector2f;
+
+import static io.nova.core.KeyCodes.*;
 
 public class SpriteSheetScene extends Scene {
 
@@ -40,27 +44,27 @@ public class SpriteSheetScene extends Scene {
     @Override
     public void update(double deltaTime) {
         // TODO: event handling
-//        if (every5Loops == 5) {
-//            if (KeyListener.isKeyPressed(GLFW_KEY_D)) {
-//                characterPosition = (characterPosition + 1) % numberOfCharacterPositions;
-//                var sprite = (Sprite) gameObject.getComponent(Sprite.class);
-//                var newSprite = spriteSheet.getSprites().get(characterPosition);
-//                sprite.setTextureCoordinates(newSprite.getTextureCoordinates());
-//                sprite.setPosition(sprite.getPosition().add(5, 0));
-//            }
-//        }
+        if (every5Loops == 5) {
+            if (WindowInput.isKeyPressed(NV_KEY_D)) {
+                characterPosition = (characterPosition + 1) % numberOfCharacterPositions;
+                var sprite = (Sprite) gameObject.getComponent(Sprite.class);
+                var newSprite = spriteSheet.getSprites().get(characterPosition);
+                sprite.setTextureCoordinates(newSprite.getTextureCoordinates());
+                sprite.setPosition(sprite.getPosition().add(5, 0));
+            }
+        }
 
         // TODO: event handling
-//        var speed = 100;
-//        if (KeyListener.isKeyPressed(GLFW_KEY_RIGHT)) {
-//            camera.move(new Vector2f((float)(-deltaTime * speed), 0));
-//        } else if (KeyListener.isKeyPressed(GLFW_KEY_UP)) {
-//            camera.move(new Vector2f(0, (float)(-deltaTime * speed)));
-//        } else if (KeyListener.isKeyPressed(GLFW_KEY_DOWN)) {
-//            camera.move(new Vector2f(0, (float)(deltaTime * speed)));
-//        } else if (KeyListener.isKeyPressed(GLFW_KEY_LEFT)) {
-//            camera.move(new Vector2f((float)(deltaTime * speed), 0));
-//        }
+        var speed = 100;
+        if (WindowInput.isKeyPressed(NV_KEY_RIGHT)) {
+            camera.move(new Vector2f((float)(-deltaTime * speed), 0));
+        } else if (WindowInput.isKeyPressed(NV_KEY_UP)) {
+            camera.move(new Vector2f(0, (float)(-deltaTime * speed)));
+        } else if (WindowInput.isKeyPressed(NV_KEY_DOWN)) {
+            camera.move(new Vector2f(0, (float)(deltaTime * speed)));
+        } else if (WindowInput.isKeyPressed(NV_KEY_LEFT)) {
+            camera.move(new Vector2f((float)(deltaTime * speed), 0));
+        }
 
         every5Loops = (every5Loops + 1) % 6;
     }

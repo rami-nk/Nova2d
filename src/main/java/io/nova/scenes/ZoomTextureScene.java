@@ -5,7 +5,11 @@ import io.nova.components.GameObject;
 import io.nova.components.Sprite;
 import io.nova.core.Scene;
 import io.nova.utils.TextureProvider;
+import io.nova.window.WindowInput;
 import org.joml.Vector2f;
+
+import static io.nova.core.KeyCodes.NV_KEY_DOWN;
+import static io.nova.core.KeyCodes.NV_KEY_UP;
 
 public class ZoomTextureScene extends Scene {
 
@@ -45,11 +49,11 @@ public class ZoomTextureScene extends Scene {
     @Override
     public void update(double deltaTime) {
         // TODO: event handling
-//        if (KeyListener.isKeyPressed(GLFW_KEY_UP)) {
-//            camera.zoom((float) (1.0f + 1.0f * deltaTime));
-//        } else if (KeyListener.isKeyPressed(GLFW_KEY_DOWN)) {
-//            camera.zoom((float) (1.0f - 1.0f * deltaTime));
-//        }
+        if (WindowInput.isKeyPressed(NV_KEY_UP)) {
+            camera.zoom((float) (1.0f + 1.0f * deltaTime));
+        } else if (WindowInput.isKeyPressed(NV_KEY_DOWN)) {
+            camera.zoom((float) (1.0f - 1.0f * deltaTime));
+        }
     }
 
     @Override
