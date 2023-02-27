@@ -30,7 +30,7 @@ public class Application {
     private LayerStack layerStack;
 
     private Vector3f color;
-    private MenuScene menuScene;
+    private Layer menuLayer;
     private ImGuiLayer imGuiLayer;
 
     private Application() {
@@ -76,16 +76,17 @@ public class Application {
         pushOverlay(imGuiLayer);
 
         // Register Scenes
-        menuScene = new MenuScene();
-        menuScene.setCurrentScene(menuScene);
+        menuLayer = new ClearColorScene();
 
-        menuScene.registerScene("Clear color", ClearColorScene.class);
-        menuScene.registerScene("Zoom texture", ZoomTextureScene.class);
-        menuScene.registerScene("Simple colored square", SimpleColoredSquareScene.class);
-        menuScene.registerScene("OpenGL logo", OpenGlLogoScene.class);
-        menuScene.registerScene("Nova2d logo", Nova2dLogoScene.class);
-        menuScene.registerScene("Batch", BatchScene.class);
-        menuScene.registerScene("Sprite sheet", SpriteSheetScene.class);
+        pushLayer(menuLayer);
+
+//        menuLayer.registerScene("Clear color", ClearColorScene.class);
+//        menuScene.registerScene("Zoom texture", ZoomTextureScene.class);
+//        menuScene.registerScene("Simple colored square", SimpleColoredSquareScene.class);
+//        menuScene.registerScene("OpenGL logo", OpenGlLogoScene.class);
+//        menuScene.registerScene("Nova2d logo", Nova2dLogoScene.class);
+//        menuScene.registerScene("Batch", BatchScene.class);
+//        menuScene.registerScene("Sprite sheet", SpriteSheetScene.class);
 
         isRunning(true);
     }
@@ -120,8 +121,8 @@ public class Application {
             imGuiLayer.startFrame();
             ImGui.begin("window");
 
-            if (ImGui.button("press me")) {
-                System.out.println("Button pressed!");
+            for (var layer : layerStack.getLayers()) {
+                layer.onImGuiRender();
             }
 
             ImGui.end();
