@@ -1,5 +1,6 @@
 package io.nova.window;
 
+import io.nova.core.renderer.GraphicsContext;
 import io.nova.core.window.EventCallback;
 import io.nova.core.window.Window;
 import io.nova.core.window.WindowProps;
@@ -13,8 +14,6 @@ import io.nova.event.mouse.MouseScrolledEvent;
 import io.nova.event.window.WindowClosedEvent;
 import io.nova.event.window.WindowResizeEvent;
 import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GLUtil;
 import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.system.jni.JNINativeInterface;
 
@@ -27,11 +26,12 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Nova2dWindow implements Window {
 
-    private WindowData windowData;
+    private final WindowData windowData;
     private long windowDataPointer;
-    private long glfwWindow;
+    private final GraphicsContext context;
 
-    public Nova2dWindow(WindowProps props) {
+    public Nova2dWindow(GraphicsContext context, WindowProps props) {
+        this.context = context;
         windowData = new WindowData();
         init(props);
     }
@@ -47,7 +47,7 @@ public class Nova2dWindow implements Window {
 
         // Initialize NV. Most NV functions will not work before doing this.
         if (!glfwInit()) {
-            throw new IllegalStateException("Unable to initialize NV");
+            throw new IllegalStateException("Unable to initialize GLFW");
         }
 
         // Configure NV
@@ -60,9 +60,9 @@ public class Nova2dWindow implements Window {
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
         // Create the window
-        glfwWindow = glfwCreateWindow(windowData.getWidth(), windowData.getHeight(), windowData.getTitle(), NULL, NULL);
+        var glfwWindow = glfwCreateWindow(windowData.getWidth(), windowData.getHeight(), windowData.getTitle(), NULL, NULL);
         if (glfwWindow == NULL) {
-            throw new RuntimeException("Failed to create the NV window");
+            throw new RuntimeException("Failed to create the GLFW window");
         }
 
         windowDataPointer = JNINativeInterface.NewGlobalRef(windowData);
@@ -136,24 +136,16 @@ public class Nova2dWindow implements Window {
         // Make the window visible
         glfwShowWindow(glfwWindow);
 
-        // This line is critical for LWJGL's interoperation with NV's
-        // OpenGL context, or any context that is managed externally.
-        // LWJGL detects the context that is current in the current thread,
-        // creates the GLCapabilities instance and makes the OpenGL
-        // bindings available for use.
-        GL.createCapabilities();
-
+        context.init(glfwWindow);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-        GLUtil.setupDebugMessageCallback();
     }
 
     @Override
     public void onUpdate() {
         glfwPollEvents();
-        glfwSwapBuffers(glfwWindow);
+        context.swapBuffers();
     }
 
     @Override
@@ -179,15 +171,15 @@ public class Nova2dWindow implements Window {
     @Override
     public void shutdown() {
         JNINativeInterface.DeleteGlobalRef(windowDataPointer);
-        glfwFreeCallbacks(glfwWindow);
-        glfwDestroyWindow(glfwWindow);
+        glfwFreeCallbacks(context.getWindowHandle());
+        glfwDestroyWindow(context.getWindowHandle());
         glfwTerminate();
         Objects.requireNonNull(glfwSetErrorCallback(null)).free();
     }
 
     @Override
     public long getNativeWindow() {
-        return glfwWindow;
+        return context.getWindowHandle();
     }
 
     @Override
