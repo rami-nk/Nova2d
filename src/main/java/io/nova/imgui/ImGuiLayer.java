@@ -1,9 +1,7 @@
 package io.nova.imgui;
 
 import imgui.ImGui;
-import imgui.flag.ImGuiBackendFlags;
 import imgui.flag.ImGuiConfigFlags;
-import imgui.flag.ImGuiKey;
 import io.nova.core.application.Application;
 import io.nova.core.layer.Layer;
 import io.nova.event.Event;
@@ -17,12 +15,9 @@ import io.nova.event.mouse.MouseScrolledEvent;
 import io.nova.event.window.WindowResizeEvent;
 import org.lwjgl.glfw.GLFW;
 
-import static org.lwjgl.glfw.GLFW.*;
-
 public class ImGuiLayer extends Layer {
     private ImGuiImplGl3 imGuiImplGl3;
     private ImGuiImplGlfw imGuiImplGlfw;
-
 
     @Override
     public void onAttach() {
@@ -85,7 +80,6 @@ public class ImGuiLayer extends Layer {
     private boolean onMouseButtonPressedEvent(MouseButtonPressedEvent event) {
         var io = ImGui.getIO();
         io.setMouseDown(event.getMouseCode(), true);
-        System.out.println("hello from the other side");
         return false;
     }
 

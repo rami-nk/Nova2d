@@ -38,8 +38,6 @@ public class Application {
         dispatcher.dispatch(WindowClosedEvent.class, this::onWindowClosed);
         dispatcher.dispatch(WindowResizeEvent.class, this::onWindowResize);
 
-        System.out.println(event);
-
         for (int i = application.layerStack.getLayers().size(); i-- > 0; ) {
             if (event.isHandled()) {
                 break;
@@ -114,9 +112,7 @@ public class Application {
 
             imGuiLayer.begin();
             ImGui.begin("window");
-            if (ImGui.button("press me")) {
-                System.out.println("You impressed me!");
-            }
+
             ImGui.end();
             imGuiLayer.end();
 
