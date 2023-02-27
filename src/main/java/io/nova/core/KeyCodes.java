@@ -1,7 +1,6 @@
 package io.nova.core;
 
 public class KeyCodes {
-
     public static final int
             NV_HAT_CENTERED   = 0,
             NV_HAT_UP         = 1,

@@ -5,7 +5,7 @@ import io.nova.renderer.Camera;
 import io.nova.components.GameObject;
 import io.nova.core.application.Application;
 import io.nova.core.Scene;
-import io.nova.window.WindowInput;
+import io.nova.window.Input;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
@@ -37,13 +37,13 @@ public class BatchScene extends Scene {
     @Override
     public void update(double deltaTime) {
         var speed = 100;
-        if (WindowInput.isKeyPressed(NV_KEY_RIGHT)) {
+        if (Input.isKeyPressed(NV_KEY_RIGHT)) {
             camera.move(new Vector2f((float)(-deltaTime * speed), 0));
-        } else if (WindowInput.isKeyPressed(NV_KEY_UP)) {
+        } else if (Input.isKeyPressed(NV_KEY_UP)) {
             camera.move(new Vector2f(0, (float)(-deltaTime * speed)));
-        } else if (WindowInput.isKeyPressed(NV_KEY_DOWN)) {
+        } else if (Input.isKeyPressed(NV_KEY_DOWN)) {
             camera.move(new Vector2f(0, (float)(deltaTime * speed)));
-        } else if (WindowInput.isKeyPressed(NV_KEY_LEFT)) {
+        } else if (Input.isKeyPressed(NV_KEY_LEFT)) {
             camera.move(new Vector2f((float)(deltaTime * speed), 0));
         }
 

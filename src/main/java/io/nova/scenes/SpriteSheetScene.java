@@ -6,7 +6,7 @@ import io.nova.components.GameObject;
 import io.nova.core.Scene;
 import io.nova.utils.TextureProvider;
 import io.nova.components.SpriteSheet;
-import io.nova.window.WindowInput;
+import io.nova.window.Input;
 import org.joml.Vector2f;
 
 import static io.nova.core.KeyCodes.*;
@@ -45,7 +45,7 @@ public class SpriteSheetScene extends Scene {
     public void update(double deltaTime) {
         // TODO: event handling
         if (every5Loops == 5) {
-            if (WindowInput.isKeyPressed(NV_KEY_D)) {
+            if (Input.isKeyPressed(NV_KEY_D)) {
                 characterPosition = (characterPosition + 1) % numberOfCharacterPositions;
                 var sprite = (Sprite) gameObject.getComponent(Sprite.class);
                 var newSprite = spriteSheet.getSprites().get(characterPosition);
@@ -56,13 +56,13 @@ public class SpriteSheetScene extends Scene {
 
         // TODO: event handling
         var speed = 100;
-        if (WindowInput.isKeyPressed(NV_KEY_RIGHT)) {
+        if (Input.isKeyPressed(NV_KEY_RIGHT)) {
             camera.move(new Vector2f((float)(-deltaTime * speed), 0));
-        } else if (WindowInput.isKeyPressed(NV_KEY_UP)) {
+        } else if (Input.isKeyPressed(NV_KEY_UP)) {
             camera.move(new Vector2f(0, (float)(-deltaTime * speed)));
-        } else if (WindowInput.isKeyPressed(NV_KEY_DOWN)) {
+        } else if (Input.isKeyPressed(NV_KEY_DOWN)) {
             camera.move(new Vector2f(0, (float)(deltaTime * speed)));
-        } else if (WindowInput.isKeyPressed(NV_KEY_LEFT)) {
+        } else if (Input.isKeyPressed(NV_KEY_LEFT)) {
             camera.move(new Vector2f((float)(deltaTime * speed), 0));
         }
 

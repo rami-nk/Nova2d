@@ -6,7 +6,7 @@ import org.lwjgl.BufferUtils;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class WindowInput {
+public class Input {
 
     public static boolean isKeyPressed(int keycode) {
         var window = Application.getWindow().getNativeWindow();
