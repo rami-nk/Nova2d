@@ -45,12 +45,12 @@ public class Nova2dWindow implements Window {
         // will print the error message in System.err.
         GLFWErrorCallback.createPrint(System.err).set();
 
-        // Initialize GLFW. Most GLFW functions will not work before doing this.
+        // Initialize NV. Most NV functions will not work before doing this.
         if (!glfwInit()) {
-            throw new IllegalStateException("Unable to initialize GLFW");
+            throw new IllegalStateException("Unable to initialize NV");
         }
 
-        // Configure GLFW
+        // Configure NV
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
@@ -62,7 +62,7 @@ public class Nova2dWindow implements Window {
         // Create the window
         glfwWindow = glfwCreateWindow(windowData.getWidth(), windowData.getHeight(), windowData.getTitle(), NULL, NULL);
         if (glfwWindow == NULL) {
-            throw new RuntimeException("Failed to create the GLFW window");
+            throw new RuntimeException("Failed to create the NV window");
         }
 
         windowDataPointer = JNINativeInterface.NewGlobalRef(windowData);
@@ -136,7 +136,7 @@ public class Nova2dWindow implements Window {
         // Make the window visible
         glfwShowWindow(glfwWindow);
 
-        // This line is critical for LWJGL's interoperation with GLFW's
+        // This line is critical for LWJGL's interoperation with NV's
         // OpenGL context, or any context that is managed externally.
         // LWJGL detects the context that is current in the current thread,
         // creates the GLCapabilities instance and makes the OpenGL
