@@ -1,4 +1,4 @@
-package io.nova.renderer;
+package io.nova.components;
 
 import io.nova.components.GameObject;
 import io.nova.components.Sprite;
@@ -7,6 +7,7 @@ import io.nova.core.renderer.Camera;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import io.nova.opengl.renderer.Batch;
 
 public class BatchRenderer {
 

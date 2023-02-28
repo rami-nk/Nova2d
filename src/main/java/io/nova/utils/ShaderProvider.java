@@ -1,6 +1,6 @@
 package io.nova.utils;
 
-import io.nova.renderer.OpenGLShader;
+import io.nova.opengl.renderer.OpenGLShader;
 
 import java.util.HashMap;
 import java.util.Map;

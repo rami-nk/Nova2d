@@ -1,4 +1,4 @@
-package io.nova.renderer;
+package io.nova.opengl.renderer;
 
 import io.nova.core.renderer.GraphicsContext;
 import org.lwjgl.opengl.GL;

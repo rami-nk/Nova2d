@@ -1,7 +1,7 @@
 package io.nova.core;
 
 import io.nova.components.GameObject;
-import io.nova.renderer.BatchRenderer;
+import io.nova.components.BatchRenderer;
 
 import java.util.ArrayList;
 import java.util.List;

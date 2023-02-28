@@ -2,10 +2,10 @@ package io.nova.scenes;
 
 import io.nova.core.Scene;
 import io.nova.core.renderer.*;
-import io.nova.renderer.OpenGLIndexBuffer;
-import io.nova.renderer.OpenGLVertexArray;
-import io.nova.renderer.OpenGLVertexBuffer;
-import io.nova.renderer.OpenGLVertexBufferLayout;
+import io.nova.opengl.renderer.OpenGLIndexBuffer;
+import io.nova.opengl.renderer.OpenGLVertexArray;
+import io.nova.opengl.renderer.OpenGLVertexBuffer;
+import io.nova.opengl.renderer.OpenGLVertexBufferLayout;
 import io.nova.utils.ShaderProvider;
 import io.nova.utils.TextureProvider;
 

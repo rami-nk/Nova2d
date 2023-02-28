@@ -1,4 +1,4 @@
-package io.nova.renderer;
+package io.nova.opengl.renderer;
 
 import io.nova.components.Sprite;
 import io.nova.core.renderer.Camera;

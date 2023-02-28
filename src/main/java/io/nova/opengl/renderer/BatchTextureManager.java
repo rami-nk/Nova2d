@@ -1,5 +1,6 @@
-package io.nova.renderer;
+package io.nova.opengl.renderer;
 
+import io.nova.core.renderer.Texture2d;
 import io.nova.utils.TextureProvider;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class BatchTextureManager {
         return -1;
     }
 
-    public OpenGLTexture2d getTexture(int textureId) {
+    public Texture2d getTexture(int textureId) {
         return TextureProvider.getTexture(textureId);
     }
 

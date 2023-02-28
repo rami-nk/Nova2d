@@ -1,6 +1,6 @@
 package io.nova.components;
 
-import io.nova.renderer.OpenGLTexture2d;
+import io.nova.opengl.renderer.OpenGLTexture2d;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 

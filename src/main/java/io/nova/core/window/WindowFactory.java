@@ -1,6 +1,6 @@
 package io.nova.core.window;
 
-import io.nova.renderer.OpenGLContext;
+import io.nova.opengl.renderer.OpenGLContext;
 import io.nova.window.Nova2dWindow;
 
 public class WindowFactory {
