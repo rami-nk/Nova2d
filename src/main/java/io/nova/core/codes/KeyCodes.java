@@ -1,4 +1,4 @@
-package io.nova.core;
+package io.nova.core.codes;
 
 public class KeyCodes {
     public static final int

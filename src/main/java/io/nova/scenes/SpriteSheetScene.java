@@ -9,7 +9,7 @@ import io.nova.components.SpriteSheet;
 import io.nova.window.Input;
 import org.joml.Vector2f;
 
-import static io.nova.core.KeyCodes.*;
+import static io.nova.core.codes.KeyCodes.*;
 
 public class SpriteSheetScene extends Scene {
 

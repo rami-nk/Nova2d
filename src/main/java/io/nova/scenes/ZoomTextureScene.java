@@ -8,8 +8,8 @@ import io.nova.utils.TextureProvider;
 import io.nova.window.Input;
 import org.joml.Vector2f;
 
-import static io.nova.core.KeyCodes.NV_KEY_DOWN;
-import static io.nova.core.KeyCodes.NV_KEY_UP;
+import static io.nova.core.codes.KeyCodes.NV_KEY_DOWN;
+import static io.nova.core.codes.KeyCodes.NV_KEY_UP;
 
 public class ZoomTextureScene extends Scene {
 

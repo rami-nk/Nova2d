@@ -1,7 +1,7 @@
 package io.nova.core.renderer;
 
-import static io.nova.core.DataTypes.NV_FLOAT;
-import static io.nova.core.DataTypes.NV_INT;
+import static io.nova.core.codes.DataTypes.NV_FLOAT;
+import static io.nova.core.codes.DataTypes.NV_INT;
 
 public class VertexBufferElement {
     private int type;

@@ -19,7 +19,7 @@ import org.joml.Vector3f;
 
 import java.util.Objects;
 
-import static io.nova.core.KeyCodes.NV_KEY_ESCAPE;
+import static io.nova.core.codes.KeyCodes.NV_KEY_ESCAPE;
 
 public class Application {
 

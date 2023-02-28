@@ -9,7 +9,7 @@ import io.nova.window.Input;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
-import static io.nova.core.KeyCodes.*;
+import static io.nova.core.codes.KeyCodes.*;
 
 public class BatchScene extends Scene {
 

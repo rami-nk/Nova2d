@@ -12,7 +12,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-import static io.nova.core.KeyCodes.*;
+import static io.nova.core.codes.KeyCodes.*;
 
 public class SimpleColoredSquareScene extends Scene {
 
