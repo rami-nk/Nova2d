@@ -24,9 +24,9 @@ public class OpenGLVertexArray implements VertexArray {
         int offset = 0;
         int index = 0;
         for (var element : elements) {
-            glVertexAttribPointer(index, element.getCount(), element.getType(), element.getNormalized(), vertexBufferLayout.getStride(), offset);
+            glVertexAttribPointer(index, element.count(), element.type(), element.normalized(), vertexBufferLayout.getStride(), offset);
             glEnableVertexAttribArray(index);
-            offset += element.getCount() * VertexBufferElement.getByteSize(element.getType());
+            offset += element.count() * VertexBufferElement.getByteSize(element.type());
             index++;
         }
     }

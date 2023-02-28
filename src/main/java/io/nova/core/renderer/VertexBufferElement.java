@@ -3,20 +3,7 @@ package io.nova.core.renderer;
 import static io.nova.core.codes.DataTypes.NV_FLOAT;
 import static io.nova.core.codes.DataTypes.NV_INT;
 
-public class VertexBufferElement {
-    private int type;
-    private int count;
-    private boolean normalized;
-
-    public VertexBufferElement(int type, int count, boolean normalized) {
-        this.type = type;
-        this.count = count;
-        this.normalized = normalized;
-    }
-
-    public int getType() {
-        return type;
-    }
+public record VertexBufferElement(int type, int count, boolean normalized) {
 
     public static int getByteSize(int type) {
         switch (type) {
@@ -29,13 +16,5 @@ public class VertexBufferElement {
         }
         System.err.println("Datatype not supported!");
         return -1;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public boolean getNormalized() {
-        return normalized;
     }
 }

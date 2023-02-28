@@ -27,9 +27,8 @@ public class MenuLayer extends Layer {
     public <T extends Layer> void registerScene(String name, Class<T> clazz) {
         scenes.put(name, () -> {
             try {
-                var instance = clazz.getDeclaredConstructor().newInstance();
-//                instance.start();
-                return instance;
+                //                instance.start();
+                return clazz.getDeclaredConstructor().newInstance();
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                      NoSuchMethodException e) {
                 throw new RuntimeException(e);

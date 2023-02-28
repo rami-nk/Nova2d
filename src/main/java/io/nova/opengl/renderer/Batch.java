@@ -1,8 +1,7 @@
 package io.nova.opengl.renderer;
 
 import io.nova.components.Sprite;
-import io.nova.core.renderer.Camera;
-import io.nova.core.renderer.Renderer;
+import io.nova.core.renderer.*;
 import io.nova.utils.ShaderProvider;
 
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
@@ -26,10 +25,10 @@ public class Batch {
     private final Sprite[] sprites;
     private int numberOfSprites;
     private boolean hasRoom;
-    private OpenGLVertexArray vertexArray;
-    private OpenGLVertexBuffer vertexBuffer;
-    private OpenGLIndexBuffer indexBuffer;
-    private OpenGLShader shader;
+    private VertexArray vertexArray;
+    private VertexBuffer vertexBuffer;
+    private IndexBuffer indexBuffer;
+    private Shader shader;
     private final BatchTextureManager batchTextureManager;
     private final Renderer renderer;
 

@@ -1,12 +1,24 @@
 package io.nova.core.renderer;
 
+import io.nova.opengl.renderer.OpenGLShader;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
-import org.lwjgl.opengl.GL20;
-
-import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 
 public interface Shader {
+
+    static Shader create(String path) {
+        switch (Renderer.API) {
+            case OpenGL -> {
+                return new OpenGLShader(path);
+            }
+            case None -> {
+                System.err.printf("%s not supported!\n", Renderer.API.name());
+                return null;
+            }
+        }
+        return null;
+    }
+
     void bind();
 
     void unbind();

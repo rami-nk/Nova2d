@@ -7,7 +7,7 @@ import io.nova.core.renderer.Renderer;
 public class ClearColorScene extends Layer {
 
     private final float[] color;
-    private Renderer renderer;
+    private final Renderer renderer;
 
     public ClearColorScene() {
         renderer = Renderer.create();

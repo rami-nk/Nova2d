@@ -83,14 +83,6 @@ public class Application {
 
         pushLayer(menuLayer);
 
-//        menuLayer.registerScene("Clear color", ClearColorScene.class);
-//        menuScene.registerScene("Zoom texture", ZoomTextureScene.class);
-//        menuScene.registerScene("Simple colored square", SimpleColoredSquareScene.class);
-//        menuScene.registerScene("OpenGL logo", OpenGlLogoScene.class);
-//        menuScene.registerScene("Nova2d logo", Nova2dLogoScene.class);
-//        menuScene.registerScene("Batch", BatchScene.class);
-//        menuScene.registerScene("Sprite sheet", SpriteSheetScene.class);
-
         isRunning(true);
     }
 

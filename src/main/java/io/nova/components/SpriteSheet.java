@@ -7,11 +7,11 @@ import java.util.List;
 
 public class SpriteSheet extends Component {
 
-    private List<Sprite> sprites;
-    private int textureId;
-    private int numberOfSprites;
-    private int xSpacing;
-    private int ySpacing;
+    private final List<Sprite> sprites;
+    private final int textureId;
+    private final int numberOfSprites;
+    private final int xSpacing;
+    private final int ySpacing;
 
     public SpriteSheet(int textureId, int numberOfSprites) {
         this(textureId, numberOfSprites, 0, 0);

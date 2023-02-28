@@ -13,7 +13,7 @@ public class EventDispatcher {
 
     // TODO: refactor this function
     public <T extends Event> boolean dispatch(final Class<T> clazz, final Function<T, Boolean> func) {
-        T e = null;
+        T e;
         try {
             e = clazz.getDeclaredConstructor().newInstance();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {

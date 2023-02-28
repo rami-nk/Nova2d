@@ -1,6 +1,5 @@
 package io.nova.components;
 
-import io.nova.components.Component;
 import org.joml.Vector2f;
 
 import java.util.ArrayList;
@@ -10,7 +9,7 @@ public class GameObject {
 
     private final List<Component> components;
     private Vector2f position;
-    private Vector2f size;
+    private final Vector2f size;
 
     public GameObject(Vector2f position, Vector2f size) {
         components = new ArrayList<>();
