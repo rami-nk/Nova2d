@@ -1,7 +1,7 @@
 package io.nova.scenes;
 
 import io.nova.components.Sprite;
-import io.nova.renderer.Camera;
+import io.nova.core.renderer.Camera;
 import io.nova.components.GameObject;
 import io.nova.core.application.Application;
 import io.nova.core.Scene;

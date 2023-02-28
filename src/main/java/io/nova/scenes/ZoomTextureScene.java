@@ -1,6 +1,6 @@
 package io.nova.scenes;
 
-import io.nova.renderer.Camera;
+import io.nova.core.renderer.Camera;
 import io.nova.components.GameObject;
 import io.nova.components.Sprite;
 import io.nova.core.Scene;
@@ -48,7 +48,6 @@ public class ZoomTextureScene extends Scene {
 
     @Override
     public void update(double deltaTime) {
-        // TODO: event handling
         if (Input.isKeyPressed(NV_KEY_UP)) {
             camera.zoom((float) (1.0f + 1.0f * deltaTime));
         } else if (Input.isKeyPressed(NV_KEY_DOWN)) {

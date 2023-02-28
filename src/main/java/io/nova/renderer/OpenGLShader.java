@@ -1,8 +1,12 @@
 package io.nova.renderer;
 
+import io.nova.core.renderer.Shader;
+import io.nova.core.renderer.ShaderProgramSource;
+import io.nova.core.renderer.ShaderType;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL20;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -14,13 +18,13 @@ import java.util.Objects;
 
 import static org.lwjgl.opengl.GL30.*;
 
-public class Shader {
+public class OpenGLShader implements Shader {
 
     private final String filePath;
     private final int rendererId;
     private final Map<String, Integer> uniformLocationCache;
 
-    public Shader(String filePath) {
+    public OpenGLShader(String filePath) {
         this.filePath = filePath;
         ShaderProgramSource source = parseShader(filePath);
         rendererId = createShader(source.vertexSource(), source.fragmentSource());
@@ -28,48 +32,44 @@ public class Shader {
         bind();
     }
 
+    @Override
     public void bind() {
         glUseProgram(rendererId);
     }
 
+    @Override
     public void unbind() {
         glUseProgram(0);
     }
 
+    @Override
     public void setUniformMat4f(final String name, final Matrix4f mat4f) {
         glUniformMatrix4fv(getUniformLocation(name), false, mat4f.get(BufferUtils.createFloatBuffer(16)));
     }
 
+    @Override
     public void setUniformVec2f(final String name, final Vector2f vec2f) {
         glUniform2fv(getUniformLocation(name), vec2f.get(BufferUtils.createFloatBuffer(2)));
     }
 
+    @Override
     public void setUniformInt(final String name, final int value) {
         glUniform1i(getUniformLocation(name), value);
     }
 
+    @Override
     public void setUniformTexture(final String name, final int slot) {
         setUniformInt(name, slot);
     }
 
+    @Override
     public void setUniformIntArray(final String name, final int[] values) {
         glUniform1iv(getUniformLocation(name), values);
     }
 
+    @Override
     public void setUniformTextureArray(final String name, final int[] slots) {
         setUniformIntArray(name, slots);
-    }
-
-    private int getUniformLocation(final String name) {
-        if (uniformLocationCache.containsKey(name)) {
-            return uniformLocationCache.get(name);
-        }
-        int location = glGetUniformLocation(rendererId, name);
-        if (location == -1) {
-            System.out.printf("WARNING: uniform \"%s\" does not exist!\n", name);
-        }
-        uniformLocationCache.put(name, location);
-        return location;
     }
 
     private int createShader(final String vertexShader, final String fragmentShader) {
@@ -145,5 +145,17 @@ public class Shader {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private int getUniformLocation(String name) {
+        if (uniformLocationCache.containsKey(name)) {
+            return uniformLocationCache.get(name);
+        }
+        int location = GL20.glGetUniformLocation(rendererId, name);
+        if (location == -1) {
+            System.out.printf("WARNING: uniform \"%s\" does not exist!\n", name);
+        }
+        uniformLocationCache.put(name, location);
+        return location;
     }
 }

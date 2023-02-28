@@ -1,6 +1,6 @@
 package io.nova.utils;
 
-import io.nova.renderer.Shader;
+import io.nova.renderer.OpenGLShader;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,9 +9,9 @@ import java.util.Objects;
 public class ShaderProvider {
 
     private static final String SHADER_PATH_PREFIX = "src/main/resources/shaders/";
-    private static final Map<String, Shader> shaders = new HashMap<>();
+    private static final Map<String, OpenGLShader> shaders = new HashMap<>();
 
-    public static Shader getShader(String name) {
+    public static OpenGLShader getShader(String name) {
         var fullPath = SHADER_PATH_PREFIX + name;
         if (shaders.containsKey(fullPath)) {
             return shaders.get(fullPath);
@@ -19,7 +19,7 @@ public class ShaderProvider {
         return null;
     }
 
-    public static Shader getOrElseUploadShader(String name) {
+    public static OpenGLShader getOrElseUploadShader(String name) {
         var shader = getShader(name);
         if (Objects.isNull(shader)) {
             uploadShader(name);
@@ -30,7 +30,7 @@ public class ShaderProvider {
 
     public static void uploadShader(String name) {
         var fullPath = SHADER_PATH_PREFIX + name;
-        var shader = new Shader(fullPath);
+        var shader = new OpenGLShader(fullPath);
         shaders.put(fullPath, shader);
     }
 }

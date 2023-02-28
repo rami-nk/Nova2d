@@ -1,13 +1,11 @@
 package io.nova.scenes;
 
-import io.nova.renderer.Camera;
+import io.nova.core.renderer.*;
 import io.nova.core.Scene;
-import io.nova.renderer.IndexBuffer;
-import io.nova.renderer.VertexArray;
-import io.nova.renderer.VertexBuffer;
-import io.nova.renderer.VertexBufferLayout;
-import io.nova.renderer.Renderer;
-import io.nova.renderer.Shader;
+import io.nova.renderer.OpenGLIndexBuffer;
+import io.nova.renderer.OpenGLVertexArray;
+import io.nova.renderer.OpenGLVertexBuffer;
+import io.nova.renderer.OpenGLVertexBufferLayout;
 import io.nova.utils.ShaderProvider;
 import io.nova.window.Input;
 import org.joml.Matrix4f;
@@ -22,8 +20,10 @@ public class SimpleColoredSquareScene extends Scene {
     private final Shader shader;
     private final IndexBuffer indexBuffer;
     private final Camera camera;
+    private final Renderer renderer;
 
     SimpleColoredSquareScene() {
+        renderer = Renderer.create();
         camera = new Camera();
 
         float[] vertices = {
@@ -34,11 +34,11 @@ public class SimpleColoredSquareScene extends Scene {
         };
         int[] elementArray = {3, 2, 0, 0, 2, 1};
 
-        vertexArray = new VertexArray();
-        VertexBuffer vertexBuffer = new VertexBuffer(vertices);
-        indexBuffer = new IndexBuffer(elementArray);
+        vertexArray = new OpenGLVertexArray();
+        VertexBuffer vertexBuffer = new OpenGLVertexBuffer(vertices);
+        indexBuffer = new OpenGLIndexBuffer(elementArray);
 
-        var layout = new VertexBufferLayout();
+        var layout = new OpenGLVertexBufferLayout();
         layout.pushFloat(2);
         layout.pushFloat(4);
         vertexArray.addBuffer(vertexBuffer, layout);
@@ -71,6 +71,6 @@ public class SimpleColoredSquareScene extends Scene {
 
     @Override
     public void render() {
-        Renderer.draw(vertexArray, indexBuffer, shader);
+        renderer.draw(vertexArray, indexBuffer, shader);
     }
 }

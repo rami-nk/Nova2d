@@ -2,20 +2,18 @@ package io.nova.scenes;
 
 import imgui.ImGui;
 import io.nova.core.layer.Layer;
+import io.nova.core.renderer.Renderer;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11C.glClearColor;
-
 public class MenuLayer extends Layer {
 
     private final Map<String, Supplier<Layer>> scenes;
     private Layer currentLayer;
+    private Renderer renderer;
 
     public MenuLayer(Layer currentLayer) {
         this.currentLayer = currentLayer;
@@ -42,8 +40,8 @@ public class MenuLayer extends Layer {
     @Override
     public void onUpdate() {
         // TODO: Remove that from here
-        glClearColor(0, 0, 0, 0);
-        glClear(GL_COLOR_BUFFER_BIT);
+        renderer.setClearColor(0, 0, 0, 0);
+        renderer.clear();
     }
 
     @Override

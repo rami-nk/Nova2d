@@ -1,5 +1,6 @@
 package io.nova.renderer;
 
+import io.nova.core.renderer.Texture2d;
 import org.lwjgl.BufferUtils;
 
 import java.util.Objects;
@@ -7,15 +8,14 @@ import java.util.Objects;
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.stb.STBImage.*;
 
-public class Texture2d {
+public class OpenGLTexture2d implements Texture2d {
 
-    public static final int RESERVED_TEXTURE_SLOT_ID = -1;
     private final String filepath;
     private final int rendererId;
     private int width;
     private int height;
 
-    public Texture2d(String filepath) {
+    public OpenGLTexture2d(String filepath) {
         this.filepath = filepath;
         rendererId = glGenTextures();
         bind();
@@ -30,7 +30,8 @@ public class Texture2d {
         loadAndUploadTexture(filepath);
     }
 
-    private void loadAndUploadTexture(String filepath) {
+    @Override
+    public void loadAndUploadTexture(String filepath) {
         var width = BufferUtils.createIntBuffer(1);
         var height = BufferUtils.createIntBuffer(1);
         var channel = BufferUtils.createIntBuffer(1);
@@ -60,22 +61,27 @@ public class Texture2d {
         }
     }
 
+    @Override
     public void bind() {
         glBindTexture(GL_TEXTURE_2D, rendererId);
     }
 
+    @Override
     public void unbind() {
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
+    @Override
     public void activate(int slot) {
         glActiveTexture(slot);
     }
 
+    @Override
     public int getWidth() {
         return width;
     }
 
+    @Override
     public int getHeight() {
         return height;
     }

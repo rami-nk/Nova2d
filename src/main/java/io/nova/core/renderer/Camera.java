@@ -1,4 +1,4 @@
-package io.nova.renderer;
+package io.nova.core.renderer;
 
 import io.nova.core.application.Application;
 import org.joml.Matrix4f;

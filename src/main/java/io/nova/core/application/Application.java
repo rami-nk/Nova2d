@@ -3,6 +3,7 @@ package io.nova.core.application;
 import imgui.ImGui;
 import io.nova.core.layer.Layer;
 import io.nova.core.layer.LayerStack;
+import io.nova.core.renderer.Renderer;
 import io.nova.core.window.Window;
 import io.nova.core.window.WindowFactory;
 import io.nova.core.window.WindowProps;
@@ -11,7 +12,6 @@ import io.nova.event.EventDispatcher;
 import io.nova.event.window.WindowClosedEvent;
 import io.nova.event.window.WindowResizeEvent;
 import io.nova.imgui.ImGuiLayer;
-import io.nova.renderer.Renderer;
 import io.nova.scenes.*;
 import io.nova.utils.Time;
 import io.nova.window.Input;
@@ -32,6 +32,8 @@ public class Application {
     private Vector3f color;
     private Layer menuLayer;
     private ImGuiLayer imGuiLayer;
+
+    private Renderer renderer;
 
     private Application() {
 
@@ -66,6 +68,7 @@ public class Application {
             specification.setWorkingDirectory(currentDir);
         }
 
+        renderer = Renderer.create();
         color = new Vector3f(0.5f, 0.5f, 0.5f);
 
         window = WindowFactory.create(new WindowProps());
@@ -111,8 +114,8 @@ public class Application {
 
         while (running && !Input.isKeyPressed(NV_KEY_ESCAPE)) {
 
-            Renderer.setClearColor(color.x, color.y, color.z, 0.0f);
-            Renderer.clear();
+            renderer.setClearColor(color.x, color.y, color.z, 0.0f);
+            renderer.clear();
 
             for (var layer : layerStack.getLayers()) {
                 layer.onUpdate();

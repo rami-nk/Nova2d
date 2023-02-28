@@ -2,6 +2,7 @@ package io.nova.renderer;
 
 import io.nova.components.GameObject;
 import io.nova.components.Sprite;
+import io.nova.core.renderer.Camera;
 
 import java.util.ArrayList;
 import java.util.List;

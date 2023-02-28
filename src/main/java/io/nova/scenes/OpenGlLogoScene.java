@@ -1,13 +1,11 @@
 package io.nova.scenes;
 
 import io.nova.core.Scene;
-import io.nova.renderer.Renderer;
-import io.nova.renderer.Texture2d;
-import io.nova.renderer.IndexBuffer;
-import io.nova.renderer.VertexArray;
-import io.nova.renderer.VertexBuffer;
-import io.nova.renderer.VertexBufferLayout;
-import io.nova.renderer.Shader;
+import io.nova.core.renderer.*;
+import io.nova.renderer.OpenGLIndexBuffer;
+import io.nova.renderer.OpenGLVertexArray;
+import io.nova.renderer.OpenGLVertexBuffer;
+import io.nova.renderer.OpenGLVertexBufferLayout;
 import io.nova.utils.ShaderProvider;
 import io.nova.utils.TextureProvider;
 
@@ -19,8 +17,11 @@ public class OpenGlLogoScene extends Scene {
     private final Shader shader;
     private final IndexBuffer indexBuffer;
     private final Texture2d texture;
+    private final Renderer renderer;
 
     OpenGlLogoScene() {
+        renderer = Renderer.create();
+
         float[] vertices = {
                 0.5f, -0.5f, 0, 1, 1,
                 -0.5f, 0.5f, 0, 0, 0,
@@ -30,11 +31,11 @@ public class OpenGlLogoScene extends Scene {
 
         int[] elementArray = {2, 1, 0, 0, 1, 3};
 
-        vertexArray = new VertexArray();
-        VertexBuffer vertexBuffer = new VertexBuffer(vertices);
-        indexBuffer = new IndexBuffer(elementArray);
+        vertexArray = new OpenGLVertexArray();
+        VertexBuffer vertexBuffer = new OpenGLVertexBuffer(vertices);
+        indexBuffer = new OpenGLIndexBuffer(elementArray);
 
-        var layout = new VertexBufferLayout();
+        var layout = new OpenGLVertexBufferLayout();
         layout.pushFloat(3);
         layout.pushFloat(2);
 
@@ -54,6 +55,6 @@ public class OpenGlLogoScene extends Scene {
 
     @Override
     public void render() {
-        Renderer.draw(vertexArray, indexBuffer, shader);
+        renderer.draw(vertexArray, indexBuffer, shader);
     }
 }

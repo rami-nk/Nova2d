@@ -1,6 +1,8 @@
 package io.nova.renderer;
 
 import io.nova.components.Sprite;
+import io.nova.core.renderer.Camera;
+import io.nova.core.renderer.Renderer;
 import io.nova.utils.ShaderProvider;
 
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
@@ -24,13 +26,15 @@ public class Batch {
     private final Sprite[] sprites;
     private int numberOfSprites;
     private boolean hasRoom;
-    private VertexArray vertexArray;
-    private VertexBuffer vertexBuffer;
-    private IndexBuffer indexBuffer;
-    private Shader shader;
+    private OpenGLVertexArray vertexArray;
+    private OpenGLVertexBuffer vertexBuffer;
+    private OpenGLIndexBuffer indexBuffer;
+    private OpenGLShader shader;
     private final BatchTextureManager batchTextureManager;
+    private final Renderer renderer;
 
     public Batch(int maxBatchSize) {
+        renderer = Renderer.create();
         hasRoom = true;
         numberOfSprites = 0;
 
@@ -44,7 +48,7 @@ public class Batch {
     private void bindTextures() {
         int i = 0;
         for (var sprite : sprites) {
-            if (sprite != null && sprite.getTextureId() !=Texture2d.RESERVED_TEXTURE_SLOT_ID) {
+            if (sprite != null && sprite.getTextureId() != OpenGLTexture2d.RESERVED_TEXTURE_SLOT_ID) {
                 var texture = batchTextureManager.getTexture(sprite.getTextureId());
                 assert texture != null;
                 texture.activate(GL_TEXTURE0 + i);
@@ -56,7 +60,7 @@ public class Batch {
 
     private void unbindTextures() {
         for (var sprite : sprites) {
-            if (sprite != null && sprite.getTextureId() !=Texture2d.RESERVED_TEXTURE_SLOT_ID) {
+            if (sprite != null && sprite.getTextureId() != OpenGLTexture2d.RESERVED_TEXTURE_SLOT_ID) {
                 var texture = batchTextureManager.getTexture(sprite.getTextureId());
                 assert texture != null;
                 texture.unbind();
@@ -65,13 +69,13 @@ public class Batch {
     }
 
     public void start() {
-        vertexArray = new VertexArray();
-        vertexBuffer = new VertexBuffer(vertices, GL_DYNAMIC_DRAW);
+        vertexArray = new OpenGLVertexArray();
+        vertexBuffer = new OpenGLVertexBuffer(vertices, GL_DYNAMIC_DRAW);
 
         var indices = generateIndices();
-        indexBuffer = new IndexBuffer(indices);
+        indexBuffer = new OpenGLIndexBuffer(indices);
 
-        var layout = new VertexBufferLayout();
+        var layout = new OpenGLVertexBufferLayout();
         layout.pushFloat(POSITION_ELEMENTS_NUM);
         layout.pushFloat(COLOR_ELEMENTS_NUM);
         layout.pushFloat(TEXTURE_ELEMENTS_NUM);
@@ -110,7 +114,7 @@ public class Batch {
             shader.setUniformTextureArray("u_Textures", batchTextureManager.getTextureSlots());
         }
 
-        Renderer.draw(vertexArray, indexBuffer, shader);
+        renderer.draw(vertexArray, indexBuffer, shader);
 
         unbindTextures();
     }

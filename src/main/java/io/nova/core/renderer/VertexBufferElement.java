@@ -1,8 +1,9 @@
-package io.nova.renderer;
+package io.nova.core.renderer;
 
-import static org.lwjgl.opengl.GL11.*;
+import static io.nova.core.DataTypes.NV_FLOAT;
+import static io.nova.core.DataTypes.NV_INT;
 
-class VertexBufferElement {
+public class VertexBufferElement {
     private int type;
     private int count;
     private boolean normalized;
@@ -13,23 +14,21 @@ class VertexBufferElement {
         this.normalized = normalized;
     }
 
-    public static int getSizeOfType(int type) {
-        switch (type) {
-            case GL_FLOAT, GL_UNSIGNED_INT -> {
-                return 4;
-            }
-            case GL_UNSIGNED_BYTE -> {
-                return 1;
-            }
-            default -> {
-                assert false;
-            }
-        }
-        return 0;
-    }
-
     public int getType() {
         return type;
+    }
+
+    public static int getByteSize(int type) {
+        switch (type) {
+            case NV_FLOAT -> {
+                return 4;
+            }
+            case NV_INT -> {
+                return 1;
+            }
+        }
+        System.err.println("Datatype not supported!");
+        return -1;
     }
 
     public int getCount() {

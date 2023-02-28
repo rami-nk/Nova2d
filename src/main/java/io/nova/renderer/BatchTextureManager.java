@@ -19,7 +19,7 @@ public class BatchTextureManager {
     }
 
     public void add(int textureId) {
-        if (textureId != Texture2d.RESERVED_TEXTURE_SLOT_ID) {
+        if (textureId != OpenGLTexture2d.RESERVED_TEXTURE_SLOT_ID) {
             if (textureIds.size() >= MAX_TEXTURES) {
                 System.err.println("Maximal texture slot limit reached!");
                 System.err.printf("Texture %s could be not added!", textureId);
@@ -37,7 +37,7 @@ public class BatchTextureManager {
     }
 
     public float getTextureSlot(int textureId) {
-        if (textureId == Texture2d.RESERVED_TEXTURE_SLOT_ID) {
+        if (textureId == OpenGLTexture2d.RESERVED_TEXTURE_SLOT_ID) {
             return -1;
         }
         for (int i=0; i < textureIds.size(); i++) {
@@ -48,7 +48,7 @@ public class BatchTextureManager {
         return -1;
     }
 
-    public Texture2d getTexture(int textureId) {
+    public OpenGLTexture2d getTexture(int textureId) {
         return TextureProvider.getTexture(textureId);
     }
 

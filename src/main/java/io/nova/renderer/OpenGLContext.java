@@ -6,11 +6,11 @@ import org.lwjgl.opengl.GLUtil;
 
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 
-public class OpenGlContext implements GraphicsContext {
+public class OpenGLContext implements GraphicsContext {
 
     private long windowHandle;
 
-    public OpenGlContext() {
+    public OpenGLContext() {
     }
 
     @Override

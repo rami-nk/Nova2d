@@ -1,29 +1,29 @@
 package io.nova.utils;
 
-import io.nova.renderer.Texture2d;
+import io.nova.renderer.OpenGLTexture2d;
 
 import java.util.Objects;
 
 public class TextureProvider {
 
     private static final String TEXTURE_PATH_PREFIX = "src/main/resources/textures/";
-    private static final IndexedLinkedHashMap<String, Texture2d> textures = new IndexedLinkedHashMap<>();
+    private static final IndexedLinkedHashMap<String, OpenGLTexture2d> textures = new IndexedLinkedHashMap<>();
 
     public static int uploadTexture(String name) {
         var path = TEXTURE_PATH_PREFIX + name;
         if (!textures.containsKey(path)) {
-            var texture = new Texture2d(path);
+            var texture = new OpenGLTexture2d(path);
             return textures.putIndexed(path, texture);
         }
         return textures.getIndex(path);
     }
 
-    private static Texture2d uploadAndGetTexture(String name) {
+    private static OpenGLTexture2d uploadAndGetTexture(String name) {
         uploadTexture(name);
         return getTexture(name);
     }
 
-    public static Texture2d getOrElseUploadTexture(String name) {
+    public static OpenGLTexture2d getOrElseUploadTexture(String name) {
         var texture = getTexture(name);
         if (Objects.isNull(texture)) {
             return uploadAndGetTexture(name);
@@ -31,7 +31,7 @@ public class TextureProvider {
         return texture;
     }
 
-    public static Texture2d getTexture(String name) {
+    public static OpenGLTexture2d getTexture(String name) {
         var path = TEXTURE_PATH_PREFIX + name;
         if (textures.containsKey(path)) {
             return textures.get(path);
@@ -39,7 +39,7 @@ public class TextureProvider {
         return null;
     }
 
-    public static Texture2d getTexture(int textureId) {
+    public static OpenGLTexture2d getTexture(int textureId) {
         return textures.getValue(textureId);
     }
 

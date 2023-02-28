@@ -1,7 +1,7 @@
 package io.nova.scenes;
 
 import io.nova.components.Sprite;
-import io.nova.renderer.Camera;
+import io.nova.core.renderer.Camera;
 import io.nova.components.GameObject;
 import io.nova.core.Scene;
 import io.nova.utils.TextureProvider;
@@ -21,7 +21,6 @@ public class SpriteSheetScene extends Scene {
 
     SpriteSheetScene() {
         camera = new Camera();
-
         createAndAddAllSpritesToScene();
     }
 
@@ -43,7 +42,6 @@ public class SpriteSheetScene extends Scene {
 
     @Override
     public void update(double deltaTime) {
-        // TODO: event handling
         if (every5Loops == 5) {
             if (Input.isKeyPressed(NV_KEY_D)) {
                 characterPosition = (characterPosition + 1) % numberOfCharacterPositions;
@@ -54,7 +52,6 @@ public class SpriteSheetScene extends Scene {
             }
         }
 
-        // TODO: event handling
         var speed = 100;
         if (Input.isKeyPressed(NV_KEY_RIGHT)) {
             camera.move(new Vector2f((float)(-deltaTime * speed), 0));

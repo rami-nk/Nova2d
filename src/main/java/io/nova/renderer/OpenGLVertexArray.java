@@ -1,17 +1,22 @@
 package io.nova.renderer;
 
+import io.nova.core.renderer.VertexArray;
+import io.nova.core.renderer.VertexBuffer;
+import io.nova.core.renderer.VertexBufferElement;
+
 import static org.lwjgl.opengl.GL30.*;
 
-public class VertexArray {
+public class OpenGLVertexArray implements VertexArray {
 
     private final int rendererId;
 
-    public VertexArray() {
+    public OpenGLVertexArray() {
         rendererId = glGenVertexArrays();
         bind();
     }
 
-    public void addBuffer(final VertexBuffer vertexBuffer, final VertexBufferLayout vertexBufferLayout) {
+    @Override
+    public void addBuffer(final VertexBuffer vertexBuffer, final OpenGLVertexBufferLayout vertexBufferLayout) {
         bind();
         vertexBuffer.bind();
 
@@ -21,16 +26,17 @@ public class VertexArray {
         for (var element : elements) {
             glVertexAttribPointer(index, element.getCount(), element.getType(), element.getNormalized(), vertexBufferLayout.getStride(), offset);
             glEnableVertexAttribArray(index);
-            offset += element.getCount() * VertexBufferElement.getSizeOfType(element.getType());
+            offset += element.getCount() * VertexBufferElement.getByteSize(element.getType());
             index++;
         }
-
     }
 
+    @Override
     public void bind() {
         glBindVertexArray(rendererId);
     }
 
+    @Override
     public void unbind() {
         glBindVertexArray(0);
     }
