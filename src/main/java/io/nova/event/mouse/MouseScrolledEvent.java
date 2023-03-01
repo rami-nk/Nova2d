@@ -9,12 +9,14 @@ public class MouseScrolledEvent extends Event {
     private float xOffset;
     private float yOffset;
 
-    public MouseScrolledEvent() { }
+    public MouseScrolledEvent() {
+        this.eventType = EventType.MouseScrolled;
+    }
 
     public MouseScrolledEvent(float xOffset, float yOffset) {
+        this();
         this.xOffset = xOffset;
         this.yOffset = yOffset;
-        this.eventType = EventType.MouseScrolled;
     }
 
     public float getXOffset() {

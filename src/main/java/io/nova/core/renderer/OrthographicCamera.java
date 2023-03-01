@@ -14,12 +14,13 @@ public class OrthographicCamera {
     public OrthographicCamera(float left, float right, float bottom, float top) {
         projectionMatrix = new Matrix4f().ortho( left, right, bottom, top, -1.0f, 1.0f);
         viewMatrix = new Matrix4f();
+        position = new Vector3f(0.0f);
         viewProjectionMatrix = projectionMatrix.mul(viewMatrix);
     }
 
     private void recalculateViewMatrix() {
         var transform = new Matrix4f().translate(position, new Matrix4f())
-                .mul(new Matrix4f().rotate(rotation, new Vector3f(0, 0, 1), new Matrix4f()));
+                .mul(new Matrix4f().rotate((float) Math.toRadians(rotation), new Vector3f(0, 0, 1), new Matrix4f()));
         viewMatrix = transform.invert();
         viewProjectionMatrix = new Matrix4f(projectionMatrix).mul(viewMatrix);
     }

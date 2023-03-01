@@ -10,13 +10,13 @@ public class WindowResizeEvent extends Event {
     private int height;
 
     public WindowResizeEvent() {
-
+        this.eventType = EventType.WindowResize;
     }
 
     public WindowResizeEvent(int width, int height) {
+        this();
         this.width = width;
         this.height = height;
-        this.eventType = EventType.WindowResize;
     }
 
     @Override

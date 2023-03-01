@@ -9,12 +9,14 @@ public class MouseMovedEvent extends Event {
     private float mouseX;
     private float mouseY;
 
-    public MouseMovedEvent() { }
+    public MouseMovedEvent() {
+       this.eventType = EventType.MouseMoved;
+    }
 
     public MouseMovedEvent(float x, float y) {
+        this();
         this.mouseX = x;
         this.mouseY = y;
-        this.eventType = EventType.MouseMoved;
     }
 
     @Override

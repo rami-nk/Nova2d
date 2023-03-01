@@ -4,10 +4,11 @@ import io.nova.event.EventType;
 
 public class MouseButtonPressedEvent extends MouseButtonEvent {
 
-    public MouseButtonPressedEvent() { }
+    public MouseButtonPressedEvent() {
+        super(0, EventType.MouseButtonPressed);
+    }
 
     public MouseButtonPressedEvent(int mouseCode) {
-        super(mouseCode);
-        this.eventType = EventType.MouseButtonPressed;
+        super(mouseCode, EventType.MouseButtonPressed);
     }
 }

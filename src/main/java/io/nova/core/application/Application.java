@@ -9,6 +9,8 @@ import io.nova.core.window.WindowFactory;
 import io.nova.core.window.WindowProps;
 import io.nova.event.Event;
 import io.nova.event.EventDispatcher;
+import io.nova.event.key.KeyEvent;
+import io.nova.event.key.KeyPressedEvent;
 import io.nova.event.window.WindowClosedEvent;
 import io.nova.event.window.WindowResizeEvent;
 import io.nova.imgui.ImGuiLayer;
@@ -21,9 +23,10 @@ import io.nova.utils.Time;
 import io.nova.window.Input;
 import org.joml.Vector3f;
 
+import java.security.Key;
 import java.util.Objects;
 
-import static io.nova.core.codes.KeyCodes.NV_KEY_ESCAPE;
+import static io.nova.core.codes.KeyCodes.*;
 
 public class Application {
 
@@ -48,6 +51,9 @@ public class Application {
         var dispatcher = new EventDispatcher(event);
         dispatcher.dispatch(WindowClosedEvent.class, this::onWindowClosed);
         dispatcher.dispatch(WindowResizeEvent.class, this::onWindowResize);
+        if (event instanceof KeyPressedEvent) {
+            dispatcher.dispatch(KeyPressedEvent.class, this::onKeyPressed);
+        }
 
         for (int i = application.layerStack.getLayers().size(); i-- > 0; ) {
             if (event.isHandled()) {
@@ -56,6 +62,19 @@ public class Application {
             var layer = application.layerStack.getLayers().get(i);
             layer.onEvent(event);
         }
+    }
+
+    private boolean onKeyPressed(KeyPressedEvent event) {
+        if (Input.isKeyPressed(NV_KEY_LEFT)) {
+            position.x--;
+        } else if (Input.isKeyPressed(NV_KEY_RIGHT)) {
+            position.x++;
+        } else if (Input.isKeyPressed(NV_KEY_UP)) {
+            position.y++;
+        } else if (Input.isKeyPressed(NV_KEY_DOWN)) {
+            position.y--;
+        }
+        return true;
     }
 
     public static Application getInstance() {
@@ -127,6 +146,9 @@ public class Application {
         return getInstance().window;
     }
 
+    private float rotation = 0.0f;
+    private Vector3f position = new Vector3f(0.0f);
+
     public void run() {
         double startTime = Time.getElapsedTimeSinceApplicationStartInSeconds();
         double endTime;
@@ -141,7 +163,8 @@ public class Application {
                 layer.onUpdate();
             }
 
-            camera.setPosition(new Vector3f(0.5f, 0.5f, 0));
+            camera.setRotation(rotation);
+            camera.setPosition(position);
 
             renderer.beginScene(camera);
             {

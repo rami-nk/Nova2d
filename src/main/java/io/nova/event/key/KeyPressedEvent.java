@@ -7,16 +7,16 @@ public class KeyPressedEvent extends KeyEvent {
 
     private boolean isRepeat;
 
-    public KeyPressedEvent() { }
+    public KeyPressedEvent() {
+        super(0, EventType.KeyPressed);
+    }
 
     public KeyPressedEvent(int keyCode) {
         this(keyCode, false);
-        this.eventType = EventType.KeyPressed;
     }
 
     public KeyPressedEvent(int keyCode, boolean isRepeat) {
-        super(keyCode);
-        this.eventType = EventType.KeyPressed;
+        super(keyCode, EventType.KeyPressed);
         this.isRepeat = isRepeat;
     }
 

@@ -5,11 +5,12 @@ import io.nova.event.EventType;
 
 public class KeyTypedEvent extends KeyEvent {
 
-    public KeyTypedEvent() { }
+    public KeyTypedEvent() {
+        super(0, EventType.KeyTyped);
+    }
 
     public KeyTypedEvent(int keyCode) {
-        super(keyCode);
-        this.eventType = EventType.KeyTyped;
+        super(keyCode, EventType.KeyTyped);
     }
 
     @Override

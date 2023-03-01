@@ -2,6 +2,7 @@ package io.nova.event.mouse;
 
 import io.nova.event.Event;
 import io.nova.event.EventCategory;
+import io.nova.event.EventType;
 
 public abstract class MouseButtonEvent extends Event {
 
@@ -9,8 +10,9 @@ public abstract class MouseButtonEvent extends Event {
 
     public MouseButtonEvent() { }
 
-    public MouseButtonEvent(int mouseCode) {
+    public MouseButtonEvent(int mouseCode, EventType eventType) {
         this.mouseCode = mouseCode;
+        this.eventType = eventType;
     }
 
     public int getMouseCode() {
