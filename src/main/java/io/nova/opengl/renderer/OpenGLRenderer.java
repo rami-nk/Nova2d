@@ -1,13 +1,17 @@
 package io.nova.opengl.renderer;
 
-import io.nova.core.renderer.IndexBuffer;
-import io.nova.core.renderer.Renderer;
-import io.nova.core.renderer.Shader;
-import io.nova.core.renderer.VertexArray;
+import io.nova.core.renderer.*;
 
 import static org.lwjgl.opengl.GL30.*;
 
 public class OpenGLRenderer implements Renderer {
+
+    private OrthographicCamera camera;
+
+    @Override
+    public void beginScene(OrthographicCamera camera) {
+        this.camera = camera;
+    }
 
     @Override
     public void setClearColor(float red, float green, float blue, float alpha) {
@@ -22,9 +26,9 @@ public class OpenGLRenderer implements Renderer {
     @Override
     public void draw(final VertexArray vertexArray, final Shader shader) {
         shader.bind();
+        shader.setUniformMat4f("uViewProjection", camera.getViewProjectionMatrix());
+
         vertexArray.bind();
-        vertexArray.getVertexBuffer().bind();
-        vertexArray.getIndexBuffer().bind();
         glDrawElements(GL_TRIANGLES, vertexArray.getIndexBuffer().getCount(), GL_UNSIGNED_INT, 0);
     }
 

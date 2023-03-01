@@ -3,7 +3,7 @@ package io.nova.core.application;
 import imgui.ImGui;
 import io.nova.core.layer.Layer;
 import io.nova.core.layer.LayerStack;
-import io.nova.core.renderer.Renderer;
+import io.nova.core.renderer.*;
 import io.nova.core.window.Window;
 import io.nova.core.window.WindowFactory;
 import io.nova.core.window.WindowProps;
@@ -12,7 +12,11 @@ import io.nova.event.EventDispatcher;
 import io.nova.event.window.WindowClosedEvent;
 import io.nova.event.window.WindowResizeEvent;
 import io.nova.imgui.ImGuiLayer;
-import io.nova.scenes.*;
+import io.nova.opengl.renderer.OpenGLIndexBuffer;
+import io.nova.opengl.renderer.OpenGLVertexArray;
+import io.nova.opengl.renderer.OpenGLVertexBuffer;
+import io.nova.opengl.renderer.OpenGLVertexBufferLayout;
+import io.nova.utils.ShaderProvider;
 import io.nova.utils.Time;
 import io.nova.window.Input;
 import org.joml.Vector3f;
@@ -32,8 +36,9 @@ public class Application {
     private Vector3f color;
     private Layer menuLayer;
     private ImGuiLayer imGuiLayer;
-
     private Renderer renderer;
+
+    private OrthographicCamera camera;
 
     private Application() {
 
@@ -71,6 +76,8 @@ public class Application {
         renderer = Renderer.create();
         color = new Vector3f(0.5f, 0.5f, 0.5f);
 
+        camera = new OrthographicCamera(-1.0f, 1.0f, -1.0f, 1.0f);
+
         window = WindowFactory.create(new WindowProps());
         window.setEventCallback(this::onEvent);
 
@@ -79,12 +86,33 @@ public class Application {
         pushOverlay(imGuiLayer);
 
         // Register Scenes
-        menuLayer = new ClearColorScene();
-
-        pushLayer(menuLayer);
+//        menuLayer = new ClearColorScene();
+//        pushLayer(menuLayer);
 
         isRunning(true);
+
+        float[] vertices = {
+                -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+                0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+                0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+                -0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+        };
+        int[] elementArray = {0, 1, 2, 2, 3, 0};
+
+        vertexArray = new OpenGLVertexArray();
+        VertexBuffer vertexBuffer = new OpenGLVertexBuffer(vertices);
+        var indexBuffer = new OpenGLIndexBuffer(elementArray);
+
+        var layout = new OpenGLVertexBufferLayout();
+        layout.pushFloat(3);
+        layout.pushFloat(4);
+        vertexArray.addBuffer(vertexBuffer, layout);
+        vertexArray.setIndexBuffer(indexBuffer);
+        shader = ShaderProvider.getOrElseUploadShader("simple.glsl");
     }
+
+    private Shader shader;
+    private VertexArray vertexArray;
 
     private boolean onWindowClosed(WindowClosedEvent event) {
         Application.getInstance().isRunning(false);
@@ -113,13 +141,21 @@ public class Application {
                 layer.onUpdate();
             }
 
+            camera.setPosition(new Vector3f(0.5f, 0.5f, 0));
+
+            renderer.beginScene(camera);
+            {
+                renderer.draw(vertexArray, shader);
+            }
+            renderer.endScene();
+
             imGuiLayer.startFrame();
             ImGui.begin("window");
-
-            for (var layer : layerStack.getLayers()) {
-                layer.onImGuiRender();
+            {
+                for (var layer : layerStack.getLayers()) {
+                    layer.onImGuiRender();
+                }
             }
-
             ImGui.end();
             imGuiLayer.endFrame();
 
