@@ -42,6 +42,7 @@ public class SimpleColoredSquareScene extends Scene {
         layout.pushFloat(2);
         layout.pushFloat(4);
         vertexArray.addBuffer(vertexBuffer, layout);
+        vertexArray.setIndexBuffer(indexBuffer);
         shader = ShaderProvider.getOrElseUploadShader("default.glsl");
     }
 
@@ -71,6 +72,6 @@ public class SimpleColoredSquareScene extends Scene {
 
     @Override
     public void render() {
-        renderer.draw(vertexArray, indexBuffer, shader);
+        renderer.draw(vertexArray, shader);
     }
 }

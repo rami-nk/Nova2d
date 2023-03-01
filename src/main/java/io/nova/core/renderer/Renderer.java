@@ -23,11 +23,14 @@ public interface Renderer {
         return null;
     }
 
+    default void beginScene() { }
+    default void endScene() { }
+
     void setClearColor(float red, float green, float blue, float alpha);
 
     void clear();
 
-    void draw(VertexArray vertexArray, IndexBuffer indexBuffer, Shader shader);
+    void draw(VertexArray vertexArray, Shader shader);
 
     void draw(VertexArray vertexArray, Shader shader, int count);
 }

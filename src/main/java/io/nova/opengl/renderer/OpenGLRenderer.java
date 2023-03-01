@@ -20,11 +20,12 @@ public class OpenGLRenderer implements Renderer {
     }
 
     @Override
-    public void draw(final VertexArray vertexArray, final IndexBuffer indexBuffer, final Shader shader) {
+    public void draw(final VertexArray vertexArray, final Shader shader) {
         shader.bind();
         vertexArray.bind();
-        indexBuffer.bind();
-        glDrawElements(GL_TRIANGLES, indexBuffer.getCount(), GL_UNSIGNED_INT, 0);
+        vertexArray.getVertexBuffer().bind();
+        vertexArray.getIndexBuffer().bind();
+        glDrawElements(GL_TRIANGLES, vertexArray.getIndexBuffer().getCount(), GL_UNSIGNED_INT, 0);
     }
 
     @Override

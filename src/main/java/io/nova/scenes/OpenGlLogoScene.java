@@ -40,6 +40,7 @@ public class OpenGlLogoScene extends Scene {
         layout.pushFloat(2);
 
         vertexArray.addBuffer(vertexBuffer, layout);
+        vertexArray.setIndexBuffer(indexBuffer);
 
         shader = ShaderProvider.getOrElseUploadShader("simpleTexture.glsl");
         texture = TextureProvider.getOrElseUploadTexture("openGlLogo.png");
@@ -55,6 +56,6 @@ public class OpenGlLogoScene extends Scene {
 
     @Override
     public void render() {
-        renderer.draw(vertexArray, indexBuffer, shader);
+        renderer.draw(vertexArray, shader);
     }
 }

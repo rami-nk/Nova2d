@@ -80,6 +80,7 @@ public class Batch {
         layout.pushFloat(TEXTURE_ELEMENTS_NUM);
         layout.pushFloat(TEXTURE_ID_ELEMENTS_NUM);
         vertexArray.addBuffer(vertexBuffer, layout);
+        vertexArray.setIndexBuffer(indexBuffer);
 
         shader = ShaderProvider.getOrElseUploadShader("defaultBatch.glsl");
     }
@@ -113,7 +114,7 @@ public class Batch {
             shader.setUniformTextureArray("u_Textures", batchTextureManager.getTextureSlots());
         }
 
-        renderer.draw(vertexArray, indexBuffer, shader);
+        renderer.draw(vertexArray, shader);
 
         unbindTextures();
     }
