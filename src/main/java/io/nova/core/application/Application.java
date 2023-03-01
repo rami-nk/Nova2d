@@ -51,9 +51,7 @@ public class Application {
         var dispatcher = new EventDispatcher(event);
         dispatcher.dispatch(WindowClosedEvent.class, this::onWindowClosed);
         dispatcher.dispatch(WindowResizeEvent.class, this::onWindowResize);
-        if (event instanceof KeyPressedEvent) {
-            dispatcher.dispatch(KeyPressedEvent.class, this::onKeyPressed);
-        }
+        dispatcher.dispatch(KeyPressedEvent.class, this::onKeyPressed);
 
         for (int i = application.layerStack.getLayers().size(); i-- > 0; ) {
             if (event.isHandled()) {
@@ -66,13 +64,13 @@ public class Application {
 
     private boolean onKeyPressed(KeyPressedEvent event) {
         if (Input.isKeyPressed(NV_KEY_LEFT)) {
-            position.x--;
+            position.x -= 0.05;
         } else if (Input.isKeyPressed(NV_KEY_RIGHT)) {
-            position.x++;
+            position.x += 0.05;
         } else if (Input.isKeyPressed(NV_KEY_UP)) {
-            position.y++;
+            position.y += 0.05;
         } else if (Input.isKeyPressed(NV_KEY_DOWN)) {
-            position.y--;
+            position.y -= 0.05;
         }
         return true;
     }
