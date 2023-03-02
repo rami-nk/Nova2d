@@ -9,7 +9,6 @@ import io.nova.core.window.WindowFactory;
 import io.nova.core.window.WindowProps;
 import io.nova.event.Event;
 import io.nova.event.EventDispatcher;
-import io.nova.event.key.KeyEvent;
 import io.nova.event.key.KeyPressedEvent;
 import io.nova.event.window.WindowClosedEvent;
 import io.nova.event.window.WindowResizeEvent;
@@ -23,66 +22,25 @@ import io.nova.utils.Time;
 import io.nova.window.Input;
 import org.joml.Vector3f;
 
-import java.security.Key;
-import java.util.Objects;
-
 import static io.nova.core.codes.KeyCodes.*;
 
 public class Application {
 
-    private ApplicationSpecification specification;
     private static Application application;
-    private Window window;
+    private final ApplicationSpecification specification;
+    private final Window window;
     private boolean running;
-    private LayerStack layerStack;
+    private final LayerStack layerStack;
 
-    private Vector3f color;
-    private Layer menuLayer;
-    private ImGuiLayer imGuiLayer;
-    private Renderer renderer;
+    private final Vector3f color;
+    private final ImGuiLayer imGuiLayer;
+    private final Renderer renderer;
+    private final OrthographicCamera camera;
+    private final Shader shader;
+    private final VertexArray vertexArray;
 
-    private OrthographicCamera camera;
-
-    private Application() {
-
-    }
-
-    public void onEvent(Event event) {
-        var dispatcher = new EventDispatcher(event);
-        dispatcher.dispatch(WindowClosedEvent.class, this::onWindowClosed);
-        dispatcher.dispatch(WindowResizeEvent.class, this::onWindowResize);
-        dispatcher.dispatch(KeyPressedEvent.class, this::onKeyPressed);
-
-        for (int i = application.layerStack.getLayers().size(); i-- > 0; ) {
-            if (event.isHandled()) {
-                break;
-            }
-            var layer = application.layerStack.getLayers().get(i);
-            layer.onEvent(event);
-        }
-    }
-
-    private boolean onKeyPressed(KeyPressedEvent event) {
-        if (Input.isKeyPressed(NV_KEY_LEFT)) {
-            position.x -= 0.05;
-        } else if (Input.isKeyPressed(NV_KEY_RIGHT)) {
-            position.x += 0.05;
-        } else if (Input.isKeyPressed(NV_KEY_UP)) {
-            position.y += 0.05;
-        } else if (Input.isKeyPressed(NV_KEY_DOWN)) {
-            position.y -= 0.05;
-        }
-        return true;
-    }
-
-    public static Application getInstance() {
-        if (Objects.isNull(application)) {
-            application = new Application();
-        }
-        return application;
-    }
-
-    public void init(ApplicationSpecification specification) {
+    public Application(ApplicationSpecification specification) {
+        application = this;
         this.specification = specification;
 
         if (specification.getWorkingDirectory().isEmpty()) {
@@ -128,8 +86,37 @@ public class Application {
         shader = ShaderProvider.getOrElseUploadShader("simple.glsl");
     }
 
-    private Shader shader;
-    private VertexArray vertexArray;
+    public void onEvent(Event event) {
+        var dispatcher = new EventDispatcher(event);
+        dispatcher.dispatch(WindowClosedEvent.class, this::onWindowClosed);
+        dispatcher.dispatch(WindowResizeEvent.class, this::onWindowResize);
+        dispatcher.dispatch(KeyPressedEvent.class, this::onKeyPressed);
+
+        for (int i = application.layerStack.getLayers().size(); i-- > 0; ) {
+            if (event.isHandled()) {
+                break;
+            }
+            var layer = application.layerStack.getLayers().get(i);
+            layer.onEvent(event);
+        }
+    }
+
+    private boolean onKeyPressed(KeyPressedEvent event) {
+        if (Input.isKeyPressed(NV_KEY_LEFT)) {
+            position.x -= 0.05;
+        } else if (Input.isKeyPressed(NV_KEY_RIGHT)) {
+            position.x += 0.05;
+        } else if (Input.isKeyPressed(NV_KEY_UP)) {
+            position.y += 0.05;
+        } else if (Input.isKeyPressed(NV_KEY_DOWN)) {
+            position.y -= 0.05;
+        }
+        return true;
+    }
+
+    public static Application getInstance() {
+        return application;
+    }
 
     private boolean onWindowClosed(WindowClosedEvent event) {
         Application.getInstance().isRunning(false);
@@ -145,7 +132,7 @@ public class Application {
     }
 
     private float rotation = 0.0f;
-    private Vector3f position = new Vector3f(0.0f);
+    private final Vector3f position = new Vector3f(0.0f);
 
     public void run() {
         double startTime = Time.getElapsedTimeSinceApplicationStartInSeconds();
