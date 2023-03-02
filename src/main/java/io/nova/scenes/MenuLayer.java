@@ -37,7 +37,7 @@ public class MenuLayer extends Layer {
     }
 
     @Override
-    public void onUpdate() {
+    public void onUpdate(float deltaTime) {
         // TODO: Remove that from here
         renderer.setClearColor(0, 0, 0, 0);
         renderer.clear();

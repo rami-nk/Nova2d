@@ -15,7 +15,7 @@ public class ClearColorScene extends Layer {
     }
 
     @Override
-    public void onUpdate() {
+    public void onUpdate(float deltaTime) {
         renderer.setClearColor(color[0], color[1], color[2], 0);
         renderer.clear();
     }

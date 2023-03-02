@@ -77,14 +77,16 @@ public class Application {
     }
 
     public void run() {
-        double startTime = Time.getElapsedTimeSinceApplicationStartInSeconds();
-        double endTime;
-        double deltaTime = -1;
+        float endTime = 0;
 
         while (running && !Input.isKeyPressed(NV_KEY_ESCAPE)) {
 
+            float startTime = Time.getElapsedTimeSinceApplicationStartInSeconds();
+            float deltaTime = startTime - endTime;
+            endTime = startTime;
+
             for (var layer : layerStack.getLayers()) {
-                layer.onUpdate();
+                layer.onUpdate(deltaTime);
             }
 
             imGuiLayer.startFrame();
@@ -98,10 +100,6 @@ public class Application {
             imGuiLayer.endFrame();
 
             window.onUpdate();
-
-            endTime = Time.getElapsedTimeSinceApplicationStartInSeconds();
-            deltaTime = endTime - startTime;
-            startTime = endTime;
         }
 
         shutdown();

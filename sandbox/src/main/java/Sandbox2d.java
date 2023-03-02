@@ -1,8 +1,6 @@
 import io.nova.core.layer.Layer;
 import io.nova.core.renderer.*;
 import io.nova.event.Event;
-import io.nova.event.EventDispatcher;
-import io.nova.event.key.KeyPressedEvent;
 import io.nova.opengl.renderer.OpenGLIndexBuffer;
 import io.nova.opengl.renderer.OpenGLVertexArray;
 import io.nova.opengl.renderer.OpenGLVertexBuffer;
@@ -60,18 +58,19 @@ public class Sandbox2d extends Layer {
     }
 
     @Override
-    public void onUpdate() {
+    public void onUpdate(float deltaTime) {
         renderer.setClearColor(color.x, color.y, color.z, 0.0f);
         renderer.clear();
+        var cameraSpeed = 0.5 * deltaTime;
 
         if (Input.isKeyPressed(NV_KEY_LEFT)) {
-            position.x -= 0.1;
+            position.x -= cameraSpeed;
         } else if (Input.isKeyPressed(NV_KEY_RIGHT)) {
-            position.x += 0.1;
+            position.x += cameraSpeed;
         } else if (Input.isKeyPressed(NV_KEY_UP)) {
-            position.y += 0.1;
+            position.y += cameraSpeed;
         } else if (Input.isKeyPressed(NV_KEY_DOWN)) {
-            position.y -= 0.1;
+            position.y -= cameraSpeed;
         }
 
         camera.setRotation(rotation);

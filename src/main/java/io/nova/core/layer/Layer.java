@@ -10,7 +10,7 @@ public abstract class Layer {
 
     public void onDetach() { }
 
-    public void onUpdate() { }
+    public void onUpdate(float deltaTime) { }
 
     public void onImGuiRender() { }
 
