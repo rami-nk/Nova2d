@@ -3,26 +3,19 @@ package io.nova.core.application;
 import imgui.ImGui;
 import io.nova.core.layer.Layer;
 import io.nova.core.layer.LayerStack;
-import io.nova.core.renderer.*;
 import io.nova.core.window.Window;
 import io.nova.core.window.WindowFactory;
 import io.nova.core.window.WindowProps;
 import io.nova.event.Event;
 import io.nova.event.EventDispatcher;
-import io.nova.event.key.KeyPressedEvent;
 import io.nova.event.window.WindowClosedEvent;
 import io.nova.event.window.WindowResizeEvent;
 import io.nova.imgui.ImGuiLayer;
-import io.nova.opengl.renderer.OpenGLIndexBuffer;
-import io.nova.opengl.renderer.OpenGLVertexArray;
-import io.nova.opengl.renderer.OpenGLVertexBuffer;
-import io.nova.opengl.renderer.OpenGLVertexBufferLayout;
-import io.nova.utils.ShaderProvider;
 import io.nova.utils.Time;
 import io.nova.window.Input;
 import org.joml.Vector3f;
 
-import static io.nova.core.codes.KeyCodes.*;
+import static io.nova.core.codes.KeyCodes.NV_KEY_ESCAPE;
 
 public class Application {
 
@@ -31,13 +24,7 @@ public class Application {
     private final Window window;
     private boolean running;
     private final LayerStack layerStack;
-
-    private final Vector3f color;
     private final ImGuiLayer imGuiLayer;
-    private final Renderer renderer;
-    private final OrthographicCamera camera;
-    private final Shader shader;
-    private final VertexArray vertexArray;
 
     public Application(ApplicationSpecification specification) {
         application = this;
@@ -48,11 +35,6 @@ public class Application {
             specification.setWorkingDirectory(currentDir);
         }
 
-        renderer = Renderer.create();
-        color = new Vector3f(0.5f, 0.5f, 0.5f);
-
-        camera = new OrthographicCamera(-1.0f, 1.0f, -1.0f, 1.0f);
-
         window = WindowFactory.create(new WindowProps());
         window.setEventCallback(this::onEvent);
 
@@ -60,37 +42,13 @@ public class Application {
         imGuiLayer = new ImGuiLayer();
         pushOverlay(imGuiLayer);
 
-        // Register Scenes
-//        menuLayer = new ClearColorScene();
-//        pushLayer(menuLayer);
-
         isRunning(true);
-
-        float[] vertices = {
-                -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-                0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f,
-                0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-                -0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-        };
-        int[] elementArray = {0, 1, 2, 2, 3, 0};
-
-        vertexArray = new OpenGLVertexArray();
-        VertexBuffer vertexBuffer = new OpenGLVertexBuffer(vertices);
-        var indexBuffer = new OpenGLIndexBuffer(elementArray);
-
-        var layout = new OpenGLVertexBufferLayout();
-        layout.pushFloat(3);
-        layout.pushFloat(4);
-        vertexArray.addBuffer(vertexBuffer, layout);
-        vertexArray.setIndexBuffer(indexBuffer);
-        shader = ShaderProvider.getOrElseUploadShader("simple.glsl");
     }
 
     public void onEvent(Event event) {
         var dispatcher = new EventDispatcher(event);
         dispatcher.dispatch(WindowClosedEvent.class, this::onWindowClosed);
         dispatcher.dispatch(WindowResizeEvent.class, this::onWindowResize);
-        dispatcher.dispatch(KeyPressedEvent.class, this::onKeyPressed);
 
         for (int i = application.layerStack.getLayers().size(); i-- > 0; ) {
             if (event.isHandled()) {
@@ -99,19 +57,6 @@ public class Application {
             var layer = application.layerStack.getLayers().get(i);
             layer.onEvent(event);
         }
-    }
-
-    private boolean onKeyPressed(KeyPressedEvent event) {
-        if (Input.isKeyPressed(NV_KEY_LEFT)) {
-            position.x -= 0.05;
-        } else if (Input.isKeyPressed(NV_KEY_RIGHT)) {
-            position.x += 0.05;
-        } else if (Input.isKeyPressed(NV_KEY_UP)) {
-            position.y += 0.05;
-        } else if (Input.isKeyPressed(NV_KEY_DOWN)) {
-            position.y -= 0.05;
-        }
-        return true;
     }
 
     public static Application getInstance() {
@@ -131,9 +76,6 @@ public class Application {
         return getInstance().window;
     }
 
-    private float rotation = 0.0f;
-    private final Vector3f position = new Vector3f(0.0f);
-
     public void run() {
         double startTime = Time.getElapsedTimeSinceApplicationStartInSeconds();
         double endTime;
@@ -141,21 +83,9 @@ public class Application {
 
         while (running && !Input.isKeyPressed(NV_KEY_ESCAPE)) {
 
-            renderer.setClearColor(color.x, color.y, color.z, 0.0f);
-            renderer.clear();
-
             for (var layer : layerStack.getLayers()) {
                 layer.onUpdate();
             }
-
-            camera.setRotation(rotation);
-            camera.setPosition(position);
-
-            renderer.beginScene(camera);
-            {
-                renderer.draw(vertexArray, shader);
-            }
-            renderer.endScene();
 
             imGuiLayer.startFrame();
             ImGui.begin("window");
