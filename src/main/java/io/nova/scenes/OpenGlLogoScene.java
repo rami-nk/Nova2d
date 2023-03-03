@@ -6,8 +6,8 @@ import io.nova.opengl.renderer.OpenGLIndexBuffer;
 import io.nova.opengl.renderer.OpenGLVertexArray;
 import io.nova.opengl.renderer.OpenGLVertexBuffer;
 import io.nova.opengl.renderer.OpenGLVertexBufferLayout;
-import io.nova.utils.ShaderProvider;
-import io.nova.utils.TextureProvider;
+import io.nova.core.renderer.ShaderLibrary;
+import io.nova.core.renderer.TextureLibrary;
 
 import static org.lwjgl.opengl.GL30.GL_TEXTURE0;
 
@@ -42,8 +42,8 @@ public class OpenGlLogoScene extends Scene {
         vertexArray.addBuffer(vertexBuffer, layout);
         vertexArray.setIndexBuffer(indexBuffer);
 
-        shader = ShaderProvider.getOrElseUploadShader("simpleTexture.glsl");
-        texture = TextureProvider.getOrElseUploadTexture("openGlLogo.png");
+        shader = ShaderLibrary.getOrElseUpload("simpleTexture.glsl");
+        texture = TextureLibrary.getOrElseUploadTexture("openGlLogo.png");
 
         shader.setUniformTexture("u_Texture", 0);
         texture.activate(GL_TEXTURE0);

@@ -1,3 +1,4 @@
+import imgui.ImGui;
 import io.nova.core.layer.Layer;
 import io.nova.core.renderer.*;
 import io.nova.event.Event;
@@ -5,10 +6,11 @@ import io.nova.opengl.renderer.OpenGLIndexBuffer;
 import io.nova.opengl.renderer.OpenGLVertexArray;
 import io.nova.opengl.renderer.OpenGLVertexBuffer;
 import io.nova.opengl.renderer.OpenGLVertexBufferLayout;
-import io.nova.utils.ShaderProvider;
+import io.nova.core.renderer.ShaderLibrary;
+import io.nova.core.renderer.TextureLibrary;
 import io.nova.window.Input;
-import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import static io.nova.core.codes.KeyCodes.*;
 
@@ -18,8 +20,10 @@ public class Sandbox2d extends Layer {
     private Renderer renderer;
     private Shader shader;
     private VertexArray vertexArray;
+    private Texture2d texture2d;
 
-    private Vector3f color;
+    private Vector3f backgroundColor;
+    private float[] objectColor = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
     private float rotation = 0.0f;
     private Vector3f position;
 
@@ -30,13 +34,13 @@ public class Sandbox2d extends Layer {
 
         position = new Vector3f(0.0f);
         rotation = 0.0f;
-        color = new Vector3f(0.5f, 0.5f, 0.5f);
+        backgroundColor = new Vector3f(1.0f, 1.0f, 1.0f);
 
         float[] vertices = {
-                -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-                0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f,
-                0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-                -0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+                -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+                0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+                0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
+                -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
         };
         int[] elementArray = {0, 1, 2, 2, 3, 0};
 
@@ -47,15 +51,20 @@ public class Sandbox2d extends Layer {
 
         var layout = new OpenGLVertexBufferLayout();
         layout.pushFloat(3);
-        layout.pushFloat(4);
+        layout.pushFloat(2);
         vertexArray.addBuffer(vertexBuffer, layout);
         vertexArray.setIndexBuffer(indexBuffer);
-        shader = ShaderProvider.getOrElseUploadShader("simple.glsl");
+        shader = ShaderLibrary.getOrElseUpload("simple.glsl");
+        shader.setUniformTexture("uTexture", 0);
+
+        var textureIdx = TextureLibrary.upload("openGlLogo.png");
+        texture2d = TextureLibrary.get(textureIdx);
+        texture2d.bind();
     }
 
     @Override
     public void onUpdate(float deltaTime) {
-        renderer.setClearColor(color.x, color.y, color.z, 0.0f);
+        renderer.setClearColor(backgroundColor.x, backgroundColor.y, backgroundColor.z, 0.0f);
         renderer.clear();
         var cameraSpeed = 0.5 * deltaTime;
 
@@ -72,17 +81,11 @@ public class Sandbox2d extends Layer {
         camera.setRotation(rotation);
         camera.setPosition(position);
 
+        shader.setUniformVec4f("uColor", new Vector4f(objectColor));
+
         renderer.beginScene(camera);
         {
-            for (int y = 0; y < 20; y++) {
-                for (int x = 0; x < 20; x++) {
-                    var position = new Vector3f(x * 0.11f, y * 0.11f, 0.0f);
-                    var transform = new Matrix4f()
-                            .translate(position)
-                            .scale(0.1f);
-                    renderer.submit(vertexArray, shader, transform);
-                }
-            }
+            renderer.submit(vertexArray, shader);
         }
         renderer.endScene();
     }
@@ -93,5 +96,6 @@ public class Sandbox2d extends Layer {
 
     @Override
     public void onImGuiRender() {
+        ImGui.colorEdit4("Object color", objectColor);
     }
 }

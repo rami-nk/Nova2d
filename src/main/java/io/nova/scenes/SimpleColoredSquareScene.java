@@ -6,7 +6,7 @@ import io.nova.opengl.renderer.OpenGLIndexBuffer;
 import io.nova.opengl.renderer.OpenGLVertexArray;
 import io.nova.opengl.renderer.OpenGLVertexBuffer;
 import io.nova.opengl.renderer.OpenGLVertexBufferLayout;
-import io.nova.utils.ShaderProvider;
+import io.nova.core.renderer.ShaderLibrary;
 import io.nova.window.Input;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -43,7 +43,7 @@ public class SimpleColoredSquareScene extends Scene {
         layout.pushFloat(4);
         vertexArray.addBuffer(vertexBuffer, layout);
         vertexArray.setIndexBuffer(indexBuffer);
-        shader = ShaderProvider.getOrElseUploadShader("default.glsl");
+        shader = ShaderLibrary.getOrElseUpload("default.glsl");
     }
 
     @Override

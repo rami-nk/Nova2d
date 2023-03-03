@@ -5,6 +5,7 @@ import io.nova.core.renderer.ShaderProgramSource;
 import io.nova.core.renderer.ShaderType;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
 
@@ -70,6 +71,11 @@ public class OpenGLShader implements Shader {
     @Override
     public void setUniformTextureArray(final String name, final int[] slots) {
         setUniformIntArray(name, slots);
+    }
+
+    @Override
+    public void setUniformVec4f(String name, Vector4f vec4f) {
+        glUniform4f(getUniformLocation(name), vec4f.x, vec4f.y, vec4f.z, vec4f.w);
     }
 
     private int createShader(final String vertexShader, final String fragmentShader) {

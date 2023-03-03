@@ -1,7 +1,7 @@
 package io.nova.opengl.renderer;
 
 import io.nova.core.renderer.Texture2d;
-import io.nova.utils.TextureProvider;
+import io.nova.core.renderer.TextureLibrary;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +50,7 @@ public class BatchTextureManager {
     }
 
     public Texture2d getTexture(int textureId) {
-        return TextureProvider.getTexture(textureId);
+        return TextureLibrary.get(textureId);
     }
 
     public boolean hasSlots() {

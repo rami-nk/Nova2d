@@ -3,6 +3,7 @@ package io.nova.core.renderer;
 import io.nova.opengl.renderer.OpenGLShader;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import org.joml.Vector4f;
 
 public interface Shader {
 
@@ -34,4 +35,5 @@ public interface Shader {
     void setUniformIntArray(String name, int[] values);
 
     void setUniformTextureArray(String name, int[] slots);
+    void setUniformVec4f(String name, Vector4f vec4f);
 }

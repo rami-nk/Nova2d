@@ -2,7 +2,7 @@ package io.nova.opengl.renderer;
 
 import io.nova.components.Sprite;
 import io.nova.core.renderer.*;
-import io.nova.utils.ShaderProvider;
+import io.nova.core.renderer.ShaderLibrary;
 
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
@@ -82,7 +82,7 @@ public class Batch {
         vertexArray.addBuffer(vertexBuffer, layout);
         vertexArray.setIndexBuffer(indexBuffer);
 
-        shader = ShaderProvider.getOrElseUploadShader("defaultBatch.glsl");
+        shader = ShaderLibrary.getOrElseUpload("defaultBatch.glsl");
     }
 
     public void render(Camera camera) {

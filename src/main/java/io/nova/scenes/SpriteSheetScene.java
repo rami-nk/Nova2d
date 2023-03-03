@@ -4,7 +4,7 @@ import io.nova.components.Sprite;
 import io.nova.core.renderer.Camera;
 import io.nova.components.GameObject;
 import io.nova.core.Scene;
-import io.nova.utils.TextureProvider;
+import io.nova.core.renderer.TextureLibrary;
 import io.nova.components.SpriteSheet;
 import io.nova.window.Input;
 import org.joml.Vector2f;
@@ -26,7 +26,7 @@ public class SpriteSheetScene extends Scene {
 
     private void createAndAddAllSpritesToScene() {
         spriteSheet = new SpriteSheet(
-                TextureProvider.uploadTexture("spritesheet.png"),
+                TextureLibrary.upload("spritesheet.png"),
                 numberOfCharacterPositions
         );
 

@@ -4,7 +4,7 @@ import io.nova.core.renderer.Camera;
 import io.nova.components.GameObject;
 import io.nova.components.Sprite;
 import io.nova.core.Scene;
-import io.nova.utils.TextureProvider;
+import io.nova.core.renderer.TextureLibrary;
 import io.nova.window.Input;
 import org.joml.Vector2f;
 
@@ -18,8 +18,8 @@ public class ZoomTextureScene extends Scene {
     ZoomTextureScene() {
         camera = new Camera();
 
-        var nova2dLogoTextureId = TextureProvider.uploadTexture("Nova2d-logo-white.png");
-        var openGlLogoTextureId = TextureProvider.uploadTexture("openGlLogo.png");
+        var nova2dLogoTextureId = TextureLibrary.upload("Nova2d-logo-white.png");
+        var openGlLogoTextureId = TextureLibrary.upload("openGlLogo.png");
 
         var nova2dLogo = new GameObject(
                 new Vector2f(-150, -150),
