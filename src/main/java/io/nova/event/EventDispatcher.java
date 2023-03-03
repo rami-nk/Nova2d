@@ -20,7 +20,7 @@ public class EventDispatcher {
             throw new RuntimeException(ex);
         }
         if (event.getEventType() == e.getEventType()) {
-            event.setHandled(event.isHandled() || func.apply(e));
+            event.setHandled(event.isHandled() || func.apply((T)event));
             return true;
         }
         return false;
