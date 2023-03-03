@@ -7,6 +7,7 @@ import io.nova.opengl.renderer.OpenGLVertexBuffer;
 import io.nova.opengl.renderer.OpenGLVertexBufferLayout;
 import io.nova.utils.ShaderProvider;
 import io.nova.window.Input;
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import static io.nova.core.codes.KeyCodes.*;
@@ -18,8 +19,8 @@ public class Sandbox2d extends Layer {
     private Shader shader;
     private VertexArray vertexArray;
 
-    private float rotation = 0.0f;
     private Vector3f color;
+    private float rotation = 0.0f;
     private Vector3f position;
 
     @Override
@@ -53,11 +54,6 @@ public class Sandbox2d extends Layer {
     }
 
     @Override
-    public void onDetach() {
-
-    }
-
-    @Override
     public void onUpdate(float deltaTime) {
         renderer.setClearColor(color.x, color.y, color.z, 0.0f);
         renderer.clear();
@@ -78,7 +74,15 @@ public class Sandbox2d extends Layer {
 
         renderer.beginScene(camera);
         {
-            renderer.draw(vertexArray, shader);
+            for (int y = 0; y < 20; y++) {
+                for (int x = 0; x < 20; x++) {
+                    var position = new Vector3f(x * 0.11f, y * 0.11f, 0.0f);
+                    var transform = new Matrix4f()
+                            .translate(position)
+                            .scale(0.1f);
+                    renderer.submit(vertexArray, shader, transform);
+                }
+            }
         }
         renderer.endScene();
     }

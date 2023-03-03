@@ -56,6 +56,6 @@ public class OpenGlLogoScene extends Scene {
 
     @Override
     public void render() {
-        renderer.draw(vertexArray, shader);
+        renderer.submit(vertexArray, shader);
     }
 }

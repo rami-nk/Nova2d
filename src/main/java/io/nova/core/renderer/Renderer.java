@@ -1,6 +1,7 @@
 package io.nova.core.renderer;
 
 import io.nova.opengl.renderer.OpenGLRenderer;
+import org.joml.Matrix4f;
 
 public interface Renderer {
 
@@ -27,6 +28,9 @@ public interface Renderer {
     default void endScene() { }
     void setClearColor(float red, float green, float blue, float alpha);
     void clear();
-    void draw(VertexArray vertexArray, Shader shader);
-    void draw(VertexArray vertexArray, Shader shader, int count);
+    void submit(VertexArray vertexArray, Shader shader, Matrix4f transform);
+    default void submit(VertexArray vertexArray, Shader shader) {
+        submit(vertexArray, shader, new Matrix4f());
+    }
+    void submit(VertexArray vertexArray, Shader shader, int count);
 }

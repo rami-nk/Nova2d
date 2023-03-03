@@ -114,7 +114,7 @@ public class Batch {
             shader.setUniformTextureArray("u_Textures", batchTextureManager.getTextureSlots());
         }
 
-        renderer.draw(vertexArray, shader);
+        renderer.submit(vertexArray, shader);
 
         unbindTextures();
     }
