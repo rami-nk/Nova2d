@@ -18,11 +18,9 @@ public class OrthographicCamera {
         viewProjectionMatrix = projectionMatrix.mul(viewMatrix);
     }
 
-    private void recalculateViewMatrix() {
-        var transform = new Matrix4f().translate(position, new Matrix4f())
-                .mul(new Matrix4f().rotate((float) Math.toRadians(rotation), new Vector3f(0, 0, 1), new Matrix4f()));
-        viewMatrix = transform.invert();
-        viewProjectionMatrix = new Matrix4f(projectionMatrix).mul(viewMatrix);
+    public void setProjection(float left, float right, float bottom, float top) {
+        projectionMatrix = new Matrix4f().ortho( left, right, bottom, top, -1.0f, 1.0f);
+        viewProjectionMatrix = projectionMatrix.mul(viewMatrix);
     }
 
     public Vector3f getPosition() {
@@ -55,4 +53,10 @@ public class OrthographicCamera {
         return viewProjectionMatrix;
     }
 
+    private void recalculateViewMatrix() {
+        var transform = new Matrix4f().translate(position, new Matrix4f())
+                .rotate((float) Math.toRadians(rotation), new Vector3f(0, 0, 1));
+        viewMatrix = transform.invert();
+        viewProjectionMatrix = new Matrix4f(projectionMatrix).mul(viewMatrix);
+    }
 }

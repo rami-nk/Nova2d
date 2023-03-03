@@ -76,7 +76,7 @@ public class Nova2dWindow implements Window {
             data.setHeight(height);
 
             var event = new WindowResizeEvent(data.getWidth(), data.getHeight());
-            data.getEventCallback().accept(event);
+            data.getEventCallback().dispatch(event);
         });
 
         glfwSetWindowCloseCallback(glfwWindow, (glfwWindowPointer) -> {
