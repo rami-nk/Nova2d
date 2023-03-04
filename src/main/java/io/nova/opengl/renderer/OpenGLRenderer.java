@@ -79,10 +79,35 @@ public class OpenGLRenderer implements Renderer {
         drawQuad(position, size);
     }
 
+    @Override
+    public void drawRotatedQuad(Vector3f position, Vector2f size, float rotation, Vector4f color) {
+        shader.setUniformVec4f("uColor", color);
+        whiteTexture.bind();
+        drawRotatedQuad(position, size, rotation);
+    }
+
+    @Override
+    public void drawRotatedQuad(Vector3f position, Vector2f size, float rotation, Texture texture, float tilingFactor) {
+        shader.setUniformVec4f("uColor", new Vector4f(1.0f));
+        shader.setUniformFloat("uTilingFactor", tilingFactor);
+        texture.bind();
+        drawRotatedQuad(position, size, rotation);
+    }
+
     private void drawQuad(Vector3f position, Vector2f size) {
         vertexArray.bind();
         var transform = new Matrix4f()
                 .translate(position)
+                .scale(size.x, size.y, 1.0f);
+        shader.setUniformMat4f("uModel", transform);
+        glDrawElements(GL_TRIANGLES, vertexArray.getIndexBuffer().getCount(), GL_UNSIGNED_INT, 0);
+    }
+
+    private void drawRotatedQuad(Vector3f position, Vector2f size, float rotation) {
+        vertexArray.bind();
+        var transform = new Matrix4f()
+                .translate(position)
+                .rotate((float) Math.toRadians(rotation), new Vector3f(0.0f, 0.0f, 1.0f))
                 .scale(size.x, size.y, 1.0f);
         shader.setUniformMat4f("uModel", transform);
         glDrawElements(GL_TRIANGLES, vertexArray.getIndexBuffer().getCount(), GL_UNSIGNED_INT, 0);

@@ -7,6 +7,7 @@ import io.nova.event.Event;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
+// -XstartOnFirstThread -Djava.library.path=libs/imgui
 public class Sandbox2d extends Layer {
 
     private OrthographicCameraController cameraController;
@@ -32,6 +33,7 @@ public class Sandbox2d extends Layer {
             renderer.drawQuad(new Vector2f(0.5f, 0.5f), new Vector2f(1.0f, 1.0f), new Vector4f(0.5f));
             renderer.drawQuad(new Vector2f(0.5f, 0.5f), new Vector2f(0.5f, 0.5f), TextureLibrary.getOrElseUploadTexture("Nova2d-logo-white.png"));
             renderer.drawQuad(new Vector2f(-0.5f, -0.5f), new Vector2f(2.0f, 2.5f), TextureLibrary.getOrElseUploadTexture("openGlLogo.png"), 10.0f);
+            renderer.drawRotatedQuad(new Vector2f(-0.5f, -0.5f), new Vector2f(2.0f, 2.5f), 45.0f, TextureLibrary.getOrElseUploadTexture("openGlLogo.png"), 10.0f);
         }
         renderer.endScene();
     }
