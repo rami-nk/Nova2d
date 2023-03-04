@@ -1,6 +1,7 @@
 package io.nova.core.layer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LayerStack {
 
@@ -33,23 +34,5 @@ public class LayerStack {
         returnStack.addAll(layers);
         returnStack.addAll(overlays);
         return returnStack;
-    }
-
-    public static void main(String[] args) {
-        var stack = new LayerStack();
-        stack.pushOverlay(new TestLayer("Overlay"));
-        stack.pushLayer(new TestLayer("Test1"));
-        stack.pushLayer(new TestLayer("Test2"));
-        stack.pushLayer(new TestLayer("Test3"));
-
-        for (var layer : stack.getLayers()) {
-            System.out.println(layer.getName());
-        }
-    }
-}
-
-class TestLayer extends Layer {
-    public TestLayer(String name) {
-        this.name = name;
     }
 }
