@@ -7,12 +7,11 @@ import io.nova.event.Event;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
-// -XstartOnFirstThread -Djava.library.path=libs/imgui
 public class Sandbox2d extends Layer {
 
+    private final float[] objectColor = new float[]{0.8f, 0.2f, 0.3f, 1.0f};
     private OrthographicCameraController cameraController;
     private Renderer renderer;
-    private final float[] objectColor = new float[]{0.8f, 0.2f, 0.3f, 1.0f};
 
     @Override
     public void onAttach() {
@@ -33,18 +32,24 @@ public class Sandbox2d extends Layer {
             renderer.drawQuad(new Vector2f(0.5f, 0.5f), new Vector2f(1.0f, 1.0f), new Vector4f(0.5f));
             renderer.drawQuad(new Vector2f(0.5f, 0.5f), new Vector2f(0.5f, 0.5f), TextureLibrary.getOrElseUploadTexture("Nova2d-logo-white.png"));
             renderer.drawQuad(new Vector2f(-0.5f, -0.5f), new Vector2f(2.0f, 2.5f), TextureLibrary.getOrElseUploadTexture("openGlLogo.png"), 10.0f);
-            renderer.drawRotatedQuad(new Vector2f(-0.5f, -0.5f), new Vector2f(2.0f, 2.5f), 45.0f, TextureLibrary.getOrElseUploadTexture("openGlLogo.png"), 10.0f);
+            renderer.drawRotatedQuad(
+                    new Vector2f(-0.5f, -0.5f),
+                    new Vector2f(2.0f, 2.5f),
+                    45.0f,
+                    TextureLibrary.getOrElseUploadTexture("openGlLogo.png"),
+                    10.0f,
+                    new Vector4f(0.2f, 0.1f, 0.8f, 0.5f));
         }
         renderer.endScene();
     }
 
     @Override
-    public void onEvent(Event event) {
-        cameraController.onEvent(event);
+    public void onImGuiRender() {
+        ImGui.colorEdit4("Object color", objectColor);
     }
 
     @Override
-    public void onImGuiRender() {
-        ImGui.colorEdit4("Object color", objectColor);
+    public void onEvent(Event event) {
+        cameraController.onEvent(event);
     }
 }

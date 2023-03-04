@@ -39,7 +39,7 @@ public class OpenGLRenderer implements Renderer {
         whiteTexture = Texture.create(1, 1);
         var whiteTextureData = BufferUtils.createByteBuffer(4);
         var oneByte = (byte) 255;
-        whiteTextureData.put(new byte[] {oneByte, oneByte, oneByte, oneByte});
+        whiteTextureData.put(new byte[]{oneByte, oneByte, oneByte, oneByte});
         whiteTextureData.flip();
         whiteTexture.setData(whiteTextureData);
 
@@ -77,6 +77,22 @@ public class OpenGLRenderer implements Renderer {
         shader.setUniformFloat("uTilingFactor", tilingFactor);
         texture.bind();
         drawQuad(position, size);
+    }
+
+    @Override
+    public void drawQuad(Vector3f position, Vector2f size, Texture texture, float tilingFactor, Vector4f tintColor) {
+        shader.setUniformVec4f("uColor", tintColor);
+        shader.setUniformFloat("uTilingFactor", tilingFactor);
+        texture.bind();
+        drawQuad(position, size);
+    }
+
+    @Override
+    public void drawRotatedQuad(Vector3f position, Vector2f size, float rotation, Texture texture, float tilingFactor, Vector4f tintColor) {
+        shader.setUniformVec4f("uColor", tintColor);
+        shader.setUniformFloat("uTilingFactor", tilingFactor);
+        texture.bind();
+        drawRotatedQuad(position, size, rotation);
     }
 
     @Override
