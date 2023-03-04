@@ -41,7 +41,6 @@ public class OpenGLRenderer implements Renderer {
         this.camera = camera;
         this.shader.bind();
         this.shader.setUniformMat4f("uViewProjection", camera.getViewProjectionMatrix());
-        this.shader.setUniformMat4f("uModel", new Matrix4f());
     }
 
     @Override
@@ -76,6 +75,10 @@ public class OpenGLRenderer implements Renderer {
         this.shader.bind();
         this.shader.setUniformVec4f("uColor", color);
         vertexArray.bind();
+        var transform = new Matrix4f()
+                .translate(position)
+                .scale(size.x, size.y, 1.0f);
+        this.shader.setUniformMat4f("uModel", transform);
         glDrawElements(GL_TRIANGLES, vertexArray.getIndexBuffer().getCount(), GL_UNSIGNED_INT, 0);
     }
 }
