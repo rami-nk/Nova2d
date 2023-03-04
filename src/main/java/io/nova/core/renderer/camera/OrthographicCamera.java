@@ -1,4 +1,4 @@
-package io.nova.core.renderer;
+package io.nova.core.renderer.camera;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -12,14 +12,14 @@ public class OrthographicCamera {
     protected float rotation = 0.0f;
 
     public OrthographicCamera(float left, float right, float bottom, float top) {
-        projectionMatrix = new Matrix4f().ortho( left, right, bottom, top, -1.0f, 1.0f);
+        projectionMatrix = new Matrix4f().ortho(left, right, bottom, top, -1.0f, 1.0f);
         viewMatrix = new Matrix4f();
         position = new Vector3f(0.0f);
         viewProjectionMatrix = projectionMatrix.mul(viewMatrix);
     }
 
     public void setProjection(float left, float right, float bottom, float top) {
-        projectionMatrix = new Matrix4f().ortho( left, right, bottom, top, -1.0f, 1.0f);
+        projectionMatrix = new Matrix4f().ortho(left, right, bottom, top, -1.0f, 1.0f);
         viewProjectionMatrix = projectionMatrix.mul(viewMatrix);
     }
 

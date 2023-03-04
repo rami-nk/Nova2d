@@ -3,6 +3,7 @@ package io.nova.scenes;
 import imgui.ImGui;
 import io.nova.core.layer.Layer;
 import io.nova.core.renderer.Renderer;
+import io.nova.core.renderer.RendererFactory;
 
 public class ClearColorScene extends Layer {
 
@@ -10,7 +11,7 @@ public class ClearColorScene extends Layer {
     private final Renderer renderer;
 
     public ClearColorScene() {
-        renderer = Renderer.create();
+        renderer = RendererFactory.create();
         color = new float[3];
     }
 

@@ -1,7 +1,7 @@
 package io.nova.opengl.renderer;
 
-import io.nova.core.renderer.VertexBufferElement;
-import io.nova.core.renderer.VertexBufferLayout;
+import io.nova.core.renderer.buffer.VertexBufferElement;
+import io.nova.core.renderer.buffer.VertexBufferLayout;
 
 import java.util.ArrayList;
 import java.util.List;

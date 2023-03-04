@@ -1,4 +1,4 @@
-package io.nova.core.renderer;
+package io.nova.core.renderer.buffer;
 
 import static io.nova.core.codes.DataTypes.NV_FLOAT;
 import static io.nova.core.codes.DataTypes.NV_INT;

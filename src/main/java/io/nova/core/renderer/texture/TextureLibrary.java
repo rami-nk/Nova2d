@@ -1,4 +1,4 @@
-package io.nova.core.renderer;
+package io.nova.core.renderer.texture;
 
 import java.util.Objects;
 
@@ -10,7 +10,7 @@ public class TextureLibrary {
     public static int upload(String name) {
         var path = TEXTURE_PATH_PREFIX + name;
         if (!textures.containsKey(path)) {
-            var texture = Texture.create(path);
+            var texture = TextureFactory.create(path);
             return textures.putIndexed(path, texture);
         }
         return textures.getIndex(path);

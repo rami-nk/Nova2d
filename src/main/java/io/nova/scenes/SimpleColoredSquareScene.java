@@ -1,12 +1,18 @@
 package io.nova.scenes;
 
-import io.nova.core.renderer.*;
 import io.nova.core.Scene;
+import io.nova.core.renderer.Renderer;
+import io.nova.core.renderer.RendererFactory;
+import io.nova.core.renderer.buffer.IndexBuffer;
+import io.nova.core.renderer.buffer.VertexArray;
+import io.nova.core.renderer.buffer.VertexBuffer;
+import io.nova.core.renderer.camera.Camera;
+import io.nova.core.renderer.shader.Shader;
+import io.nova.core.renderer.shader.ShaderLibrary;
 import io.nova.opengl.renderer.OpenGLIndexBuffer;
 import io.nova.opengl.renderer.OpenGLVertexArray;
 import io.nova.opengl.renderer.OpenGLVertexBuffer;
 import io.nova.opengl.renderer.OpenGLVertexBufferLayout;
-import io.nova.core.renderer.ShaderLibrary;
 import io.nova.window.Input;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -23,7 +29,7 @@ public class SimpleColoredSquareScene extends Scene {
     private final Renderer renderer;
 
     SimpleColoredSquareScene() {
-        renderer = Renderer.create();
+        renderer = RendererFactory.create();
         camera = new Camera();
 
         float[] vertices = {
@@ -50,13 +56,13 @@ public class SimpleColoredSquareScene extends Scene {
     public void update(double deltaTime) {
         var speed = 100;
         if (Input.isKeyPressed(NV_KEY_RIGHT)) {
-            camera.move(new Vector2f((float)(-deltaTime * speed), 0));
+            camera.move(new Vector2f((float) (-deltaTime * speed), 0));
         } else if (Input.isKeyPressed(NV_KEY_UP)) {
-            camera.move(new Vector2f(0, (float)(-deltaTime * speed)));
+            camera.move(new Vector2f(0, (float) (-deltaTime * speed)));
         } else if (Input.isKeyPressed(NV_KEY_DOWN)) {
-            camera.move(new Vector2f(0, (float)(deltaTime * speed)));
+            camera.move(new Vector2f(0, (float) (deltaTime * speed)));
         } else if (Input.isKeyPressed(NV_KEY_LEFT)) {
-            camera.move(new Vector2f((float)(deltaTime * speed), 0));
+            camera.move(new Vector2f((float) (deltaTime * speed), 0));
         }
 
         var positionOfObjectInWorld = new Vector2f(0, 0);

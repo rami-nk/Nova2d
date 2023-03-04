@@ -1,7 +1,7 @@
 package io.nova.opengl.renderer;
 
-import io.nova.core.renderer.Texture;
-import io.nova.core.renderer.TextureLibrary;
+import io.nova.core.renderer.texture.Texture;
+import io.nova.core.renderer.texture.TextureLibrary;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,7 @@ public class BatchTextureManager {
         if (textureId == OpenGLTexture.RESERVED_TEXTURE_SLOT_ID) {
             return -1;
         }
-        for (int i=0; i < textureIds.size(); i++) {
+        for (int i = 0; i < textureIds.size(); i++) {
             if (textureIds.get(i).equals(textureId)) {
                 return i;
             }

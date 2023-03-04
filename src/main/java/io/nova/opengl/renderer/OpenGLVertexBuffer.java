@@ -1,6 +1,6 @@
 package io.nova.opengl.renderer;
 
-import io.nova.core.renderer.VertexBuffer;
+import io.nova.core.renderer.buffer.VertexBuffer;
 
 import static org.lwjgl.opengl.GL30.*;
 
@@ -8,6 +8,13 @@ public class OpenGLVertexBuffer implements VertexBuffer {
 
     private final int rendererId;
     private final int usage;
+
+    public OpenGLVertexBuffer(int size) {
+        rendererId = glGenBuffers();
+        bind();
+        usage = GL_DYNAMIC_DRAW;
+        glBufferData(GL_ARRAY_BUFFER, new float[0], usage);
+    }
 
     public OpenGLVertexBuffer(final float[] data) {
         rendererId = glGenBuffers();

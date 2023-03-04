@@ -1,11 +1,11 @@
 package io.nova.scenes;
 
-import io.nova.components.Sprite;
-import io.nova.core.renderer.Camera;
 import io.nova.components.GameObject;
-import io.nova.core.Scene;
-import io.nova.core.renderer.TextureLibrary;
+import io.nova.components.Sprite;
 import io.nova.components.SpriteSheet;
+import io.nova.core.Scene;
+import io.nova.core.renderer.camera.Camera;
+import io.nova.core.renderer.texture.TextureLibrary;
 import io.nova.window.Input;
 import org.joml.Vector2f;
 
@@ -14,10 +14,11 @@ import static io.nova.core.codes.KeyCodes.*;
 public class SpriteSheetScene extends Scene {
 
     private final Camera camera;
-    private int characterPosition = 0;
     private final int numberOfCharacterPositions = 4;
+    private int characterPosition = 0;
     private GameObject gameObject;
     private SpriteSheet spriteSheet;
+    private int every5Loops = 5;
 
     SpriteSheetScene() {
         camera = new Camera();
@@ -38,8 +39,6 @@ public class SpriteSheetScene extends Scene {
         addGameObjectToScene(gameObject);
     }
 
-    private int every5Loops = 5;
-
     @Override
     public void update(double deltaTime) {
         if (every5Loops == 5) {
@@ -54,13 +53,13 @@ public class SpriteSheetScene extends Scene {
 
         var speed = 100;
         if (Input.isKeyPressed(NV_KEY_RIGHT)) {
-            camera.move(new Vector2f((float)(-deltaTime * speed), 0));
+            camera.move(new Vector2f((float) (-deltaTime * speed), 0));
         } else if (Input.isKeyPressed(NV_KEY_UP)) {
-            camera.move(new Vector2f(0, (float)(-deltaTime * speed)));
+            camera.move(new Vector2f(0, (float) (-deltaTime * speed)));
         } else if (Input.isKeyPressed(NV_KEY_DOWN)) {
-            camera.move(new Vector2f(0, (float)(deltaTime * speed)));
+            camera.move(new Vector2f(0, (float) (deltaTime * speed)));
         } else if (Input.isKeyPressed(NV_KEY_LEFT)) {
-            camera.move(new Vector2f((float)(deltaTime * speed), 0));
+            camera.move(new Vector2f((float) (deltaTime * speed), 0));
         }
 
         every5Loops = (every5Loops + 1) % 6;

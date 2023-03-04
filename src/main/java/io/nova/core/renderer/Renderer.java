@@ -1,23 +1,9 @@
 package io.nova.core.renderer;
 
-import io.nova.opengl.renderer.OpenGLRenderer;
+import io.nova.core.renderer.camera.OrthographicCamera;
 
 public interface Renderer extends QuadRenderer {
-
-    RendererApi API = RendererApi.OpenGL;
-
-    static Renderer create() {
-        switch (API) {
-            case OpenGL -> {
-                return new OpenGLRenderer();
-            }
-            case None -> {
-                System.err.printf("%s not supported!\n", API.name());
-                return null;
-            }
-        }
-        return null;
-    }
+    public static final RendererApi API = RendererApi.OpenGL;
 
     default void beginScene(OrthographicCamera camera) {}
 

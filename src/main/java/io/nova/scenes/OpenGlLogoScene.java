@@ -1,13 +1,19 @@
 package io.nova.scenes;
 
 import io.nova.core.Scene;
-import io.nova.core.renderer.*;
+import io.nova.core.renderer.Renderer;
+import io.nova.core.renderer.RendererFactory;
+import io.nova.core.renderer.buffer.IndexBuffer;
+import io.nova.core.renderer.buffer.VertexArray;
+import io.nova.core.renderer.buffer.VertexBuffer;
+import io.nova.core.renderer.shader.Shader;
+import io.nova.core.renderer.shader.ShaderLibrary;
+import io.nova.core.renderer.texture.Texture;
+import io.nova.core.renderer.texture.TextureLibrary;
 import io.nova.opengl.renderer.OpenGLIndexBuffer;
 import io.nova.opengl.renderer.OpenGLVertexArray;
 import io.nova.opengl.renderer.OpenGLVertexBuffer;
 import io.nova.opengl.renderer.OpenGLVertexBufferLayout;
-import io.nova.core.renderer.ShaderLibrary;
-import io.nova.core.renderer.TextureLibrary;
 
 import static org.lwjgl.opengl.GL30.GL_TEXTURE0;
 
@@ -20,7 +26,7 @@ public class OpenGlLogoScene extends Scene {
     private final Renderer renderer;
 
     OpenGlLogoScene() {
-        renderer = Renderer.create();
+        renderer = RendererFactory.create();
 
         float[] vertices = {
                 0.5f, -0.5f, 0, 1, 1,

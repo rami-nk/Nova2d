@@ -1,6 +1,6 @@
 package io.nova.opengl.renderer;
 
-import io.nova.core.renderer.IndexBuffer;
+import io.nova.core.renderer.buffer.IndexBuffer;
 
 import static org.lwjgl.opengl.GL30.*;
 

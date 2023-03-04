@@ -1,10 +1,10 @@
 package io.nova.scenes;
 
-import io.nova.core.renderer.Camera;
 import io.nova.components.GameObject;
 import io.nova.components.Sprite;
 import io.nova.core.Scene;
-import io.nova.core.renderer.TextureLibrary;
+import io.nova.core.renderer.camera.Camera;
+import io.nova.core.renderer.texture.TextureLibrary;
 import io.nova.window.Input;
 import org.joml.Vector2f;
 

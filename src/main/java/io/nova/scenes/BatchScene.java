@@ -1,10 +1,10 @@
 package io.nova.scenes;
 
-import io.nova.components.Sprite;
-import io.nova.core.renderer.Camera;
 import io.nova.components.GameObject;
-import io.nova.core.application.Application;
+import io.nova.components.Sprite;
 import io.nova.core.Scene;
+import io.nova.core.application.Application;
+import io.nova.core.renderer.camera.Camera;
 import io.nova.window.Input;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
@@ -22,8 +22,8 @@ public class BatchScene extends Scene {
         float objectHeight = Application.getWindow().getHeight() / 100.0f;
         float offset = -250.0f;
 
-        for (int x=0; x < 100; x++) {
-            for (int y=0; y < 100; y++) {
+        for (int x = 0; x < 100; x++) {
+            for (int y = 0; y < 100; y++) {
                 float xPos = offset + (x * objectWidth);
                 float yPos = offset + (y * objectHeight);
 
@@ -38,13 +38,13 @@ public class BatchScene extends Scene {
     public void update(double deltaTime) {
         var speed = 100;
         if (Input.isKeyPressed(NV_KEY_RIGHT)) {
-            camera.move(new Vector2f((float)(-deltaTime * speed), 0));
+            camera.move(new Vector2f((float) (-deltaTime * speed), 0));
         } else if (Input.isKeyPressed(NV_KEY_UP)) {
-            camera.move(new Vector2f(0, (float)(-deltaTime * speed)));
+            camera.move(new Vector2f(0, (float) (-deltaTime * speed)));
         } else if (Input.isKeyPressed(NV_KEY_DOWN)) {
-            camera.move(new Vector2f(0, (float)(deltaTime * speed)));
+            camera.move(new Vector2f(0, (float) (deltaTime * speed)));
         } else if (Input.isKeyPressed(NV_KEY_LEFT)) {
-            camera.move(new Vector2f((float)(deltaTime * speed), 0));
+            camera.move(new Vector2f((float) (deltaTime * speed), 0));
         }
 
         for (GameObject gameObject : getGameObjects()) {

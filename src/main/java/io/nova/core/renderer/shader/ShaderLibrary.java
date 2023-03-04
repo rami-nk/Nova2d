@@ -1,4 +1,4 @@
-package io.nova.core.renderer;
+package io.nova.core.renderer.shader;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +28,7 @@ public class ShaderLibrary {
 
     public static void upload(String name) {
         var fullPath = SHADER_PATH_PREFIX + name;
-        var shader = Shader.create(fullPath);
+        var shader = ShaderFactory.create(fullPath);
         shaders.put(fullPath, shader);
     }
 }

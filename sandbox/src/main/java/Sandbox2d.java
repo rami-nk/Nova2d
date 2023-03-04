@@ -1,8 +1,9 @@
 import imgui.ImGui;
 import io.nova.core.layer.Layer;
-import io.nova.core.renderer.OrthographicCameraController;
 import io.nova.core.renderer.Renderer;
-import io.nova.core.renderer.TextureLibrary;
+import io.nova.core.renderer.RendererFactory;
+import io.nova.core.renderer.camera.OrthographicCameraController;
+import io.nova.core.renderer.texture.TextureLibrary;
 import io.nova.event.Event;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
@@ -16,7 +17,7 @@ public class Sandbox2d extends Layer {
     @Override
     public void onAttach() {
         cameraController = new OrthographicCameraController(1.0f, true);
-        renderer = Renderer.create();
+        renderer = RendererFactory.create();
     }
 
     @Override

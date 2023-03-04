@@ -1,4 +1,4 @@
-package io.nova.core.renderer;
+package io.nova.core.renderer.camera;
 
 import io.nova.core.application.Application;
 import org.joml.Matrix4f;
@@ -48,7 +48,7 @@ public class Camera {
         float top = focusPosition.y + height / 2.0f;
         float bottom = focusPosition.y - height / 2.0f;
 
-        var projectionMatrix = new Matrix4f().ortho( left, right, bottom, top, 0.1f, 100.0f);
+        var projectionMatrix = new Matrix4f().ortho(left, right, bottom, top, 0.1f, 100.0f);
         var zoomMatrix = new Matrix4f().scale(zoom);
         return projectionMatrix.mul(zoomMatrix);
     }

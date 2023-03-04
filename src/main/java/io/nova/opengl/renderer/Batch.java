@@ -1,8 +1,14 @@
 package io.nova.opengl.renderer;
 
 import io.nova.components.Sprite;
-import io.nova.core.renderer.*;
-import io.nova.core.renderer.ShaderLibrary;
+import io.nova.core.renderer.Renderer;
+import io.nova.core.renderer.RendererFactory;
+import io.nova.core.renderer.buffer.IndexBuffer;
+import io.nova.core.renderer.buffer.VertexArray;
+import io.nova.core.renderer.buffer.VertexBuffer;
+import io.nova.core.renderer.camera.Camera;
+import io.nova.core.renderer.shader.Shader;
+import io.nova.core.renderer.shader.ShaderLibrary;
 
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
@@ -23,17 +29,17 @@ public class Batch {
     private final float[] vertices;
     private final int maxBatchSize;
     private final Sprite[] sprites;
+    private final BatchTextureManager batchTextureManager;
+    private final Renderer renderer;
     private int numberOfSprites;
     private boolean hasRoom;
     private VertexArray vertexArray;
     private VertexBuffer vertexBuffer;
     private IndexBuffer indexBuffer;
     private Shader shader;
-    private final BatchTextureManager batchTextureManager;
-    private final Renderer renderer;
 
     public Batch(int maxBatchSize) {
-        renderer = Renderer.create();
+        renderer = RendererFactory.create();
         hasRoom = true;
         numberOfSprites = 0;
 
@@ -89,7 +95,7 @@ public class Batch {
         // TODO: only rebuffer specific sprite
 
         boolean reBufferVertices = false;
-        for (int index=0; index < numberOfSprites; index++) {
+        for (int index = 0; index < numberOfSprites; index++) {
             var sprite = sprites[index];
             if (sprite.isDirty()) {
                 setVertexProperties(index);
@@ -143,7 +149,7 @@ public class Batch {
         // Add vertices with the appropriate properties
         float xAdd = 1;
         float yAdd = 1;
-        for (int i=0; i < 4; i++) {
+        for (int i = 0; i < 4; i++) {
             if (i == 1) {
                 yAdd = 0.0f;
             } else if (i == 2) {

@@ -1,8 +1,8 @@
 package io.nova.opengl.renderer;
 
-import io.nova.core.renderer.Shader;
-import io.nova.core.renderer.ShaderProgramSource;
-import io.nova.core.renderer.ShaderType;
+import io.nova.core.renderer.shader.Shader;
+import io.nova.core.renderer.shader.ShaderProgramSource;
+import io.nova.core.renderer.shader.ShaderType;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;

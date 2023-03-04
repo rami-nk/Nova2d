@@ -1,4 +1,4 @@
-package io.nova.core.renderer;
+package io.nova.core.renderer.camera;
 
 import io.nova.event.Event;
 import io.nova.event.EventDispatcher;

@@ -1,6 +1,13 @@
 package io.nova.opengl.renderer;
 
-import io.nova.core.renderer.*;
+import io.nova.core.renderer.Renderer;
+import io.nova.core.renderer.buffer.VertexArray;
+import io.nova.core.renderer.buffer.VertexBuffer;
+import io.nova.core.renderer.camera.OrthographicCamera;
+import io.nova.core.renderer.shader.Shader;
+import io.nova.core.renderer.shader.ShaderLibrary;
+import io.nova.core.renderer.texture.Texture;
+import io.nova.core.renderer.texture.TextureFactory;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -36,7 +43,7 @@ public class OpenGLRenderer implements Renderer {
         vertexArray.addBuffer(vertexBuffer, layout);
         vertexArray.setIndexBuffer(indexBuffer);
 
-        whiteTexture = Texture.create(1, 1);
+        whiteTexture = TextureFactory.create(1, 1);
         var whiteTextureData = BufferUtils.createByteBuffer(4);
         var oneByte = (byte) 255;
         whiteTextureData.put(new byte[]{oneByte, oneByte, oneByte, oneByte});

@@ -1,13 +1,11 @@
-package io.nova.core.renderer;
+package io.nova.core.renderer.texture;
 
+import io.nova.core.renderer.Renderer;
 import io.nova.opengl.renderer.OpenGLTexture;
 
-import java.nio.ByteBuffer;
+public class TextureFactory {
 
-public interface Texture {
-    int RESERVED_TEXTURE_SLOT_ID = -1;
-
-    static Texture create(String path) {
+    public static Texture create(String path) {
         switch (Renderer.API) {
             case OpenGL -> {
                 return new OpenGLTexture(path);
@@ -20,7 +18,7 @@ public interface Texture {
         return null;
     }
 
-    static Texture create(int width, int height) {
+    public static Texture create(int width, int height) {
         switch (Renderer.API) {
             case OpenGL -> {
                 return new OpenGLTexture(width, height);
@@ -32,12 +30,4 @@ public interface Texture {
         }
         return null;
     }
-
-    void loadAndUploadTexture(String filepath);
-    void bind();
-    void unbind();
-    void activate(int slot);
-    void setData(ByteBuffer data);
-    int getWidth();
-    int getHeight();
 }

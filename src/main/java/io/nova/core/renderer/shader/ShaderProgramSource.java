@@ -1,4 +1,4 @@
-package io.nova.core.renderer;
+package io.nova.core.renderer.shader;
 
 public record ShaderProgramSource(
         String vertexSource,

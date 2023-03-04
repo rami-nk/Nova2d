@@ -1,17 +1,17 @@
 package io.nova.opengl.renderer;
 
-import io.nova.core.renderer.IndexBuffer;
-import io.nova.core.renderer.VertexArray;
-import io.nova.core.renderer.VertexBuffer;
-import io.nova.core.renderer.VertexBufferElement;
+import io.nova.core.renderer.buffer.IndexBuffer;
+import io.nova.core.renderer.buffer.VertexArray;
+import io.nova.core.renderer.buffer.VertexBuffer;
+import io.nova.core.renderer.buffer.VertexBufferElement;
 
 import static org.lwjgl.opengl.GL30.*;
 
 public class OpenGLVertexArray implements VertexArray {
 
+    private final int rendererId;
     private IndexBuffer indexBuffer;
     private VertexBuffer vertexBuffer;
-    private final int rendererId;
 
     public OpenGLVertexArray() {
         rendererId = glGenVertexArrays();

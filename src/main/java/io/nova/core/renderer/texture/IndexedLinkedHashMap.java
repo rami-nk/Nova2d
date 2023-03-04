@@ -1,4 +1,4 @@
-package io.nova.core.renderer;
+package io.nova.core.renderer.texture;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -24,7 +24,7 @@ public class IndexedLinkedHashMap<String, V> extends LinkedHashMap<String, V> {
     }
 
     public int getIndex(String path) {
-        for (int i=0; i < keys.size(); i++) {
+        for (int i = 0; i < keys.size(); i++) {
             if (keys.get(i).equals(path)) {
                 return i;
             }

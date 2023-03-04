@@ -1,6 +1,6 @@
 package io.nova.opengl.renderer;
 
-import io.nova.core.renderer.Texture;
+import io.nova.core.renderer.texture.Texture;
 import org.lwjgl.BufferUtils;
 
 import java.nio.ByteBuffer;
@@ -11,8 +11,8 @@ import static org.lwjgl.stb.STBImage.*;
 
 public class OpenGLTexture implements Texture {
 
-    private String filepath;
     private final int rendererId;
+    private String filepath;
     private int width;
     private int height;
     private int internalFormat;
