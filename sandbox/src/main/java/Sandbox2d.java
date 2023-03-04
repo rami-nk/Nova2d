@@ -21,7 +21,7 @@ public class Sandbox2d extends Layer {
     public void onUpdate(float deltaTime) {
         cameraController.onUpdate(deltaTime);
 
-        renderer.setClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        renderer.setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         renderer.clear();
 
         renderer.beginScene(cameraController.getCamera());

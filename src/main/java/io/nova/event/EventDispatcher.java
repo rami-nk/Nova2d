@@ -12,6 +12,7 @@ public class EventDispatcher {
     }
 
     // TODO: refactor this function
+    @SuppressWarnings("unchecked")
     public <T extends Event> boolean dispatch(final Class<T> clazz, final Function<T, Boolean> func) {
         T e;
         try {

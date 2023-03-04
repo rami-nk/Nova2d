@@ -1,6 +1,6 @@
 package io.nova.components;
 
-import io.nova.opengl.renderer.OpenGLTexture2d;
+import io.nova.opengl.renderer.OpenGLTexture;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
@@ -13,7 +13,7 @@ public class Sprite extends Component {
     public Sprite(Vector4f color) {
         this.color = color;
         this.textureCoordinates = defaultTextureCoordinates();
-        textureId = OpenGLTexture2d.RESERVED_TEXTURE_SLOT_ID;
+        textureId = OpenGLTexture.RESERVED_TEXTURE_SLOT_ID;
     }
 
     public Sprite(Vector4f color, Vector2f[] textureCoordinates) {

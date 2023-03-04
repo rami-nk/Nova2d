@@ -16,7 +16,7 @@ public class OpenGlLogoScene extends Scene {
     private final VertexArray vertexArray;
     private final Shader shader;
     private final IndexBuffer indexBuffer;
-    private final Texture2d texture;
+    private final Texture texture;
     private final Renderer renderer;
 
     OpenGlLogoScene() {
@@ -56,6 +56,7 @@ public class OpenGlLogoScene extends Scene {
 
     @Override
     public void render() {
-        renderer.submit(vertexArray, shader);
+        // TODO: use current API
+//        renderer.submit(vertexArray, shader);
     }
 }

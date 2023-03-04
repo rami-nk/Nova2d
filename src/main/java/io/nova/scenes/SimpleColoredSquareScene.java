@@ -72,6 +72,7 @@ public class SimpleColoredSquareScene extends Scene {
 
     @Override
     public void render() {
-        renderer.submit(vertexArray, shader);
+        // TODO: use current API
+//        renderer.submit(vertexArray, shader);
     }
 }

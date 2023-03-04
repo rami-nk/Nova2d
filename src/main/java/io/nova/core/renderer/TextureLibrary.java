@@ -5,23 +5,23 @@ import java.util.Objects;
 public class TextureLibrary {
 
     private static final String TEXTURE_PATH_PREFIX = "src/main/resources/textures/";
-    private static final IndexedLinkedHashMap<String, Texture2d> textures = new IndexedLinkedHashMap<>();
+    private static final IndexedLinkedHashMap<String, Texture> textures = new IndexedLinkedHashMap<>();
 
     public static int upload(String name) {
         var path = TEXTURE_PATH_PREFIX + name;
         if (!textures.containsKey(path)) {
-            var texture = Texture2d.create(path);
+            var texture = Texture.create(path);
             return textures.putIndexed(path, texture);
         }
         return textures.getIndex(path);
     }
 
-    private static Texture2d uploadAndGet(String name) {
+    private static Texture uploadAndGet(String name) {
         upload(name);
         return get(name);
     }
 
-    public static Texture2d getOrElseUploadTexture(String name) {
+    public static Texture getOrElseUploadTexture(String name) {
         var texture = get(name);
         if (Objects.isNull(texture)) {
             return uploadAndGet(name);
@@ -29,7 +29,7 @@ public class TextureLibrary {
         return texture;
     }
 
-    public static Texture2d get(String name) {
+    public static Texture get(String name) {
         var path = TEXTURE_PATH_PREFIX + name;
         if (textures.containsKey(path)) {
             return textures.get(path);
@@ -37,7 +37,7 @@ public class TextureLibrary {
         return null;
     }
 
-    public static Texture2d get(int textureId) {
+    public static Texture get(int textureId) {
         return textures.getValue(textureId);
     }
 

@@ -47,7 +47,7 @@ public class Batch {
     private void bindTextures() {
         int i = 0;
         for (var sprite : sprites) {
-            if (sprite != null && sprite.getTextureId() != OpenGLTexture2d.RESERVED_TEXTURE_SLOT_ID) {
+            if (sprite != null && sprite.getTextureId() != OpenGLTexture.RESERVED_TEXTURE_SLOT_ID) {
                 var texture = batchTextureManager.getTexture(sprite.getTextureId());
                 assert texture != null;
                 texture.activate(GL_TEXTURE0 + i);
@@ -59,7 +59,7 @@ public class Batch {
 
     private void unbindTextures() {
         for (var sprite : sprites) {
-            if (sprite != null && sprite.getTextureId() != OpenGLTexture2d.RESERVED_TEXTURE_SLOT_ID) {
+            if (sprite != null && sprite.getTextureId() != OpenGLTexture.RESERVED_TEXTURE_SLOT_ID) {
                 var texture = batchTextureManager.getTexture(sprite.getTextureId());
                 assert texture != null;
                 texture.unbind();
@@ -114,7 +114,8 @@ public class Batch {
             shader.setUniformTextureArray("u_Textures", batchTextureManager.getTextureSlots());
         }
 
-        renderer.submit(vertexArray, shader);
+        // TODO: refactor to use current API
+//        renderer.drawQuad(vertexArray, shader);
 
         unbindTextures();
     }

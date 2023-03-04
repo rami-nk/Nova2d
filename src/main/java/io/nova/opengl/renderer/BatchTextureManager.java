@@ -1,6 +1,6 @@
 package io.nova.opengl.renderer;
 
-import io.nova.core.renderer.Texture2d;
+import io.nova.core.renderer.Texture;
 import io.nova.core.renderer.TextureLibrary;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public class BatchTextureManager {
     }
 
     public void add(int textureId) {
-        if (textureId != OpenGLTexture2d.RESERVED_TEXTURE_SLOT_ID) {
+        if (textureId != OpenGLTexture.RESERVED_TEXTURE_SLOT_ID) {
             if (textureIds.size() >= MAX_TEXTURES) {
                 System.err.println("Maximal texture slot limit reached!");
                 System.err.printf("Texture %s could be not added!", textureId);
@@ -38,7 +38,7 @@ public class BatchTextureManager {
     }
 
     public float getTextureSlot(int textureId) {
-        if (textureId == OpenGLTexture2d.RESERVED_TEXTURE_SLOT_ID) {
+        if (textureId == OpenGLTexture.RESERVED_TEXTURE_SLOT_ID) {
             return -1;
         }
         for (int i=0; i < textureIds.size(); i++) {
@@ -49,7 +49,7 @@ public class BatchTextureManager {
         return -1;
     }
 
-    public Texture2d getTexture(int textureId) {
+    public Texture getTexture(int textureId) {
         return TextureLibrary.get(textureId);
     }
 

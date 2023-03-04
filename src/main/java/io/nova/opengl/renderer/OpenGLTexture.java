@@ -1,22 +1,23 @@
 package io.nova.opengl.renderer;
 
-import io.nova.core.renderer.Texture2d;
+import io.nova.core.renderer.Texture;
 import org.lwjgl.BufferUtils;
 
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 import static org.lwjgl.opengl.GL30.*;
-import static org.lwjgl.opengl.GL45.*;
 import static org.lwjgl.stb.STBImage.*;
 
-public class OpenGLTexture2d implements Texture2d {
+public class OpenGLTexture implements Texture {
 
-    private final String filepath;
+    private String filepath;
     private final int rendererId;
     private int width;
     private int height;
+    private int internalFormat;
 
-    public OpenGLTexture2d(String filepath) {
+    public OpenGLTexture(String filepath) {
         this.filepath = filepath;
         rendererId = glGenTextures();
         bind();
@@ -28,6 +29,21 @@ public class OpenGLTexture2d implements Texture2d {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
         loadAndUploadTexture(filepath);
+    }
+
+    public OpenGLTexture(int width, int height) {
+        this.width = width;
+        this.height = height;
+        this.internalFormat = GL_RGBA;
+        this.rendererId = glGenTextures();
+
+        bind();
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     }
 
     @Override
@@ -44,7 +60,6 @@ public class OpenGLTexture2d implements Texture2d {
             this.width = width.get(0);
             this.height = height.get(0);
 
-            int internalFormat = 0;
             int channelValue = channel.get();
             if (channelValue == 4) {
                 internalFormat = GL_RGBA;
@@ -53,8 +68,7 @@ public class OpenGLTexture2d implements Texture2d {
             } else {
                 System.err.println("Format not supported!");
             }
-            glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width.get(), height.get(),
-                    0, internalFormat, GL_UNSIGNED_BYTE, textureBytes);
+            setData(textureBytes);
             stbi_image_free(textureBytes);
         } else {
             System.err.printf("Could not load texture for %s", filepath);
@@ -74,6 +88,12 @@ public class OpenGLTexture2d implements Texture2d {
     @Override
     public void activate(int slot) {
         glActiveTexture(slot);
+    }
+
+    @Override
+    public void setData(ByteBuffer data) {
+        glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height,
+                0, internalFormat, GL_UNSIGNED_BYTE, data);
     }
 
     @Override
