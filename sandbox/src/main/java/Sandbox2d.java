@@ -3,7 +3,6 @@ import io.nova.core.layer.Layer;
 import io.nova.core.renderer.*;
 import io.nova.event.Event;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 public class Sandbox2d extends Layer {
@@ -29,7 +28,8 @@ public class Sandbox2d extends Layer {
         {
             renderer.drawQuad(new Vector2f(), new Vector2f(1.0f, 1.0f), new Vector4f(objectColor));
             renderer.drawQuad(new Vector2f(0.5f, 0.5f), new Vector2f(1.0f, 1.0f), new Vector4f(0.5f));
-            renderer.drawQuad(new Vector2f(0.5f, 0.5f), new Vector2f(0.5f, 0.5f), new Vector4f(0.5f));
+            renderer.drawQuad(new Vector2f(0.5f, 0.5f), new Vector2f(0.5f, 0.5f), TextureLibrary.getOrElseUploadTexture("Nova2d-logo-white.png"));
+            renderer.drawQuad(new Vector2f(-0.5f, -0.5f), new Vector2f(2.0f, 2.5f), TextureLibrary.getOrElseUploadTexture("openGlLogo.png"));
         }
         renderer.endScene();
     }

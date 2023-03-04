@@ -11,15 +11,16 @@ import static org.lwjgl.opengl.GL30.*;
 public class OpenGLRenderer implements Renderer {
 
     private OrthographicCamera camera;
-    private final Shader shader;
+    private final Shader flatColorShader;
+    private final Shader textureShader;
     private final VertexArray vertexArray;
 
     public OpenGLRenderer() {
         float[] vertices = {
-                -0.5f, -0.5f, 0.0f,
-                0.5f, -0.5f, 0.0f,
-                0.5f, 0.5f, 0.0f,
-                -0.5f, 0.5f, 0.0f
+                -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+                0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+                0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
+                -0.5f, 0.5f, 0.0f, 0.0f, 1.0f
         };
 
         int[] elementArray = {0, 1, 2, 2, 3, 0};
@@ -31,16 +32,23 @@ public class OpenGLRenderer implements Renderer {
 
         var layout = new OpenGLVertexBufferLayout();
         layout.pushFloat(3);
+        layout.pushFloat(2);
         vertexArray.addBuffer(vertexBuffer, layout);
         vertexArray.setIndexBuffer(indexBuffer);
-        shader = ShaderLibrary.getOrElseUpload("sandbox2d.glsl");
+        flatColorShader = ShaderLibrary.getOrElseUpload("sandbox2d.glsl");
+        textureShader = ShaderLibrary.getOrElseUpload("simple.glsl");
+        this.textureShader.bind();
+        this.textureShader.setUniformTexture("uTexture", 0);
     }
 
     @Override
     public void beginScene(OrthographicCamera camera) {
         this.camera = camera;
-        this.shader.bind();
-        this.shader.setUniformMat4f("uViewProjection", camera.getViewProjectionMatrix());
+        this.flatColorShader.bind();
+        this.flatColorShader.setUniformMat4f("uViewProjection", camera.getViewProjectionMatrix());
+
+        this.textureShader.bind();
+        this.textureShader.setUniformMat4f("uViewProjection", camera.getViewProjectionMatrix());
     }
 
     @Override
@@ -72,13 +80,25 @@ public class OpenGLRenderer implements Renderer {
 
     @Override
     public void drawQuad(Vector3f position, Vector2f size, Vector4f color) {
-        this.shader.bind();
-        this.shader.setUniformVec4f("uColor", color);
+        this.flatColorShader.bind();
+        this.flatColorShader.setUniformVec4f("uColor", color);
         vertexArray.bind();
         var transform = new Matrix4f()
                 .translate(position)
                 .scale(size.x, size.y, 1.0f);
-        this.shader.setUniformMat4f("uModel", transform);
+        this.flatColorShader.setUniformMat4f("uModel", transform);
+        glDrawElements(GL_TRIANGLES, vertexArray.getIndexBuffer().getCount(), GL_UNSIGNED_INT, 0);
+    }
+
+    @Override
+    public void drawQuad(Vector3f position, Vector2f size, Texture2d texture2d) {
+        textureShader.bind();
+        vertexArray.bind();
+        var transform = new Matrix4f()
+                .translate(position)
+                .scale(size.x, size.y, 1.0f);
+        this.textureShader.setUniformMat4f("uModel", transform);
+        texture2d.bind();
         glDrawElements(GL_TRIANGLES, vertexArray.getIndexBuffer().getCount(), GL_UNSIGNED_INT, 0);
     }
 }

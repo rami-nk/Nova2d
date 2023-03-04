@@ -22,7 +22,6 @@ in vec2 fTexCoords;
 
 out vec4 color;
 
-uniform vec4 uColor;
 uniform sampler2D uTexture;
 
 void main()

@@ -41,4 +41,9 @@ public interface Renderer {
         drawQuad(new Vector3f(position, 0.0f), size, color);
     }
     void drawQuad(Vector3f position, Vector2f size, Vector4f color);
+
+    default void drawQuad(Vector2f position, Vector2f size, Texture2d texture2d) {
+        drawQuad(new Vector3f(position, 0.0f), size, texture2d);
+    }
+    void drawQuad(Vector3f position, Vector2f size, Texture2d texture2d);
 }
