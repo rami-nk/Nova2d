@@ -24,8 +24,9 @@ out vec4 color;
 
 uniform vec4 uColor;
 uniform sampler2D uTexture;
+uniform float uTilingFactor;
 
 void main()
 {
-    color = texture(uTexture, fTexCoords) * uColor;
+    color = texture(uTexture, fTexCoords * uTilingFactor) * uColor;
 }

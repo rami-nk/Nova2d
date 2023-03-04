@@ -24,9 +24,9 @@ public interface Shader {
 
     void unbind();
 
-    void setUniformMat4f(String name, Matrix4f mat4f);
+    void setUniformMat4f(String name, Matrix4f value);
 
-    void setUniformVec2f(String name, Vector2f vec2f);
+    void setUniformVec2f(String name, Vector2f value);
 
     void setUniformInt(String name, int value);
 
@@ -35,5 +35,8 @@ public interface Shader {
     void setUniformIntArray(String name, int[] values);
 
     void setUniformTextureArray(String name, int[] slots);
-    void setUniformVec4f(String name, Vector4f vec4f);
+
+    void setUniformVec4f(String name, Vector4f value);
+
+    void setUniformFloat(String name, float value);
 }

@@ -27,16 +27,31 @@ public interface Renderer {
     }
 
     default void beginScene(OrthographicCamera camera) { }
-    default void endScene() { }
+
+    default void endScene() {
+    }
+
     void setClearColor(float red, float green, float blue, float alpha);
+
     void clear();
+
     default void drawQuad(Vector2f position, Vector2f size, Vector4f color) {
         drawQuad(new Vector3f(position, 0.0f), size, color);
     }
+
     void drawQuad(Vector3f position, Vector2f size, Vector4f color);
 
     default void drawQuad(Vector2f position, Vector2f size, Texture texture) {
         drawQuad(new Vector3f(position, 0.0f), size, texture);
     }
-    void drawQuad(Vector3f position, Vector2f size, Texture texture);
+
+    default void drawQuad(Vector3f position, Vector2f size, Texture texture) {
+        drawQuad(new Vector3f(position.x, position.y, 0.0f), size, texture, 1.0f);
+    }
+
+    default void drawQuad(Vector2f position, Vector2f size, Texture texture, float tilingFactor) {
+        drawQuad(new Vector3f(position.x, position.y, 0.0f), size, texture, tilingFactor);
+    }
+
+    void drawQuad(Vector3f position, Vector2f size, Texture texture, float tilingFactor);
 }

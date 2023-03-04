@@ -72,8 +72,9 @@ public class OpenGLRenderer implements Renderer {
     }
 
     @Override
-    public void drawQuad(Vector3f position, Vector2f size, Texture texture) {
+    public void drawQuad(Vector3f position, Vector2f size, Texture texture, float tilingFactor) {
         shader.setUniformVec4f("uColor", new Vector4f(1.0f));
+        shader.setUniformFloat("uTilingFactor", tilingFactor);
         texture.bind();
         drawQuad(position, size);
     }

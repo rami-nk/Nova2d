@@ -45,7 +45,6 @@ public class ImGuiLayer extends Layer {
 
     @Override
     public void onImGuiRender() {
-        ImGui.showDemoWindow();
     }
 
     @Override

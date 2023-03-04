@@ -44,13 +44,13 @@ public class OpenGLShader implements Shader {
     }
 
     @Override
-    public void setUniformMat4f(final String name, final Matrix4f mat4f) {
-        glUniformMatrix4fv(getUniformLocation(name), false, mat4f.get(BufferUtils.createFloatBuffer(16)));
+    public void setUniformMat4f(final String name, final Matrix4f value) {
+        glUniformMatrix4fv(getUniformLocation(name), false, value.get(BufferUtils.createFloatBuffer(16)));
     }
 
     @Override
-    public void setUniformVec2f(final String name, final Vector2f vec2f) {
-        glUniform2fv(getUniformLocation(name), vec2f.get(BufferUtils.createFloatBuffer(2)));
+    public void setUniformVec2f(final String name, final Vector2f value) {
+        glUniform2fv(getUniformLocation(name), value.get(BufferUtils.createFloatBuffer(2)));
     }
 
     @Override
@@ -74,8 +74,13 @@ public class OpenGLShader implements Shader {
     }
 
     @Override
-    public void setUniformVec4f(String name, Vector4f vec4f) {
-        glUniform4f(getUniformLocation(name), vec4f.x, vec4f.y, vec4f.z, vec4f.w);
+    public void setUniformVec4f(String name, Vector4f value) {
+        glUniform4f(getUniformLocation(name), value.x, value.y, value.z, value.w);
+    }
+
+    @Override
+    public void setUniformFloat(String name, float value) {
+        glUniform1f(getUniformLocation(name), value);
     }
 
     private int createShader(final String vertexShader, final String fragmentShader) {
