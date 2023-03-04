@@ -13,7 +13,6 @@ import io.nova.event.window.WindowResizeEvent;
 import io.nova.imgui.ImGuiLayer;
 import io.nova.utils.Time;
 import io.nova.window.Input;
-import org.joml.Vector3f;
 
 import static io.nova.core.codes.KeyCodes.NV_KEY_ESCAPE;
 
@@ -25,6 +24,7 @@ public class Application {
     private boolean running;
     private final LayerStack layerStack;
     private final ImGuiLayer imGuiLayer;
+    private boolean minimized;
 
     public Application(ApplicationSpecification specification) {
         application = this;
@@ -35,14 +35,15 @@ public class Application {
             specification.setWorkingDirectory(currentDir);
         }
 
-        window = WindowFactory.create(new WindowProps());
-        window.setEventCallback(this::onEvent);
+        this.window = WindowFactory.create(new WindowProps());
+        this.window.setEventCallback(this::onEvent);
 
-        layerStack = new LayerStack();
-        imGuiLayer = new ImGuiLayer();
-        pushOverlay(imGuiLayer);
+        this.layerStack = new LayerStack();
+        this.imGuiLayer = new ImGuiLayer();
+        pushOverlay(this.imGuiLayer);
 
         isRunning(true);
+        minimized = false;
     }
 
     public void onEvent(Event event) {
@@ -69,7 +70,12 @@ public class Application {
     }
 
     private boolean onWindowResize(WindowResizeEvent event) {
-        return true;
+        if (event.getWidth() == 0 || event.getHeight() == 0) {
+            minimized = true;
+            return false;
+        }
+        minimized = false;
+        return false;
     }
 
     public static Window getWindow() {
@@ -85,8 +91,10 @@ public class Application {
             float deltaTime = startTime - endTime;
             endTime = startTime;
 
-            for (var layer : layerStack.getLayers()) {
-                layer.onUpdate(deltaTime);
+            if (!minimized) {
+                for (var layer : layerStack.getLayers()) {
+                    layer.onUpdate(deltaTime);
+                }
             }
 
             imGuiLayer.startFrame();
@@ -101,7 +109,6 @@ public class Application {
 
             window.onUpdate();
         }
-
         shutdown();
     }
 

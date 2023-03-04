@@ -15,10 +15,9 @@ public class Sandbox2d extends Layer {
     private Renderer renderer;
     private Shader shader;
     private VertexArray vertexArray;
-    private Texture2d texture2d;
 
     private Vector3f backgroundColor;
-    private float[] objectColor = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
+    private final float[] objectColor = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
 
     @Override
     public void onAttach() {
@@ -28,11 +27,12 @@ public class Sandbox2d extends Layer {
         backgroundColor = new Vector3f(1.0f, 1.0f, 1.0f);
 
         float[] vertices = {
-                -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-                0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-                0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
-                -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+                -0.5f, -0.5f, 0.0f,
+                0.5f, -0.5f, 0.0f,
+                0.5f, 0.5f, 0.0f,
+                -0.5f, 0.5f, 0.0f
         };
+
         int[] elementArray = {0, 1, 2, 2, 3, 0};
 
         vertexArray = new OpenGLVertexArray();
@@ -42,15 +42,10 @@ public class Sandbox2d extends Layer {
 
         var layout = new OpenGLVertexBufferLayout();
         layout.pushFloat(3);
-        layout.pushFloat(2);
         vertexArray.addBuffer(vertexBuffer, layout);
         vertexArray.setIndexBuffer(indexBuffer);
-        shader = ShaderLibrary.getOrElseUpload("simple.glsl");
+        shader = ShaderLibrary.getOrElseUpload("sandbox2d.glsl");
         shader.setUniformTexture("uTexture", 0);
-
-        var textureIdx = TextureLibrary.upload("openGlLogo.png");
-        texture2d = TextureLibrary.get(textureIdx);
-        texture2d.bind();
     }
 
     @Override
