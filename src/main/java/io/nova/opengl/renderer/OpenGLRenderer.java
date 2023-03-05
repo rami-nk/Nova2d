@@ -14,8 +14,7 @@ import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
+import java.util.Arrays;
 
 import static org.lwjgl.opengl.GL30.*;
 
@@ -29,10 +28,11 @@ public class OpenGLRenderer implements Renderer {
     private final Shader shader;
     private final VertexBuffer vertexBuffer;
     private final Texture whiteTexture;
+    private final Vector4f[] vertexPositions;
     TextureSlotManager textureSlotManager;
-    private FloatBuffer quadData;
+    private float[] quadData;
     private int indexCount;
-    private Vector4f[] vertexPositions;
+    private int quadDataIndex = 0;
 
     public OpenGLRenderer() {
         VertexArray vertexArray = VertexArrayFactory.create();
@@ -47,7 +47,7 @@ public class OpenGLRenderer implements Renderer {
         vertexArray.addVertexBuffer(vertexBuffer, layout);
 
         IndexBuffer indexBuffer;
-        var indices = generateIndices(MAX_INDICES);
+        var indices = generateIndices();
         indexBuffer = IndexBufferFactory.create(indices);
         vertexArray.setIndexBuffer(indexBuffer);
 
@@ -84,20 +84,18 @@ public class OpenGLRenderer implements Renderer {
 
     @Override
     public void beginScene(OrthographicCamera camera) {
-        this.shader.bind();
-        this.shader.setUniformMat4f("uViewProjection", camera.getViewProjectionMatrix());
-        this.quadData = ByteBuffer.allocateDirect(MAX_QUADS * ELEMENTS_PER_VERTEX * VERTICES_PER_QUAD)
-                .order(ByteOrder.nativeOrder())
-                .asFloatBuffer();
-        this.indexCount = 0;
+        shader.bind();
+        shader.setUniformMat4f("uViewProjection", camera.getViewProjectionMatrix());
+
+        quadData = new float[MAX_QUADS * ELEMENTS_PER_VERTEX * VERTICES_PER_QUAD];
+        indexCount = 0;
+        quadDataIndex = 0;
     }
 
     @Override
     public void endScene() {
-        quadData.flip();
-        float[] floatArray = new float[quadData.remaining()];
-        quadData.get(floatArray);
-        vertexBuffer.reBufferData(floatArray);
+        var copy = Arrays.copyOfRange(quadData, 0, quadDataIndex);
+        vertexBuffer.reBufferData(copy);
 
         flush();
     }
@@ -197,25 +195,42 @@ public class OpenGLRenderer implements Renderer {
         for (int i = 0; i < 4; i++) {
             Vector4f transformedPos = vertexPositions[i].mul(transform, new Vector4f());
 
-            quadData.put(transformedPos.x).put(transformedPos.y).put(transformedPos.z);
-            quadData.put(color.x).put(color.y).put(color.z).put(color.w);
+            quadData[quadDataIndex++] = transformedPos.x;
+            quadData[quadDataIndex++] = transformedPos.y;
+            quadData[quadDataIndex++] = transformedPos.z;
+
+            quadData[quadDataIndex++] = color.x;
+            quadData[quadDataIndex++] = color.y;
+            quadData[quadDataIndex++] = color.z;
+            quadData[quadDataIndex++] = color.w;
 
             switch (i) {
-                case 0 -> quadData.put(0.0f).put(0.0f);
-                case 1 -> quadData.put(1.0f).put(0.0f);
-                case 2 -> quadData.put(1.0f).put(1.0f);
-                case 3 -> quadData.put(0.0f).put(1.0f);
+                case 0 -> {
+                    quadData[quadDataIndex++] = 0.0f;
+                    quadData[quadDataIndex++] = 0.0f;
+                }
+                case 1 -> {
+                    quadData[quadDataIndex++] = 1.0f;
+                    quadData[quadDataIndex++] = 0.0f;
+                }
+                case 2 -> {
+                    quadData[quadDataIndex++] = 1.0f;
+                    quadData[quadDataIndex++] = 1.0f;
+                }
+                case 3 -> {
+                    quadData[quadDataIndex++] = 0.0f;
+                    quadData[quadDataIndex++] = 1.0f;
+                }
             }
 
-            quadData.put(textureSlot);
-            quadData.put(tilingFactor);
+            quadData[quadDataIndex++] = textureSlot;
+            quadData[quadDataIndex++] = tilingFactor;
         }
         indexCount += 6;
     }
 
-
-    private int[] generateIndices(int amount) {
-        int[] indices = new int[amount];
+    private int[] generateIndices() {
+        int[] indices = new int[OpenGLRenderer.MAX_INDICES];
         var offset = 0;
         for (int i = 0; i < MAX_INDICES; i += 6) {
             indices[i] = offset;

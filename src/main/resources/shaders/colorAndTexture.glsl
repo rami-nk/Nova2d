@@ -37,8 +37,5 @@ uniform sampler2D uTextures[16];
 
 void main()
 {
-    // TODO: tiling factor
-    //    color = texture(uTexture, fTexCoords * uTilingFactor) * fColor;
-    //    color = texture(uTextures[int(fTexId)], fTexCoords) * fColor;
     color = texture(uTextures[int(fTexId)], fTexCoords * fTilingFactor) * fColor;
 }
