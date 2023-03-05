@@ -14,6 +14,7 @@ import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.GL30.*;
@@ -85,7 +86,9 @@ public class OpenGLRenderer implements Renderer {
     public void beginScene(OrthographicCamera camera) {
         this.shader.bind();
         this.shader.setUniformMat4f("uViewProjection", camera.getViewProjectionMatrix());
-        this.quadData = BufferUtils.createFloatBuffer(MAX_QUADS * ELEMENTS_PER_VERTEX * VERTICES_PER_QUAD);
+        this.quadData = ByteBuffer.allocateDirect(MAX_QUADS * ELEMENTS_PER_VERTEX * VERTICES_PER_QUAD)
+                .order(ByteOrder.nativeOrder())
+                .asFloatBuffer();
         this.indexCount = 0;
     }
 
