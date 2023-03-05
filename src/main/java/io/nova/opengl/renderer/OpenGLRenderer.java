@@ -178,7 +178,7 @@ public class OpenGLRenderer implements Renderer {
 
         var transform = new Matrix4f()
                 .translate(position)
-                .rotate((float) Math.toRadians(rotation), new Vector3f(0.0f, 0.0f, 1.0f))
+                .rotate(rotation, new Vector3f(0.0f, 0.0f, 1.0f))
                 .scale(size.x, size.y, 1.0f);
 
         addQuadData(transform, tilingFactor, tintColor, textureSlot);
@@ -190,7 +190,7 @@ public class OpenGLRenderer implements Renderer {
 
         var transform = new Matrix4f()
                 .translate(position)
-                .rotate((float) Math.toRadians(rotation), new Vector3f(0.0f, 0.0f, 1.0f))
+                .rotate(rotation, new Vector3f(0.0f, 0.0f, 1.0f))
                 .scale(size.x, size.y, 1.0f);
 
         addQuadData(transform, 1.0f, color, textureSlot);
@@ -203,7 +203,7 @@ public class OpenGLRenderer implements Renderer {
 
         var transform = new Matrix4f()
                 .translate(position)
-                .rotate((float) Math.toRadians(rotation), new Vector3f(0.0f, 0.0f, 1.0f))
+                .rotate(rotation, new Vector3f(0.0f, 0.0f, 1.0f))
                 .scale(size.x, size.y, 1.0f);
 
         addQuadData(transform, 1.0f, white, textureSlot);
