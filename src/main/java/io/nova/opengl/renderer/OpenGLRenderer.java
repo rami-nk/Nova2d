@@ -20,7 +20,7 @@ import static org.lwjgl.opengl.GL30.*;
 
 public class OpenGLRenderer implements Renderer {
 
-    private static final int MAX_QUADS = 10_000;
+    private static final int MAX_QUADS = 1;
     private static final int ELEMENTS_PER_VERTEX = 11;
     private static final int VERTICES_PER_QUAD = 4;
     private static final int MAX_VERTICES = MAX_QUADS * VERTICES_PER_QUAD;
@@ -29,10 +29,11 @@ public class OpenGLRenderer implements Renderer {
     private final VertexBuffer vertexBuffer;
     private final Texture whiteTexture;
     private final Vector4f[] vertexPositions;
+    private final Statistics stats;
     TextureSlotManager textureSlotManager;
     private float[] quadData;
     private int indexCount;
-    private int quadDataIndex = 0;
+    private int quadDataIndex;
 
     public OpenGLRenderer() {
         VertexArray vertexArray = VertexArrayFactory.create();
@@ -72,6 +73,7 @@ public class OpenGLRenderer implements Renderer {
                 new Vector4f(0.5f, 0.5f, 0.0f, 1.0f),
                 new Vector4f(-0.5f, 0.5f, 0.0f, 1.0f)
         };
+        stats = new Statistics();
     }
 
     private static ByteBuffer generateWhitePixel() {
@@ -87,9 +89,7 @@ public class OpenGLRenderer implements Renderer {
         shader.bind();
         shader.setUniformMat4f("uViewProjection", camera.getViewProjectionMatrix());
 
-        quadData = new float[MAX_QUADS * ELEMENTS_PER_VERTEX * VERTICES_PER_QUAD];
-        indexCount = 0;
-        quadDataIndex = 0;
+        resetData();
     }
 
     @Override
@@ -108,6 +108,7 @@ public class OpenGLRenderer implements Renderer {
         }
 
         glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
+        stats.drawCalls++;
     }
 
     @Override
@@ -118,6 +119,23 @@ public class OpenGLRenderer implements Renderer {
     @Override
     public void clear() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
+
+    @Override
+    public void resetStats() {
+        stats.drawCalls = 0;
+        stats.quadCount = 0;
+    }
+
+    @Override
+    public Statistics getStats() {
+        return stats;
+    }
+
+    private void resetData() {
+        quadData = new float[MAX_QUADS * ELEMENTS_PER_VERTEX * VERTICES_PER_QUAD];
+        indexCount = 0;
+        quadDataIndex = 0;
     }
 
     @Override
@@ -192,6 +210,10 @@ public class OpenGLRenderer implements Renderer {
     }
 
     private void addQuadData(Matrix4f transform, float tilingFactor, Vector4f color, float textureSlot) {
+        if (indexCount >= MAX_INDICES) {
+            endScene();
+            resetData();
+        }
         for (int i = 0; i < 4; i++) {
             Vector4f transformedPos = vertexPositions[i].mul(transform, new Vector4f());
 
@@ -227,6 +249,7 @@ public class OpenGLRenderer implements Renderer {
             quadData[quadDataIndex++] = tilingFactor;
         }
         indexCount += 6;
+        stats.quadCount++;
     }
 
     private int[] generateIndices() {
@@ -244,5 +267,26 @@ public class OpenGLRenderer implements Renderer {
             offset += 4;
         }
         return indices;
+    }
+
+    public static class Statistics {
+        private int quadCount = 0;
+        private int drawCalls = 0;
+
+        public int getQuadCount() {
+            return quadCount;
+        }
+
+        public int getDrawCalls() {
+            return drawCalls;
+        }
+
+        public int getTotalVertexCount() {
+            return quadCount * 4;
+        }
+
+        public int getTotalIndexCount() {
+            return quadCount * 6;
+        }
     }
 }
