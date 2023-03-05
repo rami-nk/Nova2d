@@ -20,7 +20,7 @@ import static org.lwjgl.opengl.GL30.*;
 
 public class OpenGLRenderer implements Renderer {
 
-    private static final int MAX_QUADS = 1;
+    private static final int MAX_QUADS = 100_000;
     private static final int ELEMENTS_PER_VERTEX = 11;
     private static final int VERTICES_PER_QUAD = 4;
     private static final int MAX_VERTICES = MAX_QUADS * VERTICES_PER_QUAD;
@@ -38,7 +38,7 @@ public class OpenGLRenderer implements Renderer {
     public OpenGLRenderer() {
         VertexArray vertexArray = VertexArrayFactory.create();
 
-        vertexBuffer = VertexBufferFactory.create(MAX_VERTICES);
+        vertexBuffer = VertexBufferFactory.create(MAX_VERTICES * 11);
         var layout = new OpenGLVertexBufferLayout();
         layout.pushFloat("aPosition", 3);
         layout.pushFloat("aColor", 4);
