@@ -5,7 +5,7 @@ import io.nova.opengl.renderer.OpenGLVertexArray;
 
 public class VertexArrayFactory {
 
-    static VertexArray create() {
+    public static VertexArray create() {
         switch (Renderer.API) {
             case OpenGL -> {
                 return new OpenGLVertexArray();

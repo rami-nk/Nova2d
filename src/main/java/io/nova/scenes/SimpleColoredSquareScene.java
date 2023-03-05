@@ -45,9 +45,9 @@ public class SimpleColoredSquareScene extends Scene {
         indexBuffer = new OpenGLIndexBuffer(elementArray);
 
         var layout = new OpenGLVertexBufferLayout();
-        layout.pushFloat(3);
-        layout.pushFloat(4);
-        vertexArray.addBuffer(vertexBuffer, layout);
+        layout.pushFloat("aPosition", 3);
+        layout.pushFloat("aColor", 4);
+        vertexArray.addVertexBuffer(vertexBuffer, layout);
         vertexArray.setIndexBuffer(indexBuffer);
         shader = ShaderLibrary.getOrElseUpload("default.glsl");
     }

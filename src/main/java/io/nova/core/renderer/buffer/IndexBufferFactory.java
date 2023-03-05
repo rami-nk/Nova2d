@@ -5,7 +5,7 @@ import io.nova.opengl.renderer.OpenGLIndexBuffer;
 
 public class IndexBufferFactory {
 
-    static IndexBuffer create(int[] data) {
+    public static IndexBuffer create(int[] data) {
         switch (Renderer.API) {
             case OpenGL -> {
                 return new OpenGLIndexBuffer(data);

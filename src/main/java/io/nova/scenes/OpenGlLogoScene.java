@@ -42,10 +42,10 @@ public class OpenGlLogoScene extends Scene {
         indexBuffer = new OpenGLIndexBuffer(elementArray);
 
         var layout = new OpenGLVertexBufferLayout();
-        layout.pushFloat(3);
-        layout.pushFloat(2);
+        layout.pushFloat("aPosition", 3);
+        layout.pushFloat("aTextureCoordinates", 2);
 
-        vertexArray.addBuffer(vertexBuffer, layout);
+        vertexArray.addVertexBuffer(vertexBuffer, layout);
         vertexArray.setIndexBuffer(indexBuffer);
 
         shader = ShaderLibrary.getOrElseUpload("simpleTexture.glsl");

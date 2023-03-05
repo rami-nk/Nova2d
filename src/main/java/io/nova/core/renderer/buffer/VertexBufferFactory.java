@@ -5,7 +5,7 @@ import io.nova.opengl.renderer.OpenGLVertexBuffer;
 
 public class VertexBufferFactory {
 
-    static VertexBuffer create(float[] data) {
+    public static VertexBuffer create(float[] data) {
         switch (Renderer.API) {
             case OpenGL -> {
                 return new OpenGLVertexBuffer(data);
@@ -18,10 +18,10 @@ public class VertexBufferFactory {
         return null;
     }
 
-    static VertexBuffer create(int size) {
+    public static VertexBuffer create(int count) {
         switch (Renderer.API) {
             case OpenGL -> {
-                return new OpenGLVertexBuffer(size);
+                return new OpenGLVertexBuffer(count);
             }
             case None -> {
                 System.err.printf("%s not supported!\n", Renderer.API.name());

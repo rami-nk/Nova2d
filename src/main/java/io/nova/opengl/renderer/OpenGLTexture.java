@@ -76,7 +76,8 @@ public class OpenGLTexture implements Texture {
     }
 
     @Override
-    public void bind() {
+    public void bind(int slot) {
+        glActiveTexture(slot);
         glBindTexture(GL_TEXTURE_2D, rendererId);
     }
 
@@ -104,5 +105,10 @@ public class OpenGLTexture implements Texture {
     @Override
     public int getHeight() {
         return height;
+    }
+
+    @Override
+    public int getId() {
+        return rendererId;
     }
 }

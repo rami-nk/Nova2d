@@ -20,13 +20,13 @@ public class OpenGLVertexBufferLayout implements VertexBufferLayout {
     }
 
     @Override
-    public void pushFloat(int count) {
+    public void pushFloat(String name, int count) {
         elements.add(new VertexBufferElement(GL_FLOAT, count, false));
         stride += count * VertexBufferElement.getByteSize(GL_FLOAT);
     }
 
     @Override
-    public void pushInt(int count) {
+    public void pushInt(String name, int count) {
         elements.add(new VertexBufferElement(GL_INT, count, false));
         stride += count * VertexBufferElement.getByteSize(Integer.BYTES);
     }

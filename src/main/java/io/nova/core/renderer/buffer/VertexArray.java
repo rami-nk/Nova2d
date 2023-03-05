@@ -3,7 +3,7 @@ package io.nova.core.renderer.buffer;
 import io.nova.opengl.renderer.OpenGLVertexBufferLayout;
 
 public interface VertexArray {
-    void addBuffer(VertexBuffer vertexBuffer, OpenGLVertexBufferLayout vertexBufferLayout);
+    void addVertexBuffer(VertexBuffer vertexBuffer, OpenGLVertexBufferLayout vertexBufferLayout);
 
     void bind();
 

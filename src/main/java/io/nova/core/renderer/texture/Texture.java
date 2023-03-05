@@ -5,10 +5,15 @@ import java.nio.ByteBuffer;
 public interface Texture {
 
     int RESERVED_TEXTURE_SLOT_ID = -1;
+    int SLOT_ZERO = 33984;
 
     void loadAndUploadTexture(String filepath);
 
-    void bind();
+    default void bind() {
+        bind(0);
+    }
+
+    void bind(int slot);
 
     void unbind();
 
@@ -19,4 +24,6 @@ public interface Texture {
     int getWidth();
 
     int getHeight();
+
+    int getId();
 }

@@ -19,7 +19,7 @@ public class OpenGLVertexArray implements VertexArray {
     }
 
     @Override
-    public void addBuffer(final VertexBuffer vertexBuffer, final OpenGLVertexBufferLayout vertexBufferLayout) {
+    public void addVertexBuffer(final VertexBuffer vertexBuffer, final OpenGLVertexBufferLayout vertexBufferLayout) {
         this.vertexBuffer = vertexBuffer;
         bind();
         vertexBuffer.bind();
@@ -33,11 +33,6 @@ public class OpenGLVertexArray implements VertexArray {
             offset += element.count() * VertexBufferElement.getByteSize(element.type());
             index++;
         }
-    }
-
-    @Override
-    public void setIndexBuffer(IndexBuffer indexBuffer) {
-        this.indexBuffer = indexBuffer;
     }
 
     @Override
@@ -58,5 +53,10 @@ public class OpenGLVertexArray implements VertexArray {
     @Override
     public IndexBuffer getIndexBuffer() {
         return indexBuffer;
+    }
+
+    @Override
+    public void setIndexBuffer(IndexBuffer indexBuffer) {
+        this.indexBuffer = indexBuffer;
     }
 }

@@ -9,11 +9,11 @@ public class OpenGLVertexBuffer implements VertexBuffer {
     private final int rendererId;
     private final int usage;
 
-    public OpenGLVertexBuffer(int size) {
+    public OpenGLVertexBuffer(int count) {
         rendererId = glGenBuffers();
         bind();
         usage = GL_DYNAMIC_DRAW;
-        glBufferData(GL_ARRAY_BUFFER, new float[0], usage);
+        glBufferData(GL_ARRAY_BUFFER, new float[count], usage);
     }
 
     public OpenGLVertexBuffer(final float[] data) {
@@ -32,6 +32,7 @@ public class OpenGLVertexBuffer implements VertexBuffer {
 
     @Override
     public void reBufferData(float[] data) {
+        this.bind();
         glBufferSubData(GL_ARRAY_BUFFER, 0, data);
     }
 

@@ -8,8 +8,8 @@ public class WindowProps {
 
     public WindowProps() {
         this.title = "Nova2d Engine";
-        this.width = 500;
-        this.height = 500;
+        this.width = 1000;
+        this.height = 600;
     }
 
     public WindowProps(String title, int width, int height) {

@@ -16,7 +16,7 @@ public class Sandbox2d extends Layer {
 
     @Override
     public void onAttach() {
-        cameraController = new OrthographicCameraController(1.0f, true);
+        cameraController = new OrthographicCameraController(1000.0f / 600.0f, true);
         renderer = RendererFactory.create();
     }
 
