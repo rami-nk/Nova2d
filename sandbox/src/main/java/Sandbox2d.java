@@ -3,6 +3,7 @@ import io.nova.core.layer.Layer;
 import io.nova.core.renderer.Renderer;
 import io.nova.core.renderer.RendererFactory;
 import io.nova.core.renderer.camera.OrthographicCameraController;
+import io.nova.core.renderer.texture.TextureLibrary;
 import io.nova.event.Event;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
@@ -32,7 +33,7 @@ public class Sandbox2d extends Layer {
         {
             for (float y = -5.0f; y < 5.0f; y += 0.1f) {
                 for (float x = -5.0f; x < 5.0f; x += 0.1f) {
-                    renderer.drawQuad(new Vector2f(x, y), new Vector2f(0.45f, 0.45f), new Vector4f(objectColor));
+                    renderer.drawQuad(new Vector2f(x, y), new Vector2f(0.45f, 0.45f), TextureLibrary.getOrElseUploadTexture("Nova2d-logo-white.png"));
                 }
             }
             for (float y = 0.0f; y < 10.0f; y += 0.1f) {

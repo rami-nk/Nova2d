@@ -30,7 +30,7 @@ public class OpenGLRenderer implements Renderer {
     private final Texture whiteTexture;
     private final Vector4f[] vertexPositions;
     private final Statistics stats;
-    TextureSlotManager textureSlotManager;
+    private final TextureSlotManager textureSlotManager;
     private float[] quadData;
     private int indexCount;
     private int quadDataIndex;
@@ -38,7 +38,7 @@ public class OpenGLRenderer implements Renderer {
     public OpenGLRenderer() {
         VertexArray vertexArray = VertexArrayFactory.create();
 
-        vertexBuffer = VertexBufferFactory.create(MAX_VERTICES * 11);
+        vertexBuffer = VertexBufferFactory.create(MAX_VERTICES * ELEMENTS_PER_VERTEX);
         var layout = new OpenGLVertexBufferLayout();
         layout.pushFloat("aPosition", 3);
         layout.pushFloat("aColor", 4);
