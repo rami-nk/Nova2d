@@ -1,31 +1,26 @@
 package io.nova.core.renderer;
 
-import io.nova.core.buffer.IndexBuffer;
-import io.nova.core.buffer.VertexArray;
-import io.nova.core.shader.Shader;
+import io.nova.core.renderer.camera.OrthographicCamera;
+import io.nova.opengl.renderer.OpenGLRenderer;
 
-import static org.lwjgl.opengl.GL30.*;
+public interface Renderer extends QuadRenderer {
+    RendererApi API = RendererApi.OpenGL;
 
-public class Renderer {
+    void beginScene(OrthographicCamera camera);
 
-    public static void setClearColor(float red, float green, float blue, float alpha) {
-        glClearColor(red, green, blue, alpha);
-    }
+    void endScene();
 
-    public static void clear() {
-        glClear(GL_COLOR_BUFFER_BIT);
-    }
+    void flush();
 
-    public static void draw(final VertexArray vertexArray, final IndexBuffer indexBuffer, final Shader shader) {
-        shader.bind();
-        vertexArray.bind();
-        indexBuffer.bind();
-        glDrawElements(GL_TRIANGLES, indexBuffer.getCount(), GL_UNSIGNED_INT, 0);
-    }
+    void setClearColor(float red, float green, float blue, float alpha);
 
-    public static void draw(final VertexArray vertexArray, final Shader shader, int count) {
-        shader.bind();
-        vertexArray.bind();
-        glDrawArrays(GL_TRIANGLES, 0, count);
+    void clear();
+
+    void resetStats();
+
+    OpenGLRenderer.Statistics getStats();
+
+    enum RendererApi {
+        None, OpenGL
     }
 }
