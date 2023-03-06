@@ -1,4 +1,8 @@
 import imgui.ImGui;
+import imgui.flag.ImGuiCond;
+import imgui.flag.ImGuiStyleVar;
+import imgui.flag.ImGuiWindowFlags;
+import io.nova.core.application.Application;
 import io.nova.core.layer.Layer;
 import io.nova.core.renderer.Renderer;
 import io.nova.core.renderer.RendererFactory;
@@ -50,14 +54,54 @@ public class Sandbox2d extends Layer {
 
     @Override
     public void onImGuiRender() {
-        ImGui.colorEdit4("Object color", objectColor);
+//        ImGui.colorEdit4("Object color", objectColor);
+//
+//        var stats = renderer.getStats();
+//        ImGui.text("Renderer stats:");
+//        ImGui.text("Draw calls: " + stats.getDrawCalls());
+//        ImGui.text("Quad count: " + stats.getQuadCount());
+//        ImGui.text("Vertex count: " + stats.getTotalVertexCount());
+//        ImGui.text("Index count: " + stats.getTotalIndexCount());
 
+        // We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
+        // because it would be confusing to have two docking targets within each others.
+        var window_flags = ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoDocking;
+        var viewport = ImGui.getMainViewport();
+
+        ImGui.setNextWindowPos(viewport.getPosX(), viewport.getPosY(), ImGuiCond.Always);
+        ImGui.setNextWindowSize(viewport.getWorkSizeX(), viewport.getWorkSizeY());
+        ImGui.setNextWindowViewport(viewport.getID());
+
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
+
+        window_flags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove;
+        window_flags |= ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus;
+
+        ImGui.begin("Dockspace", window_flags);
+
+        ImGui.popStyleVar(2);
+
+        ImGui.dockSpace(ImGui.getID("Dockspace"));
+
+        ImGui.beginMenuBar();
+        if (ImGui.beginMenu("File")) {
+            if (ImGui.menuItem("Exit")) {
+                Application.getInstance().close();
+            }
+            ImGui.endMenu();
+        }
+        ImGui.endMenuBar();
+
+        ImGui.begin("Renderer stats");
         var stats = renderer.getStats();
-        ImGui.text("Renderer stats:");
         ImGui.text("Draw calls: " + stats.getDrawCalls());
         ImGui.text("Quad count: " + stats.getQuadCount());
         ImGui.text("Vertex count: " + stats.getTotalVertexCount());
         ImGui.text("Index count: " + stats.getTotalIndexCount());
+        ImGui.end();
+
+        ImGui.end();
     }
 
     @Override
