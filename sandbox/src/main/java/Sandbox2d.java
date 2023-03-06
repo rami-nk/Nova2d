@@ -3,10 +3,12 @@ import io.nova.core.layer.Layer;
 import io.nova.core.renderer.Renderer;
 import io.nova.core.renderer.RendererFactory;
 import io.nova.core.renderer.camera.OrthographicCameraController;
+import io.nova.core.renderer.texture.SubTexture;
+import io.nova.core.renderer.texture.Texture;
 import io.nova.core.renderer.texture.TextureLibrary;
 import io.nova.event.Event;
 import org.joml.Vector2f;
-import org.joml.Vector4f;
+import org.joml.Vector3f;
 
 public class Sandbox2d extends Layer {
 
@@ -14,15 +16,21 @@ public class Sandbox2d extends Layer {
     private OrthographicCameraController cameraController;
     private Renderer renderer;
 
+    private Texture texture;
+    private SubTexture grass;
+    private SubTexture stone;
+
     @Override
     public void onAttach() {
         cameraController = new OrthographicCameraController(1000.0f / 600.0f, true);
         renderer = RendererFactory.create();
+        texture = TextureLibrary.getOrElseUploadTexture("tilemap_packed.png");
+        grass = new SubTexture(texture, new Vector2f(0, 10), new Vector2f(16.0f, 16.0f));
+        stone = new SubTexture(texture, new Vector2f(1, 1), new Vector2f(16.0f, 16.0f));
     }
 
     @Override
     public void onUpdate(float deltaTime) {
-        System.out.println(1.0f / deltaTime);
         cameraController.onUpdate(deltaTime);
 
         renderer.setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -31,56 +39,8 @@ public class Sandbox2d extends Layer {
         renderer.resetStats();
         renderer.beginScene(cameraController.getCamera());
         {
-            for (float y = -5.0f; y < 5.0f; y += 0.1f) {
-                for (float x = -5.0f; x < 5.0f; x += 0.1f) {
-                    renderer.drawQuad(new Vector2f(x, y), new Vector2f(0.45f, 0.45f), TextureLibrary.getOrElseUploadTexture("Nova2d-logo-white.png"));
-                }
-            }
-            for (float y = 0.0f; y < 10.0f; y += 0.1f) {
-                for (float x = 0.0f; x < 10.0f; x += 0.1f) {
-                    renderer.drawQuad(new Vector2f(x, y), new Vector2f(0.45f, 0.45f), new Vector4f(objectColor));
-                }
-            }
-            for (float y = 5.0f; y < 15.0f; y += 0.1f) {
-                for (float x = 5.0f; x < 15.0f; x += 0.1f) {
-                    renderer.drawQuad(new Vector2f(x, y), new Vector2f(0.45f, 0.45f), new Vector4f(objectColor));
-                }
-            }
-            for (float y = 10.0f; y < 20.0f; y += 0.1f) {
-                for (float x = 10.0f; x < 20.0f; x += 0.1f) {
-                    renderer.drawQuad(new Vector2f(x, y), new Vector2f(0.45f, 0.45f), new Vector4f(objectColor));
-                }
-            }
-            for (float y = 10.0f; y < 20.0f; y += 0.1f) {
-                for (float x = 10.0f; x < 20.0f; x += 0.1f) {
-                    renderer.drawQuad(new Vector2f(x, y), new Vector2f(0.45f, 0.45f), new Vector4f(objectColor));
-                }
-            }
-            for (float y = 10.0f; y < 20.0f; y += 0.1f) {
-                for (float x = 10.0f; x < 20.0f; x += 0.1f) {
-                    renderer.drawQuad(new Vector2f(x, y), new Vector2f(0.45f, 0.45f), new Vector4f(objectColor));
-                }
-            }
-            for (float y = 10.0f; y < 20.0f; y += 0.1f) {
-                for (float x = 10.0f; x < 20.0f; x += 0.1f) {
-                    renderer.drawQuad(new Vector2f(x, y), new Vector2f(0.45f, 0.45f), new Vector4f(objectColor));
-                }
-            }
-            for (float y = 10.0f; y < 20.0f; y += 0.1f) {
-                for (float x = 10.0f; x < 20.0f; x += 0.1f) {
-                    renderer.drawQuad(new Vector2f(x, y), new Vector2f(0.45f, 0.45f), new Vector4f(objectColor));
-                }
-            }
-            for (float y = 10.0f; y < 20.0f; y += 0.1f) {
-                for (float x = 10.0f; x < 20.0f; x += 0.1f) {
-                    renderer.drawQuad(new Vector2f(x, y), new Vector2f(0.45f, 0.45f), new Vector4f(objectColor));
-                }
-            }
-            for (float y = 10.0f; y < 20.0f; y += 0.1f) {
-                for (float x = 10.0f; x < 20.0f; x += 0.1f) {
-                    renderer.drawQuad(new Vector2f(x, y), new Vector2f(0.45f, 0.45f), new Vector4f(objectColor));
-                }
-            }
+            renderer.drawQuad(new Vector3f(), new Vector2f(1.0f, 1.0f), grass);
+            renderer.drawQuad(new Vector2f(1.0f, 0.0f), new Vector2f(1.0f, 1.0f), stone);
         }
         renderer.endScene();
     }

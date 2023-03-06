@@ -5,6 +5,7 @@ import io.nova.core.renderer.buffer.*;
 import io.nova.core.renderer.camera.OrthographicCamera;
 import io.nova.core.renderer.shader.Shader;
 import io.nova.core.renderer.shader.ShaderLibrary;
+import io.nova.core.renderer.texture.SubTexture;
 import io.nova.core.renderer.texture.Texture;
 import io.nova.core.renderer.texture.TextureFactory;
 import org.joml.Matrix4f;
@@ -151,14 +152,14 @@ public class OpenGLRenderer implements Renderer {
 
     @Override
     public void drawQuad(Vector3f position, Vector2f size, Texture texture, float tilingFactor) {
-        var textureSlot = textureSlotManager.add(texture);
         var white = new Vector4f(1.0f);
+        drawQuad(position, size, texture, tilingFactor, white);
+    }
 
-        var transform = new Matrix4f()
-                .translate(position)
-                .scale(size.x, size.y, 1.0f);
-
-        addQuadData(transform, tilingFactor, white, textureSlot);
+    @Override
+    public void drawQuad(Vector3f position, Vector2f size, SubTexture subTexture, float tilingFactor) {
+        var white = new Vector4f(1.0f);
+        drawQuad(position, size, subTexture, tilingFactor, white);
     }
 
     @Override
@@ -185,6 +186,29 @@ public class OpenGLRenderer implements Renderer {
     }
 
     @Override
+    public void drawQuad(Vector3f position, Vector2f size, SubTexture subTexture, float tilingFactor, Vector4f tintColor) {
+        var textureSlot = textureSlotManager.add(subTexture.getTexture());
+
+        var transform = new Matrix4f()
+                .translate(position)
+                .scale(size.x, size.y, 1.0f);
+
+        addQuadDataSubTexture(transform, tilingFactor, tintColor, textureSlot, subTexture.getTextureCoordinates());
+    }
+
+    @Override
+    public void drawRotatedQuad(Vector3f position, Vector2f size, float rotation, SubTexture subTexture, float tilingFactor, Vector4f tintColor) {
+        var textureSlot = textureSlotManager.add(whiteTexture);
+
+        var transform = new Matrix4f()
+                .translate(position)
+                .rotate(rotation, new Vector3f(0.0f, 0.0f, 1.0f))
+                .scale(size.x, size.y, 1.0f);
+
+        addQuadDataSubTexture(transform, tilingFactor, tintColor, textureSlot, subTexture.getTextureCoordinates());
+    }
+
+    @Override
     public void drawRotatedQuad(Vector3f position, Vector2f size, float rotation, Vector4f color) {
         var textureSlot = textureSlotManager.add(whiteTexture);
 
@@ -207,6 +231,19 @@ public class OpenGLRenderer implements Renderer {
                 .scale(size.x, size.y, 1.0f);
 
         addQuadData(transform, 1.0f, white, textureSlot);
+    }
+
+    @Override
+    public void drawRotatedQuad(Vector3f position, Vector2f size, float rotation, SubTexture subTexture, float tilingFactor) {
+        var textureSlot = textureSlotManager.add(subTexture.getTexture());
+        var white = new Vector4f(1.0f);
+
+        var transform = new Matrix4f()
+                .translate(position)
+                .rotate(rotation, new Vector3f(0.0f, 0.0f, 1.0f))
+                .scale(size.x, size.y, 1.0f);
+
+        addQuadDataSubTexture(transform, tilingFactor, white, textureSlot, subTexture.getTextureCoordinates());
     }
 
     private void addQuadData(Matrix4f transform, float tilingFactor, Vector4f color, float textureSlot) {
@@ -244,6 +281,33 @@ public class OpenGLRenderer implements Renderer {
                     quadData[quadDataIndex++] = 1.0f;
                 }
             }
+
+            quadData[quadDataIndex++] = textureSlot;
+            quadData[quadDataIndex++] = tilingFactor;
+        }
+        indexCount += 6;
+        stats.quadCount++;
+    }
+
+    private void addQuadDataSubTexture(Matrix4f transform, float tilingFactor, Vector4f color, float textureSlot, Vector2f[] textureCoords) {
+        if (indexCount >= MAX_INDICES) {
+            endScene();
+            resetData();
+        }
+        for (int i = 0; i < 4; i++) {
+            Vector4f transformedPos = vertexPositions[i].mul(transform, new Vector4f());
+
+            quadData[quadDataIndex++] = transformedPos.x;
+            quadData[quadDataIndex++] = transformedPos.y;
+            quadData[quadDataIndex++] = transformedPos.z;
+
+            quadData[quadDataIndex++] = color.x;
+            quadData[quadDataIndex++] = color.y;
+            quadData[quadDataIndex++] = color.z;
+            quadData[quadDataIndex++] = color.w;
+
+            quadData[quadDataIndex++] = textureCoords[i].x;
+            quadData[quadDataIndex++] = textureCoords[i].y;
 
             quadData[quadDataIndex++] = textureSlot;
             quadData[quadDataIndex++] = tilingFactor;
