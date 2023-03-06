@@ -19,6 +19,7 @@ public class Sandbox2d extends Layer {
     private Texture texture;
     private SubTexture grass;
     private SubTexture stone;
+    private SubTexture ceiling;
 
     @Override
     public void onAttach() {
@@ -27,6 +28,7 @@ public class Sandbox2d extends Layer {
         texture = TextureLibrary.getOrElseUploadTexture("tilemap_packed.png");
         grass = new SubTexture(texture, new Vector2f(0, 10), new Vector2f(16.0f, 16.0f));
         stone = new SubTexture(texture, new Vector2f(1, 1), new Vector2f(16.0f, 16.0f));
+        ceiling = new SubTexture(texture, new Vector2f(6, 6), new Vector2f(16.0f, 16.0f));
     }
 
     @Override
@@ -41,6 +43,7 @@ public class Sandbox2d extends Layer {
         {
             renderer.drawQuad(new Vector3f(), new Vector2f(1.0f, 1.0f), grass);
             renderer.drawQuad(new Vector2f(1.0f, 0.0f), new Vector2f(1.0f, 1.0f), stone);
+            renderer.drawRotatedQuad(new Vector2f(2.0f, 0.0f), new Vector2f(1.0f, 1.0f), (float) Math.toRadians(45.0f), ceiling);
         }
         renderer.endScene();
     }
