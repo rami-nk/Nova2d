@@ -1,8 +1,8 @@
 import io.nova.core.application.ApplicationCommandLineArgs;
 
-public class Nova2dEditorApp {
+public class SuperNova {
 
     public static void main(String[] args) {
-        Nova2dEditor.create(new ApplicationCommandLineArgs(args)).run();
+        SuperNovaEditor.create(new ApplicationCommandLineArgs(args)).run();
     }
 }
