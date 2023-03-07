@@ -4,8 +4,7 @@ import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 import io.nova.core.application.Application;
 import io.nova.core.layer.Layer;
-import io.nova.core.renderer.Renderer;
-import io.nova.core.renderer.RendererFactory;
+import io.nova.core.renderer.*;
 import io.nova.core.renderer.camera.OrthographicCameraController;
 import io.nova.core.renderer.texture.SubTexture;
 import io.nova.core.renderer.texture.Texture;
@@ -24,6 +23,7 @@ public class Sandbox2d extends Layer {
     private SubTexture grass;
     private SubTexture stone;
     private SubTexture ceiling;
+    private FrameBuffer frameBuffer;
 
     @Override
     public void onAttach() {
@@ -33,12 +33,16 @@ public class Sandbox2d extends Layer {
         grass = new SubTexture(texture, new Vector2f(0, 10), new Vector2f(16.0f, 16.0f));
         stone = new SubTexture(texture, new Vector2f(1, 1), new Vector2f(16.0f, 16.0f));
         ceiling = new SubTexture(texture, new Vector2f(6, 6), new Vector2f(16.0f, 16.0f));
+
+        var spec = new FrameBufferSpecification(Application.getWindow().getWidth(), Application.getWindow().getHeight());
+        frameBuffer = FrameBufferFactory.create(spec);
     }
 
     @Override
     public void onUpdate(float deltaTime) {
         cameraController.onUpdate(deltaTime);
 
+        frameBuffer.bind();
         renderer.setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         renderer.clear();
 
@@ -50,6 +54,7 @@ public class Sandbox2d extends Layer {
             renderer.drawRotatedQuad(new Vector2f(2.0f, 0.0f), new Vector2f(1.0f, 1.0f), (float) Math.toRadians(45.0f), ceiling);
         }
         renderer.endScene();
+        frameBuffer.unbind();
     }
 
     @Override
@@ -99,8 +104,10 @@ public class Sandbox2d extends Layer {
         ImGui.text("Quad count: " + stats.getQuadCount());
         ImGui.text("Vertex count: " + stats.getTotalVertexCount());
         ImGui.text("Index count: " + stats.getTotalIndexCount());
-        ImGui.end();
 
+        var textureId = frameBuffer.getColorAttachmentRendererId();
+        ImGui.image(textureId, 1000, 800);
+        ImGui.end();
         ImGui.end();
     }
 
