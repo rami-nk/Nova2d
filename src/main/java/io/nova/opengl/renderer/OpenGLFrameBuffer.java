@@ -22,20 +22,24 @@ public class OpenGLFrameBuffer implements FrameBuffer {
 
     @Override
     public void invalidate() {
+        if (rendererId != 0) {
+            dispose();
+        }
+
         rendererId = glGenFramebuffers();
         glBindFramebuffer(GL_FRAMEBUFFER, rendererId);
 
         colorAttachment = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, colorAttachment);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, specification.width, specification.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, specification.getWidth(), specification.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorAttachment, 0);
 
         depthAttachment = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, depthAttachment);
-        glTexImage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, specification.width, specification.height, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, (ByteBuffer) null);
+        glTexImage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, specification.getWidth(), specification.getHeight(), 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, (ByteBuffer) null);
         glFramebufferTexture2D(GL_TEXTURE_2D, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depthAttachment, 0);
 
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
@@ -48,7 +52,7 @@ public class OpenGLFrameBuffer implements FrameBuffer {
     @Override
     public void bind() {
         glBindFramebuffer(GL_FRAMEBUFFER, rendererId);
-        glViewport(0, 0, specification.width, specification.height);
+        glViewport(0, 0, specification.getWidth(), specification.getHeight());
     }
 
     @Override
@@ -57,12 +61,27 @@ public class OpenGLFrameBuffer implements FrameBuffer {
     }
 
     @Override
+    public void dispose() {
+        glDeleteFramebuffers(rendererId);
+        glDeleteTextures(colorAttachment);
+        glDeleteTextures(depthAttachment);
+    }
+
+    @Override
     public FrameBufferSpecification getSpecification() {
-        return null;
+        return specification;
     }
 
     @Override
     public int getColorAttachmentRendererId() {
         return colorAttachment;
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        specification.setWidth(width);
+        specification.setHeight(height);
+
+        invalidate();
     }
 }

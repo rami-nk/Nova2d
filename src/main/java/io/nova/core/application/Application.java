@@ -1,6 +1,5 @@
 package io.nova.core.application;
 
-import imgui.ImGui;
 import io.nova.core.layer.Layer;
 import io.nova.core.layer.LayerStack;
 import io.nova.core.window.Window;
@@ -98,13 +97,11 @@ public class Application {
             }
 
             imGuiLayer.startFrame();
-            ImGui.begin("window");
             {
                 for (var layer : layerStack.getLayers()) {
                     layer.onImGuiRender();
                 }
             }
-            ImGui.end();
             imGuiLayer.endFrame();
 
             window.onUpdate();

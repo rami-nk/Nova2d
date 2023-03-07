@@ -23,6 +23,7 @@ public class SuperNovaDefaultEditorLayer extends Layer {
     private SubTexture stone;
     private SubTexture ceiling;
     private FrameBuffer frameBuffer;
+    private Vector2f viewportSize = new Vector2f();
 
     @Override
     public void onAttach() {
@@ -35,6 +36,11 @@ public class SuperNovaDefaultEditorLayer extends Layer {
 
         var spec = new FrameBufferSpecification(Application.getWindow().getWidth(), Application.getWindow().getHeight());
         frameBuffer = FrameBufferFactory.create(spec);
+    }
+
+    @Override
+    public void onDetach() {
+        frameBuffer.dispose();
     }
 
     @Override
@@ -90,15 +96,33 @@ public class SuperNovaDefaultEditorLayer extends Layer {
         ImGui.endMenuBar();
 
         ImGui.begin("Renderer stats");
-        var stats = renderer.getStats();
-        ImGui.text("Draw calls: " + stats.getDrawCalls());
-        ImGui.text("Quad count: " + stats.getQuadCount());
-        ImGui.text("Vertex count: " + stats.getTotalVertexCount());
-        ImGui.text("Index count: " + stats.getTotalIndexCount());
-
-        var textureId = frameBuffer.getColorAttachmentRendererId();
-        ImGui.image(textureId, 1000, 800, 0, 1, 1, 0);
+        {
+            var stats = renderer.getStats();
+            ImGui.text("Draw calls: " + stats.getDrawCalls());
+            ImGui.text("Quad count: " + stats.getQuadCount());
+            ImGui.text("Vertex count: " + stats.getTotalVertexCount());
+            ImGui.text("Index count: " + stats.getTotalIndexCount());
+        }
         ImGui.end();
+
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 0, 0);
+        ImGui.begin("Viewport");
+        {
+            var viewportSize = ImGui.getContentRegionAvail();
+            if (viewportSize.x != this.viewportSize.x || viewportSize.y != this.viewportSize.y) {
+                frameBuffer.resize((int) viewportSize.x, (int) viewportSize.y);
+                this.viewportSize.x = viewportSize.x;
+                this.viewportSize.y = viewportSize.y;
+            }
+
+            var textureId = frameBuffer.getColorAttachmentRendererId();
+            ImGui.image(textureId, viewportSize.x, viewportSize.y, 0, 1, 1, 0);
+            // We set the viewPortSize of the cameraController here to make sure the aspect ratio is correct after resizing the window
+            cameraController.setViewportSize((int) viewportSize.x, (int) viewportSize.y);
+        }
+        ImGui.end();
+        ImGui.popStyleVar();
+
         ImGui.end();
     }
 

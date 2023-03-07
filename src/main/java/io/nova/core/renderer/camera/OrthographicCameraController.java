@@ -101,4 +101,9 @@ public class OrthographicCameraController {
     private void calculateView() {
         camera.setProjection(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel);
     }
+
+    public void setViewportSize(int width, int height) {
+        aspectRatio = (float) width / (float) height;
+        calculateView();
+    }
 }

@@ -2,9 +2,9 @@ package io.nova.core.renderer;
 
 public class FrameBufferSpecification {
 
-    public int width;
-    public int height;
-    public boolean swapChainTarget;
+    private int width;
+    private int height;
+    private boolean swapChainTarget;
 
     public FrameBufferSpecification() {
     }
@@ -17,5 +17,29 @@ public class FrameBufferSpecification {
 
     public FrameBufferSpecification(int width, int height) {
         this(width, height, false);
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public boolean isSwapChainTarget() {
+        return swapChainTarget;
+    }
+
+    public void setSwapChainTarget(boolean swapChainTarget) {
+        this.swapChainTarget = swapChainTarget;
     }
 }
