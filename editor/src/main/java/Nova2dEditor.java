@@ -10,7 +10,7 @@ public class Nova2dEditor extends Application {
 
     public static Nova2dEditor create(ApplicationCommandLineArgs args) {
         var specification = new ApplicationSpecification(
-                "Sandbox",
+                "Nova2d Editor",
                 ".",
                 args
         );

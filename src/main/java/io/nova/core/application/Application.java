@@ -35,7 +35,7 @@ public class Application {
             specification.setWorkingDirectory(currentDir);
         }
 
-        this.window = WindowFactory.create(new WindowProps());
+        this.window = WindowFactory.create(new WindowProps(specification.getName()));
         this.window.setEventCallback(this::onEvent);
 
         this.layerStack = new LayerStack();

@@ -97,7 +97,7 @@ public class Nova2dDefaultEditorLayer extends Layer {
         ImGui.text("Index count: " + stats.getTotalIndexCount());
 
         var textureId = frameBuffer.getColorAttachmentRendererId();
-        ImGui.image(textureId, 1000, 800);
+        ImGui.image(textureId, 1000, 800, 0, 1, 1, 0);
         ImGui.end();
         ImGui.end();
     }
