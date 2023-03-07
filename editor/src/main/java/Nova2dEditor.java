@@ -2,18 +2,18 @@ import io.nova.core.application.Application;
 import io.nova.core.application.ApplicationCommandLineArgs;
 import io.nova.core.application.ApplicationSpecification;
 
-public class Editor extends Application {
-    public Editor(ApplicationSpecification specification) {
+public class Nova2dEditor extends Application {
+    public Nova2dEditor(ApplicationSpecification specification) {
         super(specification);
-        this.pushLayer(new EditorLayer());
+        this.pushLayer(new Nova2dDefaultEditorLayer());
     }
 
-    public static Editor create(ApplicationCommandLineArgs args) {
+    public static Nova2dEditor create(ApplicationCommandLineArgs args) {
         var specification = new ApplicationSpecification(
                 "Sandbox",
                 ".",
                 args
         );
-        return new Editor(specification);
+        return new Nova2dEditor(specification);
     }
 }

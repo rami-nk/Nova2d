@@ -13,7 +13,7 @@ import io.nova.event.Event;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-public class EditorLayer extends Layer {
+public class Nova2dDefaultEditorLayer extends Layer {
 
     private OrthographicCameraController cameraController;
     private Renderer renderer;
