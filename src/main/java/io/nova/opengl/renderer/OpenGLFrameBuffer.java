@@ -79,6 +79,10 @@ public class OpenGLFrameBuffer implements FrameBuffer {
 
     @Override
     public void resize(int width, int height) {
+        if (width <= 0 || height <= 0 || width > 8192 || height > 8192) {
+            System.err.println("ERROR: Attempted to resize framebuffer to " + width + ", " + height);
+            return;
+        }
         specification.setWidth(width);
         specification.setHeight(height);
 
