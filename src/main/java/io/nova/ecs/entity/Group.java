@@ -44,5 +44,4 @@ public class Group {
         Group other = (Group) obj;
         return types.equals(other.types);
     }
-
 }

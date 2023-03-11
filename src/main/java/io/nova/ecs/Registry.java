@@ -18,18 +18,18 @@ public final class Registry {
     private final Map<Group, List<EntityListener>> filteredListeners = new HashMap<>();
     private boolean updating;
 
-    public void addEntityListener(EntityListener l, Group family) {
-        List<EntityListener> lst = filteredListeners.get(family);
+    public void addEntityListener(EntityListener l, Group group) {
+        List<EntityListener> lst = filteredListeners.get(group);
         if (lst == null) {
             lst = new CopyOnWriteArrayList<>();
-            filteredListeners.put(family, lst);
+            filteredListeners.put(group, lst);
         }
         assert !lst.contains(l) : "listener already added " + l;
         lst.add(l);
     }
 
-    public void removeEntityListener(EntityListener l, Group family) {
-        List<EntityListener> lst = filteredListeners.get(family);
+    public void removeEntityListener(EntityListener l, Group group) {
+        List<EntityListener> lst = filteredListeners.get(group);
         if (lst != null) {
             lst.remove(l);
         }
@@ -95,9 +95,9 @@ public final class Registry {
     }
 
     private void addEntityToViews(Entity e) {
-        for (Group family : views.keySet()) {
-            if (family.isMember(e)) {
-                views.get(family).add(e);
+        for (Group group : views.keySet()) {
+            if (group.isMember(e)) {
+                views.get(group).add(e);
             }
         }
     }
@@ -160,20 +160,20 @@ public final class Registry {
         updating = false;
     }
 
-    public List<Entity> getEntities(Group family) {
-        List<Entity> view = views.get(family);
+    public List<Entity> getEntities(Group group) {
+        List<Entity> view = views.get(group);
         if (view == null) {
             view = new ArrayList<>();
-            views.put(family, view);
-            initView(family, view);
+            views.put(group, view);
+            initView(group, view);
         }
         return Collections.unmodifiableList(view);
     }
 
-    private void initView(Group family, List<Entity> view) {
+    private void initView(Group group, List<Entity> view) {
         assert view.isEmpty();
         for (Entity e : entities) {
-            if (family.isMember(e)) {
+            if (group.isMember(e)) {
                 view.add(e);
             }
         }

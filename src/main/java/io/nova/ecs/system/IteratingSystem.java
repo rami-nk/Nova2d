@@ -8,19 +8,19 @@ import java.util.List;
 
 public abstract class IteratingSystem extends System {
 
-    private final Group family;
+    private final Group group;
     private List<Entity> entities;
 
-    public IteratingSystem(Group family) {
-        if (family == null) {
-            throw new NullPointerException("entity family must not be null");
+    public IteratingSystem(Group group) {
+        if (group == null) {
+            throw new NullPointerException("entity group must not be null");
         }
-        this.family = family;
+        this.group = group;
     }
 
     @Override
     public void addedToRegistry(Registry e) {
-        entities = e.getEntities(family);
+        entities = e.getEntities(group);
     }
 
     @Override
