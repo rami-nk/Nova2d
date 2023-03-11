@@ -157,6 +157,13 @@ public class OpenGLRenderer implements Renderer {
     }
 
     @Override
+    public void drawQuad(Matrix4f transform, Vector4f color) {
+        var whiteTextureSlot = 0.0f;
+
+        addQuadData(transform, 1.0f, color, whiteTextureSlot);
+    }
+
+    @Override
     public void drawQuad(Vector3f position, Vector2f size, SubTexture subTexture, float tilingFactor) {
         var white = new Vector4f(1.0f);
         drawQuad(position, size, subTexture, tilingFactor, white);

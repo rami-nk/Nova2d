@@ -2,6 +2,7 @@ package io.nova.core.renderer;
 
 import io.nova.core.renderer.texture.SubTexture;
 import io.nova.core.renderer.texture.Texture;
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -26,6 +27,8 @@ public interface SimpleQuadRenderer {
     default void drawQuad(Vector2f position, Vector2f size, Texture texture, float tilingFactor) {
         drawQuad(new Vector3f(position.x, position.y, 0.0f), size, texture, tilingFactor);
     }
+
+    void drawQuad(Matrix4f transform, Vector4f color);
 
     /*
      * ###########################################################################
