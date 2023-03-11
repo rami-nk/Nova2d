@@ -2,7 +2,7 @@ package io.nova.ecs;
 
 import io.nova.core.renderer.Renderer;
 import io.nova.core.renderer.camera.Camera;
-import io.nova.ecs.component.CameraComponent;
+import io.nova.ecs.component.SceneCameraComponent;
 import io.nova.ecs.component.SpriteRenderComponent;
 import io.nova.ecs.component.TagComponent;
 import io.nova.ecs.component.TransformComponent;
@@ -27,9 +27,9 @@ public class Scene {
         Camera primaryCamera = null;
         Matrix4f cameraTransform = null;
         {
-            var group = registry.getEntities(Group.create(CameraComponent.class));
+            var group = registry.getEntities(Group.create(SceneCameraComponent.class));
             for (var camera : group) {
-                var cameraComponent = camera.getComponent(CameraComponent.class);
+                var cameraComponent = camera.getComponent(SceneCameraComponent.class);
 
                 if (cameraComponent.isPrimary()) {
                     primaryCamera = cameraComponent.getCamera();
@@ -75,6 +75,17 @@ public class Scene {
     public void activateEntities(Entity... entities) {
         for (var entity : entities) {
             registry.addEntity(entity);
+        }
+    }
+
+    public void onViewportResize(int width, int height) {
+        var group = registry.getEntities(Group.create(SceneCameraComponent.class));
+        for (var camera : group) {
+            var sceneCamera = camera.getComponent(SceneCameraComponent.class);
+
+            if (!sceneCamera.isFixedAspectRatio()) {
+                sceneCamera.getCamera().setViewport(width, height);
+            }
         }
     }
 }

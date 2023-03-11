@@ -7,7 +7,7 @@ import io.nova.core.layer.Layer;
 import io.nova.core.renderer.*;
 import io.nova.core.renderer.camera.OrthographicCameraController;
 import io.nova.ecs.Scene;
-import io.nova.ecs.component.CameraComponent;
+import io.nova.ecs.component.SceneCameraComponent;
 import io.nova.ecs.component.SpriteRenderComponent;
 import io.nova.ecs.component.TagComponent;
 import io.nova.ecs.component.TransformComponent;
@@ -19,6 +19,8 @@ import org.joml.Vector3f;
 
 public class EcsLayer extends Layer {
 
+    private final float[] cameraPosition = new float[3];
+    private final Vector2f viewportSize = new Vector2f();
     private Scene scene;
     private Renderer renderer;
     private OrthographicCameraController cameraController;
@@ -26,9 +28,6 @@ public class EcsLayer extends Layer {
     private Entity primaryCamera;
     private Entity secondaryCamera;
     private boolean primary = true;
-    private float[] cameraPosition = new float[3];
-    private Vector2f viewportSize = new Vector2f();
-
     private FrameBuffer frameBuffer;
 
     public void onAttach() {
@@ -40,12 +39,12 @@ public class EcsLayer extends Layer {
         entity.addComponent(new SpriteRenderComponent());
 
         primaryCamera = scene.createEntity();
-        primaryCamera.addComponent(new CameraComponent());
-        primaryCamera.getComponent(CameraComponent.class).setPrimary(primary);
+        primaryCamera.addComponent(new SceneCameraComponent());
+        primaryCamera.getComponent(SceneCameraComponent.class).setPrimary(primary);
 
         secondaryCamera = scene.createEntity();
-        secondaryCamera.addComponent(new CameraComponent(new Matrix4f().ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f)));
-        secondaryCamera.getComponent(CameraComponent.class).setPrimary(!primary);
+        secondaryCamera.addComponent(new SceneCameraComponent());
+        secondaryCamera.getComponent(SceneCameraComponent.class).setPrimary(!primary);
 
         scene.activateEntities(entity, primaryCamera, secondaryCamera);
 
@@ -61,11 +60,22 @@ public class EcsLayer extends Layer {
     public void onUpdate(float deltaTime) {
         cameraController.onUpdate(deltaTime);
 
+        // Resize
+        FrameBufferSpecification spec = frameBuffer.getSpecification();
+        if (viewportSize.x > 0 && viewportSize.y > 0 &&
+                (viewportSize.x != spec.getWidth() || viewportSize.y != spec.getHeight())) {
+            frameBuffer.resize((int) viewportSize.x, (int) viewportSize.y);
+            scene.onViewportResize((int) viewportSize.x, (int) viewportSize.y);
+            System.out.println("Resized to " + viewportSize.x + "x" + viewportSize.y);
+        }
+
+        // Render
         frameBuffer.bind();
         renderer.resetStats();
         renderer.setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         renderer.clear();
 
+        // Update
         scene.onUpdate(deltaTime);
         frameBuffer.unbind();
     }
@@ -117,7 +127,6 @@ public class EcsLayer extends Layer {
         {
             var viewportSize = ImGui.getContentRegionAvail();
             if (viewportSize.x != this.viewportSize.x || viewportSize.y != this.viewportSize.y) {
-                frameBuffer.resize((int) viewportSize.x, (int) viewportSize.y);
                 this.viewportSize.x = viewportSize.x;
                 this.viewportSize.y = viewportSize.y;
             }
@@ -134,8 +143,8 @@ public class EcsLayer extends Layer {
             ImGui.text(entity.getComponent(TagComponent.class).getTag());
             if (ImGui.checkbox(primary ? "Primary" : "Secondary", primary)) {
                 primary = !primary;
-                primaryCamera.getComponent(CameraComponent.class).setPrimary(primary);
-                secondaryCamera.getComponent(CameraComponent.class).setPrimary(!primary);
+                primaryCamera.getComponent(SceneCameraComponent.class).setPrimary(primary);
+                secondaryCamera.getComponent(SceneCameraComponent.class).setPrimary(!primary);
             }
 
             ImGui.dragFloat3("Camera Position", cameraPosition);

@@ -3,7 +3,7 @@ package io.nova.core.renderer.camera;
 import org.joml.Matrix4f;
 
 public class Camera {
-    private Matrix4f projection;
+    protected Matrix4f projection;
 
     public Camera() {
         this(new Matrix4f());
