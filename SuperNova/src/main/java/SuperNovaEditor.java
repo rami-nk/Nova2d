@@ -5,7 +5,8 @@ import io.nova.core.application.ApplicationSpecification;
 public class SuperNovaEditor extends Application {
     public SuperNovaEditor(ApplicationSpecification specification) {
         super(specification);
-        this.pushLayer(new SuperNovaDefaultEditorLayer());
+//        this.pushLayer(new SuperNovaDefaultEditorLayer());
+        this.pushLayer(new EcsLayer());
     }
 
     public static SuperNovaEditor create(ApplicationCommandLineArgs args) {
