@@ -4,7 +4,6 @@ import io.nova.core.renderer.RendererFactory;
 import io.nova.core.renderer.camera.OrthographicCameraController;
 import io.nova.ecs.Scene;
 import io.nova.ecs.component.SpriteRenderComponent;
-import io.nova.ecs.component.TransformComponent;
 import io.nova.event.Event;
 import io.nova.utils.Profiler;
 
@@ -19,10 +18,9 @@ public class EcsLayer extends Layer {
         renderer = RendererFactory.create();
         scene = new Scene(renderer);
 
-        var entity = scene.createEntity();
-        entity.addComponent(new SpriteRenderComponent());
-        entity.addComponent(new TransformComponent());
-        scene.activateEntities(entity);
+        var square = scene.createEntity();
+        square.addComponent(new SpriteRenderComponent());
+        scene.activateEntities(square);
     }
 
     public void onDetach() {

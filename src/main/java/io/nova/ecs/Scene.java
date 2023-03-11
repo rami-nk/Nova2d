@@ -24,6 +24,13 @@ public class Scene {
         var entity = new Entity();
         entity.addComponent(new TransformComponent());
         entity.addComponent(new TagComponent());
+        return entity;
+    }
+
+    public Entity createEntity(String name) {
+        var entity = new Entity();
+        entity.addComponent(new TransformComponent());
+        entity.addComponent(new TagComponent(name));
         return new Entity();
     }
 
