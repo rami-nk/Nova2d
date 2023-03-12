@@ -14,9 +14,13 @@ public abstract class ScriptableEntity {
         entity = e;
     }
 
-    public abstract void onCreate();
+    public void onCreate() {}
 
-    public abstract void onDestroy();
+    public void onDestroy() {}
 
-    public abstract void onUpdate(float deltaTime);
+    ;
+
+    public void onUpdate(float deltaTime) {}
+
+    ;
 }

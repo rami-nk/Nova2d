@@ -171,16 +171,6 @@ public class EcsLayer extends Layer {
     }
 
     public static class CameraController extends ScriptableEntity {
-
-        @Override
-        public void onCreate() {
-            System.out.println("CameraController created");
-        }
-
-        @Override
-        public void onDestroy() {
-        }
-
         @Override
         public void onUpdate(float deltaTime) {
             var transformComponent = getComponent(TransformComponent.class);
