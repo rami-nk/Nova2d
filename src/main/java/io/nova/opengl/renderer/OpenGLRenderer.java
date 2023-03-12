@@ -98,7 +98,9 @@ public class OpenGLRenderer implements Renderer {
     public void beginScene(Camera camera, Matrix4f transform) {
         shader.bind();
 
-        var viewProjection = camera.getProjection().mul(transform.invert(), new Matrix4f());
+        var projection = new Matrix4f(camera.getProjection());
+        transform = new Matrix4f(transform);
+        var viewProjection = projection.mul(transform.invert());
 
         shader.setUniformMat4f("uViewProjection", viewProjection);
 

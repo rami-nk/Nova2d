@@ -2,7 +2,7 @@ package io.nova.ecs.system;
 
 import io.nova.ecs.Registry;
 
-public abstract class System {
+public abstract class EcSystem {
 
     private boolean enabled = true;
     private Registry registry;

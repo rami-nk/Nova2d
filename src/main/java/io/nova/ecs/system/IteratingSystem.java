@@ -6,7 +6,7 @@ import io.nova.ecs.entity.Group;
 
 import java.util.List;
 
-public abstract class IteratingSystem extends System {
+public abstract class IteratingSystem extends EcSystem {
 
     private final Group group;
     private List<Entity> entities;

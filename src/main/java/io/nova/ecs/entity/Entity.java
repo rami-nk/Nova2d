@@ -36,7 +36,7 @@ public final class Entity {
         return false;
     }
 
-    public <T> T getComponent(Class<T> clazz) {
+    public <T extends Component> T getComponent(Class<T> clazz) {
         Component cached = cache.get(clazz);
         if (cached != null) {
             return clazz.cast(cached);
@@ -51,7 +51,7 @@ public final class Entity {
         return null;
     }
 
-    public <T> List<T> getAllComponents(Class<T> clazz) {
+    public <T extends Component> List<T> getAllComponents(Class<T> clazz) {
         ArrayList<T> result = new ArrayList<>();
         for (Component c : components) {
             if (clazz.isInstance(c)) {
@@ -62,7 +62,7 @@ public final class Entity {
         return result;
     }
 
-    public void addComponent(Component c) {
+    public <T extends Component> T addComponent(T c) {
         if (isActivated() || registry != null) {
             throw new IllegalStateException(
                     "cannot add component to activated entity");
@@ -73,6 +73,7 @@ public final class Entity {
         }
         components.add(c);
         c.setEntity(this);
+        return c;
     }
 
     public boolean isActivated() {

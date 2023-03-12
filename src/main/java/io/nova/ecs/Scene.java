@@ -2,14 +2,11 @@ package io.nova.ecs;
 
 import io.nova.core.renderer.Renderer;
 import io.nova.core.renderer.camera.Camera;
-import io.nova.ecs.component.SceneCameraComponent;
-import io.nova.ecs.component.SpriteRenderComponent;
-import io.nova.ecs.component.TagComponent;
-import io.nova.ecs.component.TransformComponent;
+import io.nova.ecs.component.*;
 import io.nova.ecs.entity.Entity;
 import io.nova.ecs.entity.Group;
+import io.nova.ecs.system.EcSystem;
 import io.nova.ecs.system.RenderSystem;
-import io.nova.ecs.system.System;
 import org.joml.Matrix4f;
 
 public class Scene {
@@ -24,6 +21,20 @@ public class Scene {
     }
 
     public void onUpdate(float deltaTime) {
+        // Update scripts
+        {
+            var group = registry.getEntities(Group.create(ScriptComponent.class));
+            for (var entity : group) {
+                var script = entity.getComponent(ScriptComponent.class);
+                if (script.getInstance() == null) {
+                    script.createInstance();
+                    script.setInstanceEntity();
+                    script.onCreate();
+                }
+                script.onUpdate(deltaTime);
+            }
+        }
+
         Camera primaryCamera = null;
         Matrix4f cameraTransform = null;
         {
@@ -38,6 +49,7 @@ public class Scene {
                 }
             }
         }
+
         if (primaryCamera != null) {
             renderer.beginScene(primaryCamera, cameraTransform);
             var group = registry.getEntities(Group.create(SpriteRenderComponent.class, TransformComponent.class));
@@ -64,7 +76,7 @@ public class Scene {
         return new Entity();
     }
 
-    public void addSystem(System system) {
+    public void addSystem(EcSystem system) {
         registry.addSystem(system);
     }
 

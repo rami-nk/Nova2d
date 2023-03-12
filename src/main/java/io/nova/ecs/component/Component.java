@@ -2,6 +2,7 @@ package io.nova.ecs.component;
 
 import io.nova.ecs.Registry;
 import io.nova.ecs.entity.Entity;
+import io.nova.ecs.system.EcSystem;
 
 public abstract class Component {
 
@@ -16,12 +17,12 @@ public abstract class Component {
         entity = e;
     }
 
-    final protected <T> T getSystem(Class<T> clazz) throws IllegalArgumentException,
+    final protected <T extends EcSystem> T getSystem(Class<T> clazz) throws IllegalArgumentException,
             NullPointerException {
         return entity.getRegistry().getSystem(clazz);
     }
 
-    final protected <T> T getComponent(Class<T> clazz)
+    final protected <T extends Component> T getComponent(Class<T> clazz)
             throws IllegalArgumentException, NullPointerException {
         return entity.getComponent(clazz);
     }

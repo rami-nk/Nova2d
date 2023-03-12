@@ -2,7 +2,7 @@ package io.nova.ecs;
 
 import io.nova.ecs.entity.Entity;
 import io.nova.ecs.entity.Group;
-import io.nova.ecs.system.System;
+import io.nova.ecs.system.EcSystem;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -13,7 +13,7 @@ public final class Registry {
     private final List<Entity> entities = new ArrayList<>();
     private final Map<Group, List<Entity>> views = new HashMap<>();
     private final List<Command> commands = new ArrayList<>();
-    private final List<System> systems = new ArrayList<>();
+    private final List<EcSystem> systems = new ArrayList<>();
     private final List<EntityListener> listeners = new CopyOnWriteArrayList<>();
     private final Map<Group, List<EntityListener>> filteredListeners = new HashMap<>();
     private boolean updating;
@@ -145,7 +145,7 @@ public final class Registry {
         updating = true;
 
         // update systems
-        for (System s : systems) {
+        for (EcSystem s : systems) {
             if (s.isEnabled()) {
                 s.update(dt);
             }
@@ -179,7 +179,7 @@ public final class Registry {
         }
     }
 
-    public void addSystem(System s) throws IllegalStateException,
+    public void addSystem(EcSystem s) throws IllegalStateException,
             IllegalArgumentException {
         if (updating) {
             throw new IllegalStateException("cannot add system while updating");
@@ -194,7 +194,7 @@ public final class Registry {
         s.addedToRegistry(this);
     }
 
-    public void removeSystem(System s) throws IllegalStateException,
+    public void removeSystem(EcSystem s) throws IllegalStateException,
             IllegalArgumentException {
         if (updating) {
             throw new IllegalStateException(
@@ -210,7 +210,7 @@ public final class Registry {
     }
 
     public boolean hasSystem(Class<?> clazz) {
-        for (System s : systems) {
+        for (EcSystem s : systems) {
             if (clazz.isInstance(s)) {
                 return true;
             }
@@ -219,7 +219,7 @@ public final class Registry {
     }
 
     public <T> T getSystem(Class<T> clazz) throws IllegalArgumentException {
-        for (System s : systems) {
+        for (EcSystem s : systems) {
             if (clazz.isInstance(s)) {
                 return clazz.cast(s);
             }
@@ -246,7 +246,7 @@ public final class Registry {
 
         // dispose systems
         for (int i = systems.size() - 1; i >= 0; --i) {
-            System s = systems.get(i);
+            EcSystem s = systems.get(i);
             s.setEnabled(false);
             s.removedFromRegistry(this);
             s.setRegistry(null);
@@ -258,7 +258,7 @@ public final class Registry {
         return systems.size();
     }
 
-    public System getSystem(int idx) throws IndexOutOfBoundsException {
+    public EcSystem getSystem(int idx) throws IndexOutOfBoundsException {
         return systems.get(idx);
     }
 

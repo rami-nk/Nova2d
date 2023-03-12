@@ -19,13 +19,11 @@ public class SceneCamera extends Camera {
         this.nearPlane = nearPlane;
         this.farPlane = farPlane;
         this.orthographicSize = size;
-
         updateProjection();
     }
 
     public void setViewport(int width, int height) {
         this.aspectRatio = (float) width / (float) height;
-
         updateProjection();
     }
 
@@ -36,6 +34,15 @@ public class SceneCamera extends Camera {
                 -orthographicSize * 0.5f,
                 orthographicSize * 0.5f,
                 nearPlane, farPlane);
+    }
+
+    public float getOrthographicSize() {
+        return orthographicSize;
+    }
+
+    public void setOrthographicSize(float size) {
+        this.orthographicSize = size;
+        updateProjection();
     }
 
     public float getAspectRatio() {

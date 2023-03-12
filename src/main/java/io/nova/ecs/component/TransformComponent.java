@@ -20,4 +20,12 @@ public class TransformComponent extends Component {
     public void setTransform(Matrix4f transform) {
         this.transform = transform;
     }
+
+    public void translate(float x, float y, float z) {
+        transform.translate(x, y, z);
+    }
+
+    public void translate(float x, float y) {
+        translate(x, y, 0);
+    }
 }
