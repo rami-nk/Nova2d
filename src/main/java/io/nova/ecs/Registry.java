@@ -5,8 +5,6 @@ import io.nova.ecs.entity.Group;
 import io.nova.ecs.system.EcSystem;
 
 import java.util.*;
-import java.util.Map.Entry;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class Registry {
 
@@ -14,35 +12,7 @@ public final class Registry {
     private final Map<Group, List<Entity>> views = new HashMap<>();
     private final List<Command> commands = new ArrayList<>();
     private final List<EcSystem> systems = new ArrayList<>();
-    private final List<EntityListener> listeners = new CopyOnWriteArrayList<>();
-    private final Map<Group, List<EntityListener>> filteredListeners = new HashMap<>();
     private boolean updating;
-
-    public void addEntityListener(EntityListener l, Group group) {
-        List<EntityListener> lst = filteredListeners.get(group);
-        if (lst == null) {
-            lst = new CopyOnWriteArrayList<>();
-            filteredListeners.put(group, lst);
-        }
-        assert !lst.contains(l) : "listener already added " + l;
-        lst.add(l);
-    }
-
-    public void removeEntityListener(EntityListener l, Group group) {
-        List<EntityListener> lst = filteredListeners.get(group);
-        if (lst != null) {
-            lst.remove(l);
-        }
-    }
-
-    public void addEntityListener(EntityListener l) {
-        assert !listeners.contains(l) : "listener already added " + l;
-        listeners.add(l);
-    }
-
-    public void removeEntityListener(EntityListener l) {
-        listeners.remove(l);
-    }
 
     public void addEntity(Entity e) {
         if (updating) {
@@ -81,17 +51,6 @@ public final class Registry {
         e.activate();
 
         addEntityToViews(e);
-
-        // inform listeners
-        for (EntityListener l : listeners) {
-            l.entityAdded(e);
-        }
-
-        for (Entry<Group, List<EntityListener>> entry : filteredListeners.entrySet()) {
-            if (entry.getKey().isMember(e)) {
-                for (EntityListener l : entry.getValue()) {l.entityAdded(e);}
-            }
-        }
     }
 
     private void addEntityToViews(Entity e) {
@@ -109,16 +68,6 @@ public final class Registry {
         }
         assert e.isActivated();
         assert entities.contains(e);
-
-        // inform listeners as long as the entity is still active
-        for (EntityListener l : listeners) {
-            l.entityRemoved(e);
-        }
-        for (Entry<Group, List<EntityListener>> entry : filteredListeners.entrySet()) {
-            if (entry.getKey().isMember(e)) {
-                for (EntityListener l : entry.getValue()) {l.entityRemoved(e);}
-            }
-        }
 
         // actually remove entity
         e.deactivate();
