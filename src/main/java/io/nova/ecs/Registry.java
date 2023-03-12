@@ -14,6 +14,10 @@ public final class Registry {
     private final List<EcSystem> systems = new ArrayList<>();
     private boolean updating;
 
+    public List<Entity> getEntities() {
+        return entities;
+    }
+
     public void addEntity(Entity e) {
         if (updating) {
             commands.add(() -> addEntityInternal(e));
@@ -32,7 +36,7 @@ public final class Registry {
 
     public void removeEntity(Entity e) {
         if (updating) {
-            commands.add(() -> {removeEntityInternal(e);});
+            commands.add(() -> removeEntityInternal(e));
         } else {
             removeEntityInternal(e);
         }
@@ -143,30 +147,6 @@ public final class Registry {
         s.addedToRegistry(this);
     }
 
-    public void removeSystem(EcSystem s) throws IllegalStateException,
-            IllegalArgumentException {
-        if (updating) {
-            throw new IllegalStateException(
-                    "cannot remove system while updating");
-        }
-
-        if (!systems.contains(s)) {
-            throw new IllegalArgumentException("system is unknown");
-        }
-        s.removedFromRegistry(this);
-        systems.remove(s);
-        s.setRegistry(null);
-    }
-
-    public boolean hasSystem(Class<?> clazz) {
-        for (EcSystem s : systems) {
-            if (clazz.isInstance(s)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public <T> T getSystem(Class<T> clazz) throws IllegalArgumentException {
         for (EcSystem s : systems) {
             if (clazz.isInstance(s)) {
@@ -201,18 +181,6 @@ public final class Registry {
             s.setRegistry(null);
         }
         systems.clear();
-    }
-
-    public int getNumOfSystems() {
-        return systems.size();
-    }
-
-    public EcSystem getSystem(int idx) throws IndexOutOfBoundsException {
-        return systems.get(idx);
-    }
-
-    public int getNumOfEntities() {
-        return entities.size();
     }
 
 

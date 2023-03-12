@@ -22,7 +22,7 @@ public class EcsLayer extends Layer {
 
     private final float[] cameraPosition = new float[3];
     private final Vector2f viewportSize = new Vector2f();
-    private float[] orthographicSize = new float[]{1.0f};
+    private final float[] orthographicSize = new float[]{1.0f};
     private Scene scene;
     private Renderer renderer;
     private OrthographicCameraController cameraController;
@@ -31,20 +31,21 @@ public class EcsLayer extends Layer {
     private Entity secondaryCamera;
     private boolean primary = true;
     private FrameBuffer frameBuffer;
+    private EntityPanel entityPanel;
 
     public void onAttach() {
         cameraController = new OrthographicCameraController(16.0f / 9.0f, true);
         renderer = RendererFactory.create();
         scene = new Scene(renderer);
 
-        entity = scene.createEntity();
+        entity = scene.createEntity("Quad");
         entity.addComponent(new SpriteRenderComponent());
 
-        primaryCamera = scene.createEntity();
+        primaryCamera = scene.createEntity("Primary Camera");
         var primarySceneCamera = primaryCamera.addComponent(new SceneCameraComponent());
         primarySceneCamera.setPrimary(primary);
 
-        secondaryCamera = scene.createEntity();
+        secondaryCamera = scene.createEntity("Secondary Camera");
         var sceneCamera = secondaryCamera.addComponent(new SceneCameraComponent());
         sceneCamera.setPrimary(!primary);
 
@@ -54,6 +55,8 @@ public class EcsLayer extends Layer {
 
         var spec = new FrameBufferSpecification(Application.getWindow().getWidth(), Application.getWindow().getHeight());
         frameBuffer = FrameBufferFactory.create(spec);
+
+        entityPanel = new EntityPanel(scene);
     }
 
     public void onDetach() {
@@ -114,6 +117,8 @@ public class EcsLayer extends Layer {
             ImGui.endMenu();
         }
         ImGui.endMenuBar();
+
+        entityPanel.onImGuiRender();
 
         ImGui.begin("Renderer stats");
         {

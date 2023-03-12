@@ -5,7 +5,6 @@ import io.nova.core.renderer.camera.Camera;
 import io.nova.ecs.component.*;
 import io.nova.ecs.entity.Entity;
 import io.nova.ecs.entity.Group;
-import io.nova.ecs.system.EcSystem;
 import io.nova.ecs.system.RenderSystem;
 import org.joml.Matrix4f;
 
@@ -20,6 +19,10 @@ public class Scene {
         this.renderer = renderer;
         registry = new Registry();
         registry.addSystem(new RenderSystem(renderer));
+    }
+
+    public Registry getRegistry() {
+        return registry;
     }
 
     public void onUpdate(float deltaTime) {
@@ -72,21 +75,14 @@ public class Scene {
     }
 
     public Entity createEntity() {
-        var entity = new Entity();
-        entity.addComponent(new TransformComponent());
-        entity.addComponent(new TagComponent());
-        return entity;
+        return createEntity("");
     }
 
     public Entity createEntity(String name) {
         var entity = new Entity();
         entity.addComponent(new TransformComponent());
         entity.addComponent(new TagComponent(name));
-        return new Entity();
-    }
-
-    public void addSystem(EcSystem system) {
-        registry.addSystem(system);
+        return entity;
     }
 
     public void dispose() {

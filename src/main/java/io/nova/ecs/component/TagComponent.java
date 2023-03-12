@@ -10,7 +10,11 @@ public class TagComponent extends Component {
     }
 
     public TagComponent(String tag) {
-        this.tag = tag;
+        this.tag = isInvalid(tag) ? generateId() : tag;
+    }
+
+    private static boolean isInvalid(String tag) {
+        return tag == null || tag.isEmpty() || tag.isBlank();
     }
 
     private static String generateId() {
