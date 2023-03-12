@@ -5,6 +5,7 @@ import io.nova.ecs.entity.Entity;
 import io.nova.ecs.entity.Group;
 
 import java.util.List;
+import java.util.Objects;
 
 public abstract class IteratingSystem extends EcSystem {
 
@@ -12,7 +13,7 @@ public abstract class IteratingSystem extends EcSystem {
     private List<Entity> entities;
 
     public IteratingSystem(Group group) {
-        if (group == null) {
+        if (Objects.isNull(group)) {
             throw new NullPointerException("entity group must not be null");
         }
         this.group = group;

@@ -111,7 +111,7 @@ public final class Registry {
 
     public List<Entity> getEntities(Group group) {
         List<Entity> view = views.get(group);
-        if (view == null) {
+        if (Objects.isNull(view)) {
             view = new ArrayList<>();
             views.put(group, view);
             initView(group, view);

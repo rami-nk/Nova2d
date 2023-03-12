@@ -9,6 +9,8 @@ import io.nova.ecs.system.EcSystem;
 import io.nova.ecs.system.RenderSystem;
 import org.joml.Matrix4f;
 
+import java.util.Objects;
+
 public class Scene {
 
     private final Registry registry;
@@ -26,7 +28,7 @@ public class Scene {
             var group = registry.getEntities(Group.create(ScriptComponent.class));
             for (var entity : group) {
                 var script = entity.getComponent(ScriptComponent.class);
-                if (script.getInstance() == null) {
+                if (Objects.isNull(script.getInstance())) {
                     script.createInstance();
                     script.setInstanceEntity();
                     script.onCreate();
@@ -34,7 +36,7 @@ public class Scene {
 
                 // If the entity has a camera component we only want to update it if it is the primary camera
                 var camera = entity.getComponent(SceneCameraComponent.class);
-                if (camera == null) {
+                if (Objects.isNull(camera)) {
                     script.onUpdate(deltaTime);
                 } else if (camera.isPrimary()) {
                     script.onUpdate(deltaTime);
@@ -57,7 +59,7 @@ public class Scene {
             }
         }
 
-        if (primaryCamera != null) {
+        if (!Objects.isNull(primaryCamera)) {
             renderer.beginScene(primaryCamera, cameraTransform);
             var group = registry.getEntities(Group.create(SpriteRenderComponent.class, TransformComponent.class));
             for (var entity : group) {

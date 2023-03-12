@@ -1,19 +1,14 @@
 package io.nova.imgui;
 
-import imgui.ImDrawData;
-import imgui.ImFontAtlas;
-import imgui.ImGui;
-import imgui.ImGuiIO;
-import imgui.ImGuiViewport;
-import imgui.ImVec2;
-import imgui.ImVec4;
+import imgui.*;
 import imgui.callback.ImPlatformFuncViewport;
+import imgui.flag.ImGuiBackendFlags;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.flag.ImGuiViewportFlags;
 import imgui.type.ImInt;
-import imgui.flag.ImGuiBackendFlags;
 
 import java.nio.ByteBuffer;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,6 +27,26 @@ import static org.lwjgl.opengl.GL32.*;
  */
 @SuppressWarnings("MagicNumber")
 public final class ImGuiImplGl3 {
+    // Used to store tmp renderer data
+    private final ImVec2 displaySize = new ImVec2();
+    private final ImVec2 framebufferScale = new ImVec2();
+    private final ImVec2 displayPos = new ImVec2();
+    private final ImVec4 clipRect = new ImVec4();
+    private final float[] orthoProjMatrix = new float[4 * 4];
+    // Variables used to backup GL state before and after the rendering of Dear ImGui
+    private final int[] lastActiveTexture = new int[1];
+    private final int[] lastProgram = new int[1];
+    private final int[] lastTexture = new int[1];
+    private final int[] lastArrayBuffer = new int[1];
+    private final int[] lastVertexArrayObject = new int[1];
+    private final int[] lastViewport = new int[4];
+    private final int[] lastScissorBox = new int[4];
+    private final int[] lastBlendSrcRgb = new int[1];
+    private final int[] lastBlendDstRgb = new int[1];
+    private final int[] lastBlendSrcAlpha = new int[1];
+    private final int[] lastBlendDstAlpha = new int[1];
+    private final int[] lastBlendEquationRgb = new int[1];
+    private final int[] lastBlendEquationAlpha = new int[1];
     // OpenGL Data
     private int glVersion = 0;
     private String glslVersion = "";
@@ -47,28 +62,6 @@ public final class ImGuiImplGl3 {
     private int gVboHandle = 0;
     private int gElementsHandle = 0;
     private int gVertexArrayObjectHandle = 0;
-
-    // Used to store tmp renderer data
-    private final ImVec2 displaySize = new ImVec2();
-    private final ImVec2 framebufferScale = new ImVec2();
-    private final ImVec2 displayPos = new ImVec2();
-    private final ImVec4 clipRect = new ImVec4();
-    private final float[] orthoProjMatrix = new float[4 * 4];
-
-    // Variables used to backup GL state before and after the rendering of Dear ImGui
-    private final int[] lastActiveTexture = new int[1];
-    private final int[] lastProgram = new int[1];
-    private final int[] lastTexture = new int[1];
-    private final int[] lastArrayBuffer = new int[1];
-    private final int[] lastVertexArrayObject = new int[1];
-    private final int[] lastViewport = new int[4];
-    private final int[] lastScissorBox = new int[4];
-    private final int[] lastBlendSrcRgb = new int[1];
-    private final int[] lastBlendDstRgb = new int[1];
-    private final int[] lastBlendSrcAlpha = new int[1];
-    private final int[] lastBlendDstAlpha = new int[1];
-    private final int[] lastBlendEquationRgb = new int[1];
-    private final int[] lastBlendEquationAlpha = new int[1];
     private boolean lastEnableBlend = false;
     private boolean lastEnableCullFace = false;
     private boolean lastEnableDepthTest = false;
@@ -118,11 +111,7 @@ public final class ImGuiImplGl3 {
         readGlVersion();
         setupBackendCapabilitiesFlags();
 
-        if (glslVersion == null) {
-            this.glslVersion = "#version 130";
-        } else {
-            this.glslVersion = glslVersion;
-        }
+        this.glslVersion = Objects.requireNonNullElse(glslVersion, "#version 130");
 
         createDeviceObjects();
 
@@ -365,11 +354,16 @@ public final class ImGuiImplGl3 {
         glBlendEquationSeparate(lastBlendEquationRgb[0], lastBlendEquationAlpha[0]);
         glBlendFuncSeparate(lastBlendSrcRgb[0], lastBlendDstRgb[0], lastBlendSrcAlpha[0], lastBlendDstAlpha[0]);
         // @formatter:off CHECKSTYLE:OFF
-        if (lastEnableBlend) glEnable(GL_BLEND); else glDisable(GL_BLEND);
-        if (lastEnableCullFace) glEnable(GL_CULL_FACE); else glDisable(GL_CULL_FACE);
-        if (lastEnableDepthTest) glEnable(GL_DEPTH_TEST); else glDisable(GL_DEPTH_TEST);
-        if (lastEnableStencilTest) glEnable(GL_STENCIL_TEST); else glDisable(GL_STENCIL_TEST);
-        if (lastEnableScissorTest) glEnable(GL_SCISSOR_TEST); else glDisable(GL_SCISSOR_TEST);
+        if (lastEnableBlend) glEnable(GL_BLEND);
+        else glDisable(GL_BLEND);
+        if (lastEnableCullFace) glEnable(GL_CULL_FACE);
+        else glDisable(GL_CULL_FACE);
+        if (lastEnableDepthTest) glEnable(GL_DEPTH_TEST);
+        else glDisable(GL_DEPTH_TEST);
+        if (lastEnableStencilTest) glEnable(GL_STENCIL_TEST);
+        else glDisable(GL_STENCIL_TEST);
+        if (lastEnableScissorTest) glEnable(GL_SCISSOR_TEST);
+        else glDisable(GL_SCISSOR_TEST);
         // @formatter:on CHECKSTYLE:ON
         glViewport(lastViewport[0], lastViewport[1], lastViewport[2], lastViewport[3]);
         glScissor(lastScissorBox[0], lastScissorBox[1], lastScissorBox[2], lastScissorBox[3]);
@@ -468,117 +462,117 @@ public final class ImGuiImplGl3 {
 
     private String getVertexShaderGlsl120() {
         return glslVersion + "\n"
-            + "uniform mat4 ProjMtx;\n"
-            + "attribute vec2 Position;\n"
-            + "attribute vec2 UV;\n"
-            + "attribute vec4 Color;\n"
-            + "varying vec2 Frag_UV;\n"
-            + "varying vec4 Frag_Color;\n"
-            + "void main()\n"
-            + "{\n"
-            + "    Frag_UV = UV;\n"
-            + "    Frag_Color = Color;\n"
-            + "    gl_Position = ProjMtx * vec4(Position.xy,0,1);\n"
-            + "}\n";
+                + "uniform mat4 ProjMtx;\n"
+                + "attribute vec2 Position;\n"
+                + "attribute vec2 UV;\n"
+                + "attribute vec4 Color;\n"
+                + "varying vec2 Frag_UV;\n"
+                + "varying vec4 Frag_Color;\n"
+                + "void main()\n"
+                + "{\n"
+                + "    Frag_UV = UV;\n"
+                + "    Frag_Color = Color;\n"
+                + "    gl_Position = ProjMtx * vec4(Position.xy,0,1);\n"
+                + "}\n";
     }
 
     private String getVertexShaderGlsl130() {
         return glslVersion + "\n"
-            + "uniform mat4 ProjMtx;\n"
-            + "in vec2 Position;\n"
-            + "in vec2 UV;\n"
-            + "in vec4 Color;\n"
-            + "out vec2 Frag_UV;\n"
-            + "out vec4 Frag_Color;\n"
-            + "void main()\n"
-            + "{\n"
-            + "    Frag_UV = UV;\n"
-            + "    Frag_Color = Color;\n"
-            + "    gl_Position = ProjMtx * vec4(Position.xy,0,1);\n"
-            + "}\n";
+                + "uniform mat4 ProjMtx;\n"
+                + "in vec2 Position;\n"
+                + "in vec2 UV;\n"
+                + "in vec4 Color;\n"
+                + "out vec2 Frag_UV;\n"
+                + "out vec4 Frag_Color;\n"
+                + "void main()\n"
+                + "{\n"
+                + "    Frag_UV = UV;\n"
+                + "    Frag_Color = Color;\n"
+                + "    gl_Position = ProjMtx * vec4(Position.xy,0,1);\n"
+                + "}\n";
     }
 
     private String getVertexShaderGlsl300es() {
         return glslVersion + "\n"
-            + "precision highp float;\n"
-            + "layout (location = 0) in vec2 Position;\n"
-            + "layout (location = 1) in vec2 UV;\n"
-            + "layout (location = 2) in vec4 Color;\n"
-            + "uniform mat4 ProjMtx;\n"
-            + "out vec2 Frag_UV;\n"
-            + "out vec4 Frag_Color;\n"
-            + "void main()\n"
-            + "{\n"
-            + "    Frag_UV = UV;\n"
-            + "    Frag_Color = Color;\n"
-            + "    gl_Position = ProjMtx * vec4(Position.xy,0,1);\n"
-            + "}\n";
+                + "precision highp float;\n"
+                + "layout (location = 0) in vec2 Position;\n"
+                + "layout (location = 1) in vec2 UV;\n"
+                + "layout (location = 2) in vec4 Color;\n"
+                + "uniform mat4 ProjMtx;\n"
+                + "out vec2 Frag_UV;\n"
+                + "out vec4 Frag_Color;\n"
+                + "void main()\n"
+                + "{\n"
+                + "    Frag_UV = UV;\n"
+                + "    Frag_Color = Color;\n"
+                + "    gl_Position = ProjMtx * vec4(Position.xy,0,1);\n"
+                + "}\n";
     }
 
     private String getVertexShaderGlsl410Core() {
         return glslVersion + "\n"
-            + "layout (location = 0) in vec2 Position;\n"
-            + "layout (location = 1) in vec2 UV;\n"
-            + "layout (location = 2) in vec4 Color;\n"
-            + "uniform mat4 ProjMtx;\n"
-            + "out vec2 Frag_UV;\n"
-            + "out vec4 Frag_Color;\n"
-            + "void main()\n"
-            + "{\n"
-            + "    Frag_UV = UV;\n"
-            + "    Frag_Color = Color;\n"
-            + "    gl_Position = ProjMtx * vec4(Position.xy,0,1);\n"
-            + "}\n";
+                + "layout (location = 0) in vec2 Position;\n"
+                + "layout (location = 1) in vec2 UV;\n"
+                + "layout (location = 2) in vec4 Color;\n"
+                + "uniform mat4 ProjMtx;\n"
+                + "out vec2 Frag_UV;\n"
+                + "out vec4 Frag_Color;\n"
+                + "void main()\n"
+                + "{\n"
+                + "    Frag_UV = UV;\n"
+                + "    Frag_Color = Color;\n"
+                + "    gl_Position = ProjMtx * vec4(Position.xy,0,1);\n"
+                + "}\n";
     }
 
     private String getFragmentShaderGlsl120() {
         return glslVersion + "\n"
-            + "#ifdef GL_ES\n"
-            + "    precision mediump float;\n"
-            + "#endif\n"
-            + "uniform sampler2D Texture;\n"
-            + "varying vec2 Frag_UV;\n"
-            + "varying vec4 Frag_Color;\n"
-            + "void main()\n"
-            + "{\n"
-            + "    gl_FragColor = Frag_Color * texture2D(Texture, Frag_UV.st);\n"
-            + "}\n";
+                + "#ifdef GL_ES\n"
+                + "    precision mediump float;\n"
+                + "#endif\n"
+                + "uniform sampler2D Texture;\n"
+                + "varying vec2 Frag_UV;\n"
+                + "varying vec4 Frag_Color;\n"
+                + "void main()\n"
+                + "{\n"
+                + "    gl_FragColor = Frag_Color * texture2D(Texture, Frag_UV.st);\n"
+                + "}\n";
     }
 
     private String getFragmentShaderGlsl130() {
         return glslVersion + "\n"
-            + "uniform sampler2D Texture;\n"
-            + "in vec2 Frag_UV;\n"
-            + "in vec4 Frag_Color;\n"
-            + "out vec4 Out_Color;\n"
-            + "void main()\n"
-            + "{\n"
-            + "    Out_Color = Frag_Color * texture(Texture, Frag_UV.st);\n"
-            + "}\n";
+                + "uniform sampler2D Texture;\n"
+                + "in vec2 Frag_UV;\n"
+                + "in vec4 Frag_Color;\n"
+                + "out vec4 Out_Color;\n"
+                + "void main()\n"
+                + "{\n"
+                + "    Out_Color = Frag_Color * texture(Texture, Frag_UV.st);\n"
+                + "}\n";
     }
 
     private String getFragmentShaderGlsl300es() {
         return glslVersion + "\n"
-            + "precision mediump float;\n"
-            + "uniform sampler2D Texture;\n"
-            + "in vec2 Frag_UV;\n"
-            + "in vec4 Frag_Color;\n"
-            + "layout (location = 0) out vec4 Out_Color;\n"
-            + "void main()\n"
-            + "{\n"
-            + "    Out_Color = Frag_Color * texture(Texture, Frag_UV.st);\n"
-            + "}\n";
+                + "precision mediump float;\n"
+                + "uniform sampler2D Texture;\n"
+                + "in vec2 Frag_UV;\n"
+                + "in vec4 Frag_Color;\n"
+                + "layout (location = 0) out vec4 Out_Color;\n"
+                + "void main()\n"
+                + "{\n"
+                + "    Out_Color = Frag_Color * texture(Texture, Frag_UV.st);\n"
+                + "}\n";
     }
 
     private String getFragmentShaderGlsl410Core() {
         return glslVersion + "\n"
-            + "in vec2 Frag_UV;\n"
-            + "in vec4 Frag_Color;\n"
-            + "uniform sampler2D Texture;\n"
-            + "layout (location = 0) out vec4 Out_Color;\n"
-            + "void main()\n"
-            + "{\n"
-            + "    Out_Color = Frag_Color * texture(Texture, Frag_UV.st);\n"
-            + "}\n";
+                + "in vec2 Frag_UV;\n"
+                + "in vec4 Frag_Color;\n"
+                + "uniform sampler2D Texture;\n"
+                + "layout (location = 0) out vec4 Out_Color;\n"
+                + "void main()\n"
+                + "{\n"
+                + "    Out_Color = Frag_Color * texture(Texture, Frag_UV.st);\n"
+                + "}\n";
     }
 }
