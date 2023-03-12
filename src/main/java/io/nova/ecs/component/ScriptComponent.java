@@ -3,22 +3,13 @@ package io.nova.ecs.component;
 import io.nova.ecs.entity.ScriptableEntity;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public class ScriptComponent extends Component {
-
-    private Consumer<ScriptableEntity> onCreateFunction;
-    private Consumer<ScriptableEntity> onDestroyFunction;
-    private BiConsumer<ScriptableEntity, Float> onUpdateFunction;
 
     private ScriptableEntity instance;
     private Class<? extends ScriptableEntity> clazz;
 
     public <T extends ScriptableEntity> void bind(Class<T> clazz) {
-        onCreateFunction = ScriptableEntity::onCreate;
-        onDestroyFunction = ScriptableEntity::onDestroy;
-        onUpdateFunction = ScriptableEntity::onUpdate;
         this.clazz = clazz;
     }
 
@@ -35,15 +26,15 @@ public class ScriptComponent extends Component {
     }
 
     public void onCreate() {
-        onCreateFunction.accept(instance);
+        instance.onCreate();
     }
 
     public void onDestroy() {
-        onDestroyFunction.accept(instance);
+        instance.onDestroy();
     }
 
-    public void onUpdate(float delta) {
-        onUpdateFunction.accept(instance, delta);
+    public void onUpdate(float deltaTime) {
+        instance.onUpdate(deltaTime);
     }
 
     public void setInstanceEntity() {
