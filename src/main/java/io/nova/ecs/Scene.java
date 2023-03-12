@@ -31,7 +31,14 @@ public class Scene {
                     script.setInstanceEntity();
                     script.onCreate();
                 }
-                script.onUpdate(deltaTime);
+
+                // If the entity has a camera component we only want to update it if it is the primary camera
+                var camera = entity.getComponent(SceneCameraComponent.class);
+                if (camera == null) {
+                    script.onUpdate(deltaTime);
+                } else if (camera.isPrimary()) {
+                    script.onUpdate(deltaTime);
+                }
             }
         }
 
