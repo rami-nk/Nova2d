@@ -65,7 +65,6 @@ public class EcsLayer extends Layer {
         }
 
         ImGui.dragFloat3("Camera Position", cameraPosition);
-        System.out.println(cameraPosition[0] + ", " + cameraPosition[1] + ", " + cameraPosition[2]);
         var transformComponent = primaryCamera.getComponent(TransformComponent.class);
         transformComponent.setTransform(new Matrix4f().translate(new Vector3f(cameraPosition), new Matrix4f()));
     }
