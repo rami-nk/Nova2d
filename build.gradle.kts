@@ -24,6 +24,8 @@ val jomlVersion = "1.10.5"
 val lwjglNatives = "natives-macos-arm64"
 
 dependencies {
+    implementation("com.zaxxer:SparseBitSet:1.0")
+
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
 
     // IMGUI
