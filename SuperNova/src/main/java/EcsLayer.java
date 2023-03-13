@@ -27,6 +27,7 @@ public class EcsLayer extends Layer {
     private Renderer renderer;
     private OrthographicCameraController cameraController;
     private Entity entity;
+    private Entity entity2;
     private Entity primaryCamera;
     private Entity secondaryCamera;
     private boolean primary = true;
@@ -41,6 +42,9 @@ public class EcsLayer extends Layer {
         entity = scene.createEntity("Quad");
         entity.addComponent(new SpriteRenderComponent());
 
+        entity2 = scene.createEntity("Quad2");
+        entity2.addComponent(new SpriteRenderComponent());
+
         primaryCamera = scene.createEntity("Primary Camera");
         var primarySceneCamera = primaryCamera.addComponent(new SceneCameraComponent());
         primarySceneCamera.setPrimary(primary);
@@ -51,7 +55,7 @@ public class EcsLayer extends Layer {
 
         secondaryCamera.addComponent(new ScriptComponent()).bind(CameraController.class);
 
-        scene.activateEntities(entity, primaryCamera, secondaryCamera);
+        scene.activateEntities(entity, entity2, primaryCamera, secondaryCamera);
 
         var spec = new FrameBufferSpecification(Application.getWindow().getWidth(), Application.getWindow().getHeight());
         frameBuffer = FrameBufferFactory.create(spec);

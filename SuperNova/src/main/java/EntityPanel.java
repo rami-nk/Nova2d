@@ -2,6 +2,7 @@ import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImString;
 import io.nova.ecs.Scene;
+import io.nova.ecs.component.SpriteRenderComponent;
 import io.nova.ecs.component.TagComponent;
 import io.nova.ecs.component.TransformComponent;
 import io.nova.ecs.entity.Entity;
@@ -67,8 +68,27 @@ public class EntityPanel {
         ImGui.separator();
 
         if (entity.hasComponent(TransformComponent.class)) {
-            var transform = entity.getComponent(TransformComponent.class);
-            ImGui.dragFloat3("Test", new float[3], 0.1f);
+            if (ImGui.treeNodeEx("Transform", ImGuiTreeNodeFlags.DefaultOpen)) {
+
+                var transform = entity.getComponent(TransformComponent.class);
+                var position = transform.getPosition();
+                if (ImGui.dragFloat3("Transform", position, 0.1f)) {
+                    transform.setPosition(position);
+                }
+                ImGui.treePop();
+            }
+        }
+
+        if (entity.hasComponent(SpriteRenderComponent.class)) {
+            if (ImGui.treeNodeEx("Sprite", ImGuiTreeNodeFlags.DefaultOpen)) {
+
+                var sprite = entity.getComponent(SpriteRenderComponent.class);
+                var color = sprite.getColorArray();
+                if (ImGui.dragFloat4("Color", color, 0.01f, 0.0f, 1.0f)) {
+                    sprite.setColor(color);
+                }
+                ImGui.treePop();
+            }
         }
     }
 }
