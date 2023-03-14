@@ -12,7 +12,7 @@ public class SpriteRenderComponentNode {
 
                 var sprite = entity.getComponent(SpriteRenderComponent.class);
                 var color = sprite.getColorArray();
-                if (ImGui.dragFloat4("Color", color, 0.01f, 0.0f, 1.0f)) {
+                if (ImGui.colorEdit4("Color", color)) {
                     sprite.setColor(color);
                 }
                 ImGui.treePop();
