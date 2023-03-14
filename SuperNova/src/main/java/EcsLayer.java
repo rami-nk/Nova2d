@@ -13,6 +13,7 @@ import io.nova.ecs.entity.ScriptableEntity;
 import io.nova.event.Event;
 import io.nova.window.Input;
 import org.joml.Vector2f;
+import panels.EntityPanel;
 
 import static io.nova.core.codes.KeyCodes.*;
 
