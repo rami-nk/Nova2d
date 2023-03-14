@@ -1,7 +1,9 @@
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImString;
+import io.nova.core.renderer.camera.ProjectionType;
 import io.nova.ecs.Scene;
+import io.nova.ecs.component.SceneCameraComponent;
 import io.nova.ecs.component.SpriteRenderComponent;
 import io.nova.ecs.component.TagComponent;
 import io.nova.ecs.component.TransformComponent;
@@ -87,6 +89,62 @@ public class EntityPanel {
                 if (ImGui.dragFloat4("Color", color, 0.01f, 0.0f, 1.0f)) {
                     sprite.setColor(color);
                 }
+                ImGui.treePop();
+            }
+        }
+
+        if (entity.hasComponent(SceneCameraComponent.class)) {
+            if (ImGui.treeNodeEx("Camera", ImGuiTreeNodeFlags.DefaultOpen)) {
+
+                var camera = entity.getComponent(SceneCameraComponent.class);
+                var currentProjectionType = camera.getCamera().getProjectionType();
+
+                if (ImGui.beginCombo("Projection", currentProjectionType.getDisplayName())) {
+                    for (var projectionType : ProjectionType.values()) {
+                        var isSelected = projectionType == currentProjectionType;
+                        if (ImGui.selectable(projectionType.getDisplayName(), isSelected)) {
+                            currentProjectionType = projectionType;
+                            camera.getCamera().setProjectionType(currentProjectionType);
+                        }
+
+                        if (isSelected) {
+                            ImGui.setItemDefaultFocus();
+                        }
+                    }
+                    ImGui.endCombo();
+                }
+
+                switch (currentProjectionType) {
+                    case ORTHOGRAPHIC -> {
+                        var size = new float[]{camera.getCamera().getOrthographicSize()};
+                        if (ImGui.dragFloat("Size", size, 0.1f)) {
+                            camera.getCamera().setOrthographicSize(size[0]);
+                        }
+                        var nearPlane = new float[]{camera.getCamera().getOrthographicNearPlane()};
+                        if (ImGui.dragFloat("Near", nearPlane, 0.1f)) {
+                            camera.getCamera().setOrthographicNearPlane(nearPlane[0]);
+                        }
+                        var farPlane = new float[]{camera.getCamera().getOrthographicFarPlane()};
+                        if (ImGui.dragFloat("Far", farPlane, 0.1f)) {
+                            camera.getCamera().setOrthographicFarPlane(farPlane[0]);
+                        }
+                    }
+                    case PERSPECTIVE -> {
+                        var fov = new float[]{camera.getCamera().getFov()};
+                        if (ImGui.dragFloat("FOV", fov, 0.1f)) {
+                            camera.getCamera().setFov(fov[0]);
+                        }
+                        var nearPlane = new float[]{camera.getCamera().getPerspectiveNearPlane()};
+                        if (ImGui.dragFloat("Near", nearPlane, 0.1f)) {
+                            camera.getCamera().setPerspectiveNearPlane(nearPlane[0]);
+                        }
+                        var farPlane = new float[]{camera.getCamera().getPerspectiveFarPlane()};
+                        if (ImGui.dragFloat("Far", farPlane, 0.1f)) {
+                            camera.getCamera().setPerspectiveFarPlane(farPlane[0]);
+                        }
+                    }
+                }
+
                 ImGui.treePop();
             }
         }

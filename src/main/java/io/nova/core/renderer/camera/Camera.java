@@ -3,6 +3,7 @@ package io.nova.core.renderer.camera;
 import org.joml.Matrix4f;
 
 public class Camera {
+    protected ProjectionType projectionType;
     protected Matrix4f projection;
 
     public Camera() {
@@ -11,6 +12,14 @@ public class Camera {
 
     public Camera(Matrix4f projection) {
         this.projection = projection;
+    }
+
+    public ProjectionType getProjectionType() {
+        return projectionType;
+    }
+
+    public void setProjectionType(ProjectionType projectionType) {
+        this.projectionType = projectionType;
     }
 
     public Matrix4f getProjection() {

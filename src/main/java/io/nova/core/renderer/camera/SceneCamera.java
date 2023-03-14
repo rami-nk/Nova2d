@@ -5,21 +5,86 @@ import org.joml.Matrix4f;
 public class SceneCamera extends Camera {
 
     private float aspectRatio;
-    private float nearPlane, farPlane;
+    private float orthographicNearPlane, orthographicFarPlane;
     private float orthographicSize;
 
+    private float fov;
+    private float perspectiveNearPlane, perspectiveFarPlane;
+
     public SceneCamera() {
-        setOrthographic(10.0f, -1.0f, 1.0f);
+        this(ProjectionType.ORTHOGRAPHIC);
+    }
+
+    public SceneCamera(ProjectionType projectionType) {
+        this.projectionType = projectionType;
         aspectRatio = 16.0f / 9.0f;
 
+        setDefaultPerspectiveParams();
+        setDefaultOrthographicParams();
+
+        switch (projectionType) {
+            case PERSPECTIVE -> setPerspective(fov, perspectiveNearPlane, perspectiveFarPlane);
+            case ORTHOGRAPHIC -> setOrthographic(orthographicSize, orthographicNearPlane, orthographicFarPlane);
+        }
         updateProjection();
     }
 
-    public void setOrthographic(float size, float nearPlane, float farPlane) {
-        this.nearPlane = nearPlane;
-        this.farPlane = farPlane;
-        this.orthographicSize = size;
+    private void setDefaultOrthographicParams() {
+        orthographicNearPlane = -1.0f;
+        orthographicFarPlane = 1.0f;
+        orthographicSize = 10.0f;
+    }
+
+    private void setDefaultPerspectiveParams() {
+        fov = (float) Math.toRadians(45.0f);
+        perspectiveNearPlane = 0.1f;
+        perspectiveFarPlane = 1000.0f;
+    }
+
+    public float getFov() {
+        return (float) Math.toDegrees(fov);
+    }
+
+    public void setFov(float fov) {
+        this.fov = (float) Math.toRadians(fov);
+        updatePerspective();
+    }
+
+    public void setProjectionType(ProjectionType projectionType) {
+        super.setProjectionType(projectionType);
         updateProjection();
+    }
+
+    public float getPerspectiveNearPlane() {
+        return perspectiveNearPlane;
+    }
+
+    public void setPerspectiveNearPlane(float perspectiveNearPlane) {
+        this.perspectiveNearPlane = perspectiveNearPlane;
+        updatePerspective();
+    }
+
+    public float getPerspectiveFarPlane() {
+        return perspectiveFarPlane;
+    }
+
+    public void setPerspectiveFarPlane(float perspectiveFarPlane) {
+        this.perspectiveFarPlane = perspectiveFarPlane;
+        updatePerspective();
+    }
+
+    public void setPerspective(float fov, float farPlane, float nearPlane) {
+        this.fov = fov;
+        this.perspectiveNearPlane = nearPlane;
+        this.perspectiveFarPlane = farPlane;
+        updatePerspective();
+    }
+
+    public void setOrthographic(float size, float nearPlane, float farPlane) {
+        this.orthographicNearPlane = nearPlane;
+        this.orthographicFarPlane = farPlane;
+        this.orthographicSize = size;
+        updateOrthographic();
     }
 
     public void setViewport(int width, int height) {
@@ -28,12 +93,27 @@ public class SceneCamera extends Camera {
     }
 
     private void updateProjection() {
+        switch (projectionType) {
+            case PERSPECTIVE -> updatePerspective();
+            case ORTHOGRAPHIC -> updateOrthographic();
+        }
+    }
+
+    public void updatePerspective() {
+        projection = new Matrix4f().perspective(
+                fov,
+                aspectRatio,
+                perspectiveNearPlane,
+                perspectiveFarPlane);
+    }
+
+    public void updateOrthographic() {
         projection = new Matrix4f().ortho(
                 -orthographicSize * aspectRatio * 0.5f,
                 orthographicSize * aspectRatio * 0.5f,
                 -orthographicSize * 0.5f,
                 orthographicSize * 0.5f,
-                nearPlane, farPlane);
+                orthographicNearPlane, orthographicFarPlane);
     }
 
     public float getOrthographicSize() {
@@ -42,18 +122,28 @@ public class SceneCamera extends Camera {
 
     public void setOrthographicSize(float size) {
         this.orthographicSize = size;
-        updateProjection();
+        updateOrthographic();
     }
 
     public float getAspectRatio() {
         return aspectRatio;
     }
 
-    public float getNearPlane() {
-        return nearPlane;
+    public float getOrthographicNearPlane() {
+        return orthographicNearPlane;
     }
 
-    public float getFarPlane() {
-        return farPlane;
+    public void setOrthographicNearPlane(float orthographicNearPlane) {
+        this.orthographicNearPlane = orthographicNearPlane;
+        updateOrthographic();
+    }
+
+    public float getOrthographicFarPlane() {
+        return orthographicFarPlane;
+    }
+
+    public void setOrthographicFarPlane(float orthographicFarPlane) {
+        this.orthographicFarPlane = orthographicFarPlane;
+        updateOrthographic();
     }
 }
