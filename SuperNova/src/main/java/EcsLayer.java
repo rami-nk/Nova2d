@@ -12,9 +12,7 @@ import io.nova.ecs.entity.Entity;
 import io.nova.ecs.entity.ScriptableEntity;
 import io.nova.event.Event;
 import io.nova.window.Input;
-import org.joml.Matrix4f;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
 
 import static io.nova.core.codes.KeyCodes.*;
 
@@ -138,17 +136,6 @@ public class EcsLayer extends Layer {
                     primary = !primary;
                     primaryCamera.getComponent(SceneCameraComponent.class).setPrimary(primary);
                     secondaryCamera.getComponent(SceneCameraComponent.class).setPrimary(!primary);
-                }
-
-                ImGui.dragFloat3("Camera Position", cameraPosition);
-                var transformComponent = primaryCamera.getComponent(TransformComponent.class);
-                transformComponent.setTransform(new Matrix4f().translate(new Vector3f(cameraPosition), new Matrix4f()));
-
-                {
-                    var cameraComponent = secondaryCamera.getComponent(SceneCameraComponent.class);
-                    if (ImGui.dragFloat("Zoom", orthographicSize)) {
-                        cameraComponent.getCamera().setOrthographicSize(orthographicSize[0]);
-                    }
                 }
             }
 

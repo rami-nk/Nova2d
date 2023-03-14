@@ -71,9 +71,9 @@ public class EntityPanel {
             if (ImGui.treeNodeEx("Transform", ImGuiTreeNodeFlags.DefaultOpen)) {
 
                 var transform = entity.getComponent(TransformComponent.class);
-                var position = transform.getPosition();
+                var position = transform.getTranslation();
                 if (ImGui.dragFloat3("Transform", position, 0.1f)) {
-                    transform.setPosition(position);
+                    transform.setTranslation(position);
                 }
                 ImGui.treePop();
             }

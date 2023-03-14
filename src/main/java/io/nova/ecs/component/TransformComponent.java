@@ -4,29 +4,23 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 public class TransformComponent extends Component {
-    private Matrix4f transform;
-    private float[] position;
+    private float[] translation;
+    private float[] rotation;
     private float[] scale;
 
     public TransformComponent() {
-        this(new Matrix4f());
+//        this(new Matrix4f());
+        translation = new float[]{0, 0, 0};
+        rotation = new float[]{0, 0, 0};
+        scale = new float[]{1, 1, 1};
     }
 
-    public TransformComponent(Matrix4f transform) {
-        this.transform = transform;
-        var translation = transform.getTranslation(new Vector3f());
-        this.position = new float[]{translation.x, translation.y, translation.z};
-        var _scale = transform.getScale(new Vector3f());
-        this.scale = new float[]{_scale.x, _scale.y, _scale.z};
+    public float[] getTranslation() {
+        return translation;
     }
 
-    public float[] getPosition() {
-        return position;
-    }
-
-    public void setPosition(float[] position) {
-        this.position = position;
-        transform.setTranslation(position[0], position[1], position[2]);
+    public void setTranslation(float[] translation) {
+        this.translation = translation;
     }
 
     public float[] getScale() {
@@ -35,19 +29,32 @@ public class TransformComponent extends Component {
 
     public void setScale(float[] scale) {
         this.scale = scale;
-        transform.scale(scale[0], scale[1], scale[2]);
     }
 
     public Matrix4f getTransform() {
+//        Matrix4f transform = new Matrix4f();
+//        transform.translate(new Vector3f(translation[0], translation[1], translation[2]));
+//        transform.rotateXYZ(rotation[0], rotation[1], rotation[2]);
+//        transform.scale(new Vector3f(scale[0], scale[1], scale[2]));
+        var rotation = new Matrix4f().rotate((float) Math.toRadians(this.rotation[0]), new Vector3f(1, 0, 0))
+                .rotate((float) Math.toRadians(this.rotation[1]), new Vector3f(0, 1, 0))
+                .rotate((float) Math.toRadians(this.rotation[2]), new Vector3f(0, 0, 1));
+        var transform = new Matrix4f().translate(new Vector3f(translation[0], translation[1], translation[2]))
+                .mul(rotation)
+                .scale(new Vector3f(scale[0], scale[1], scale[2]));
         return transform;
     }
 
     public void setTransform(Matrix4f transform) {
-        this.transform = transform;
+        scale = new float[]{transform.m00(), transform.m11(), transform.m22()};
+        translation = new float[]{transform.m30(), transform.m31(), transform.m32()};
+        rotation = new float[]{transform.m00(), transform.m11(), transform.m22()};
     }
 
     public void translate(float x, float y, float z) {
-        transform.translate(x, y, z);
+        translation[0] += x;
+        translation[1] += y;
+        translation[2] += z;
     }
 
     public void translate(float x, float y) {
