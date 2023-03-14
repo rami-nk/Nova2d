@@ -45,9 +45,9 @@ public class SceneCameraComponentNode {
                         }
                     }
                     case PERSPECTIVE -> {
-                        var fov = new float[]{camera.getCamera().getFov()};
+                        var fov = new float[]{(float) Math.toDegrees(camera.getCamera().getFov())};
                         if (ImGui.dragFloat("FOV", fov, 0.1f)) {
-                            camera.getCamera().setFov(fov[0]);
+                            camera.getCamera().setFov((float) Math.toRadians(fov[0]));
                         }
                         var nearPlane = new float[]{camera.getCamera().getPerspectiveNearPlane()};
                         if (ImGui.dragFloat("Near", nearPlane, 0.1f)) {

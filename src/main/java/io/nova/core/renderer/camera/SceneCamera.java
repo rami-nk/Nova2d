@@ -42,11 +42,11 @@ public class SceneCamera extends Camera {
     }
 
     public float getFov() {
-        return (float) Math.toDegrees(fov);
+        return fov;
     }
 
     public void setFov(float fov) {
-        this.fov = (float) Math.toRadians(fov);
+        this.fov = fov;
         updatePerspective();
     }
 
