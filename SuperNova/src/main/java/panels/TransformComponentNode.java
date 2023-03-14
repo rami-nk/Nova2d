@@ -12,6 +12,16 @@ public class TransformComponentNode {
             if (ImGui.dragFloat3("Transform", position, 0.1f)) {
                 transform.setTranslation(position);
             }
+
+            var rotation = transform.getRotation();
+            if (ImGui.dragFloat3("Rotation", rotation, 0.1f)) {
+                transform.setRotation(rotation);
+            }
+
+            var scale = transform.getScale();
+            if (ImGui.dragFloat3("Scale", scale, 0.1f)) {
+                transform.setScale(scale);
+            }
         });
     }
 }

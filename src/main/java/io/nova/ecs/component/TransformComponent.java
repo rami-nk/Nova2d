@@ -9,10 +9,17 @@ public class TransformComponent extends Component {
     private float[] scale;
 
     public TransformComponent() {
-//        this(new Matrix4f());
         translation = new float[]{0, 0, 0};
         rotation = new float[]{0, 0, 0};
         scale = new float[]{1, 1, 1};
+    }
+
+    public float[] getRotation() {
+        return rotation;
+    }
+
+    public void setRotation(float[] rotation) {
+        this.rotation = rotation;
     }
 
     public float[] getTranslation() {
@@ -32,17 +39,12 @@ public class TransformComponent extends Component {
     }
 
     public Matrix4f getTransform() {
-//        Matrix4f transform = new Matrix4f();
-//        transform.translate(new Vector3f(translation[0], translation[1], translation[2]));
-//        transform.rotateXYZ(rotation[0], rotation[1], rotation[2]);
-//        transform.scale(new Vector3f(scale[0], scale[1], scale[2]));
         var rotation = new Matrix4f().rotate((float) Math.toRadians(this.rotation[0]), new Vector3f(1, 0, 0))
                 .rotate((float) Math.toRadians(this.rotation[1]), new Vector3f(0, 1, 0))
                 .rotate((float) Math.toRadians(this.rotation[2]), new Vector3f(0, 0, 1));
-        var transform = new Matrix4f().translate(new Vector3f(translation[0], translation[1], translation[2]))
+        return new Matrix4f().translate(new Vector3f(translation[0], translation[1], translation[2]))
                 .mul(rotation)
                 .scale(new Vector3f(scale[0], scale[1], scale[2]));
-        return transform;
     }
 
     public void setTransform(Matrix4f transform) {
