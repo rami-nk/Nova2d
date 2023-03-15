@@ -105,4 +105,8 @@ public class Scene {
             }
         }
     }
+
+    public void removeEntity(Entity entity) {
+        registry.removeEntity(entity);
+    }
 }

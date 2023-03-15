@@ -1,6 +1,7 @@
 package panels;
 
 import imgui.ImGui;
+import imgui.flag.ImGuiPopupFlags;
 import imgui.flag.ImGuiTreeNodeFlags;
 import io.nova.ecs.Scene;
 import io.nova.ecs.component.TagComponent;
@@ -12,6 +13,8 @@ public class EntityPanel {
 
     private final Scene scene;
     private Entity selectedEntity;
+    private boolean removeEntityClicked = false;
+    private Entity entityToRemove;
 
     public EntityPanel(Scene scene) {
         this.scene = scene;
@@ -27,9 +30,17 @@ public class EntityPanel {
             if (ImGui.isMouseDown(0) && ImGui.isWindowHovered()) {
                 selectedEntity = null;
             }
-            createEntityPopUpMenu();
+            createEntityPopupMenu();
         }
         ImGui.end();
+
+        if (removeEntityClicked) {
+            scene.getRegistry().removeEntity(entityToRemove);
+            removeEntityClicked = false;
+            if (Objects.equals(selectedEntity, entityToRemove)) {
+                selectedEntity = null;
+            }
+        }
 
         ImGui.begin("Properties");
         {
@@ -40,8 +51,8 @@ public class EntityPanel {
         ImGui.end();
     }
 
-    private void createEntityPopUpMenu() {
-        if (ImGui.beginPopupContextWindow()) {
+    private void createEntityPopupMenu() {
+        if (ImGui.beginPopupContextWindow("NewEntity", ImGuiPopupFlags.NoOpenOverItems)) {
             if (ImGui.menuItem("New Entity")) {
                 var entity = scene.createEntity();
                 scene.activateEntities(entity);
@@ -62,8 +73,21 @@ public class EntityPanel {
             selectedEntity = entity;
         }
 
+        removeEntityPopupMenu(entity);
+
         if (expanded) {
             ImGui.treePop();
+        }
+    }
+
+    private void removeEntityPopupMenu(Entity entity) {
+        if (ImGui.beginPopupContextItem()) {
+            if (ImGui.menuItem("Delete Entity")) {
+                // Defer removal to avoid concurrent modification exception
+                removeEntityClicked = true;
+                entityToRemove = entity;
+            }
+            ImGui.endPopup();
         }
     }
 }
