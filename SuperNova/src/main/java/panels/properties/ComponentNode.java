@@ -19,7 +19,7 @@ public class ComponentNode {
             ImGui.popStyleVar();
 
             ImGui.sameLine(contentRegionAvail.x - lineHeight * 0.5f);
-            if (ImGui.button("+", lineHeight, lineHeight)) {
+            if (ImGui.button("...", lineHeight, lineHeight)) {
                 ImGui.openPopup("ComponentSettings");
             }
 
