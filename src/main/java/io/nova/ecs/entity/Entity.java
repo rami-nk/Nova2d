@@ -63,10 +63,10 @@ public final class Entity {
     }
 
     public <T extends Component> T addComponent(T c) {
-        if (isActivated() || registry != null) {
-            throw new IllegalStateException(
-                    "cannot add component to activated entity");
-        }
+//        if (isActivated() || registry != null) {
+//            throw new IllegalStateException(
+//                    "cannot add component to activated entity");
+//        }
         if (c.getEntity() != null) {
             throw new IllegalArgumentException(
                     "component already attached an entity");

@@ -40,6 +40,11 @@ public class SceneCameraComponentNode {
                     if (ImGui.dragFloat("Far", farPlane, 0.1f)) {
                         camera.getCamera().setOrthographicFarPlane(farPlane[0]);
                     }
+
+                    var isFixedAspectRatio = camera.isFixedAspectRatio();
+                    if (ImGui.checkbox("Fixed aspect", isFixedAspectRatio)) {
+                        camera.setFixedAspectRatio(!isFixedAspectRatio);
+                    }
                 }
                 case PERSPECTIVE -> {
                     var fov = new float[]{(float) Math.toDegrees(camera.getCamera().getFov())};

@@ -4,6 +4,7 @@ import io.nova.core.renderer.Renderer;
 import io.nova.core.renderer.camera.Camera;
 import io.nova.ecs.component.*;
 import io.nova.ecs.entity.Entity;
+import io.nova.ecs.entity.EntityListener;
 import io.nova.ecs.entity.Group;
 import io.nova.ecs.system.RenderSystem;
 import org.joml.Matrix4f;
@@ -14,11 +15,13 @@ public class Scene {
 
     private final Registry registry;
     private final Renderer renderer;
+    private int viewPortWidth, viewPortHeight;
 
     public Scene(Renderer renderer) {
         this.renderer = renderer;
         registry = new Registry();
         registry.addSystem(new RenderSystem(renderer));
+        registry.addEntityListener(new CameraComponentAddEventListener(), Group.create(SceneCameraComponent.class));
     }
 
     public Registry getRegistry() {
@@ -72,6 +75,8 @@ public class Scene {
             }
             renderer.endScene();
         }
+
+        registry.update(deltaTime);
     }
 
     public Entity createEntity() {
@@ -96,6 +101,8 @@ public class Scene {
     }
 
     public void onViewportResize(int width, int height) {
+        viewPortWidth = width;
+        viewPortHeight = height;
         var group = registry.getEntities(Group.create(SceneCameraComponent.class));
         for (var camera : group) {
             var sceneCamera = camera.getComponent(SceneCameraComponent.class);
@@ -108,5 +115,13 @@ public class Scene {
 
     public void removeEntity(Entity entity) {
         registry.removeEntity(entity);
+    }
+
+    private class CameraComponentAddEventListener implements EntityListener {
+
+        @Override
+        public void entityUpdated(Entity e) {
+            onViewportResize(viewPortWidth, viewPortHeight);
+        }
     }
 }

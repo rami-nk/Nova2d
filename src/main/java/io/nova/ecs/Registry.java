@@ -1,10 +1,12 @@
 package io.nova.ecs;
 
 import io.nova.ecs.entity.Entity;
+import io.nova.ecs.entity.EntityListener;
 import io.nova.ecs.entity.Group;
 import io.nova.ecs.system.EcSystem;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class Registry {
 
@@ -12,7 +14,31 @@ public final class Registry {
     private final Map<Group, List<Entity>> views = new HashMap<>();
     private final List<Command> commands = new ArrayList<>();
     private final List<EcSystem> systems = new ArrayList<>();
+    private final List<EntityListener> listeners = new CopyOnWriteArrayList<>();
+    private final Map<Group, List<EntityListener>> filteredListeners = new HashMap<>();
     private boolean updating;
+
+    public void addEntityListener(EntityListener l, Group group) {
+        List<EntityListener> lst = filteredListeners.get(group);
+        if (lst == null) {
+            lst = new CopyOnWriteArrayList<>();
+            filteredListeners.put(group, lst);
+        }
+        assert !lst.contains(l) : "listener already added " + l;
+        lst.add(l);
+    }
+
+    public void removeEntityListener(EntityListener l, Group group) {
+        List<EntityListener> lst = filteredListeners.get(group);
+        if (lst != null) {
+            lst.remove(l);
+        }
+    }
+
+    public void addEntityListener(EntityListener l) {
+        assert !listeners.contains(l) : "listener already added " + l;
+        listeners.add(l);
+    }
 
     public List<Entity> getEntities() {
         return entities;
@@ -57,6 +83,25 @@ public final class Registry {
         addEntityToViews(e);
     }
 
+    public void updateEntity(Entity entity) {
+        commands.add(() -> updateEntityInternal(entity));
+    }
+
+    private void updateEntityInternal(Entity entity) {
+        addEntityToViews(entity);
+
+        // inform listeners
+        for (EntityListener l : listeners) {
+            l.entityUpdated(entity);
+        }
+
+        for (Map.Entry<Group, List<EntityListener>> entry : filteredListeners.entrySet()) {
+            if (entry.getKey().isMember(entity)) {
+                for (EntityListener l : entry.getValue()) {l.entityUpdated(entity);}
+            }
+        }
+    }
+
     private void addEntityToViews(Entity e) {
         for (Group group : views.keySet()) {
             if (group.isMember(e)) {
@@ -67,13 +112,11 @@ public final class Registry {
 
     private void removeEntityInternal(Entity e) {
         if (e.getRegistry() != this) {
-            // silently ignore this event (best practice)
             return;
         }
         assert e.isActivated();
         assert entities.contains(e);
 
-        // actually remove entity
         e.deactivate();
         e.setRegistry(null);
         entities.remove(e);
@@ -182,7 +225,6 @@ public final class Registry {
         }
         systems.clear();
     }
-
 
     private interface Command {
         void execute();
