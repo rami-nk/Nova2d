@@ -23,6 +23,8 @@ public class ImGuiLayer extends Layer {
         var openSans = "assets/fonts/opensans/static/OpenSans/OpenSans-Regular.ttf";
         io.setFontDefault(io.getFonts().addFontFromFileTTF(openSans, 18.0f));
 
+        Themes.setDarkTheme();
+
         var glfwWindow = Application.getWindow().getNativeWindow();
         imGuiImplGlfw.init(glfwWindow, true);
         imGuiImplGl3.init("#version 330");
