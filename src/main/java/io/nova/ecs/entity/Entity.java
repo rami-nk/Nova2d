@@ -63,10 +63,10 @@ public final class Entity {
     }
 
     public <T extends Component> T addComponent(T c) {
-//        if (isActivated() || registry != null) {
-//            throw new IllegalStateException(
-//                    "cannot add component to activated entity");
-//        }
+        if (components.contains(c)) {
+            throw new IllegalStateException(
+                    "cannot add same component twice");
+        }
         if (c.getEntity() != null) {
             throw new IllegalArgumentException(
                     "component already attached an entity");
@@ -74,6 +74,16 @@ public final class Entity {
         components.add(c);
         c.setEntity(this);
         return c;
+    }
+
+    public <T extends Component> void removeComponent(T c) {
+        if (c.getEntity() != this) {
+            throw new IllegalArgumentException(
+                    "component not attached to this entity");
+        }
+        components.remove(c);
+        cache.remove(c.getClass());
+        c.setEntity(null);
     }
 
     public boolean isActivated() {

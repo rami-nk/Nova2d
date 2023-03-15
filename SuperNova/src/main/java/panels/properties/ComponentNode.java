@@ -37,7 +37,8 @@ public class ComponentNode {
             }
 
             if (removeComponent) {
-                // TODO: remove component
+                var component = entity.getComponent(clazz);
+                entity.removeComponent(component);
             }
         }
     }
