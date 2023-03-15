@@ -36,7 +36,7 @@ public class EntityPanel {
         ImGui.end();
 
         if (removeEntityClicked) {
-            scene.getRegistry().removeEntity(entityToRemove);
+            scene.removeEntity(entityToRemove);
             removeEntityClicked = false;
             if (Objects.equals(selectedEntity, entityToRemove)) {
                 selectedEntity = null;

@@ -56,6 +56,11 @@ public class SceneCameraComponentNode {
                     }
                 }
             }
+
+            var isPrimary = camera.isPrimary();
+            if (ImGui.checkbox("Primary", isPrimary)) {
+                camera.setPrimary(!isPrimary);
+            }
         });
     }
 }

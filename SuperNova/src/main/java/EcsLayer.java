@@ -7,7 +7,10 @@ import io.nova.core.layer.Layer;
 import io.nova.core.renderer.*;
 import io.nova.core.renderer.camera.OrthographicCameraController;
 import io.nova.ecs.Scene;
-import io.nova.ecs.component.*;
+import io.nova.ecs.component.SceneCameraComponent;
+import io.nova.ecs.component.ScriptComponent;
+import io.nova.ecs.component.SpriteRenderComponent;
+import io.nova.ecs.component.TransformComponent;
 import io.nova.ecs.entity.Entity;
 import io.nova.ecs.entity.ScriptableEntity;
 import io.nova.event.Event;
@@ -29,7 +32,6 @@ public class EcsLayer extends Layer {
     private Entity entity2;
     private Entity primaryCamera;
     private Entity secondaryCamera;
-    private boolean primary = true;
     private FrameBuffer frameBuffer;
     private EntityPanel entityPanel;
 
@@ -45,12 +47,10 @@ public class EcsLayer extends Layer {
         entity2.addComponent(new SpriteRenderComponent());
 
         primaryCamera = scene.createEntity("Primary Camera");
-        var primarySceneCamera = primaryCamera.addComponent(new SceneCameraComponent());
-        primarySceneCamera.setPrimary(primary);
+        primaryCamera.addComponent(new SceneCameraComponent()).setPrimary(true);
 
         secondaryCamera = scene.createEntity("Secondary Camera");
-        var sceneCamera = secondaryCamera.addComponent(new SceneCameraComponent());
-        sceneCamera.setPrimary(!primary);
+        secondaryCamera.addComponent(new SceneCameraComponent());
 
         secondaryCamera.addComponent(new ScriptComponent()).bind(CameraController.class);
 
@@ -130,16 +130,6 @@ public class EcsLayer extends Layer {
             ImGui.text("Quad count: " + stats.getQuadCount());
             ImGui.text("Vertex count: " + stats.getTotalVertexCount());
             ImGui.text("Index count: " + stats.getTotalIndexCount());
-
-            {
-                ImGui.text(entity.getComponent(TagComponent.class).getTag());
-                if (ImGui.checkbox(primary ? "Primary" : "Secondary", primary)) {
-                    primary = !primary;
-                    primaryCamera.getComponent(SceneCameraComponent.class).setPrimary(primary);
-                    secondaryCamera.getComponent(SceneCameraComponent.class).setPrimary(!primary);
-                }
-            }
-
         }
         ImGui.end();
 
