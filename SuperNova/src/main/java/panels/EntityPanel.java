@@ -53,7 +53,7 @@ public class EntityPanel {
     }
 
     private void createEntityPopupMenu() {
-        if (ImGui.beginPopupContextWindow("NewEntity", ImGuiPopupFlags.NoOpenOverItems)) {
+        if (ImGui.beginPopupContextWindow("NewEntity", ImGuiPopupFlags.NoOpenOverItems | ImGuiPopupFlags.MouseButtonRight)) {
             if (ImGui.menuItem("New Entity")) {
                 var entity = scene.createEntity();
                 scene.activateEntities(entity);
