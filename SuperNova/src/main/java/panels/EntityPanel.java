@@ -6,6 +6,7 @@ import imgui.flag.ImGuiTreeNodeFlags;
 import io.nova.ecs.Scene;
 import io.nova.ecs.component.TagComponent;
 import io.nova.ecs.entity.Entity;
+import panels.properties.EntityPropertiesPanel;
 
 import java.util.Objects;
 

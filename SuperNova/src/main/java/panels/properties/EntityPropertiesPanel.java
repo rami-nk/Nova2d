@@ -1,4 +1,4 @@
-package panels;
+package panels.properties;
 
 import io.nova.ecs.entity.Entity;
 

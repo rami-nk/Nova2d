@@ -1,4 +1,4 @@
-package panels;
+package panels.properties;
 
 import imgui.ImGui;
 import imgui.type.ImString;

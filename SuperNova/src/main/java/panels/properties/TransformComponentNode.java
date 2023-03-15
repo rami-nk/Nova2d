@@ -1,4 +1,4 @@
-package panels;
+package panels.properties;
 
 import imgui.ImGui;
 import io.nova.ecs.component.TransformComponent;
