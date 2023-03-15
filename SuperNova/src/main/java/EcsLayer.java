@@ -110,7 +110,12 @@ public class EcsLayer extends Layer {
 
         ImGui.popStyleVar(2);
 
+        // Dockspace
+        var style = ImGui.getStyle();
+        var minWindowSize = style.getWindowMinSize();
+        style.setWindowMinSize(350.0f, minWindowSize.y);
         ImGui.dockSpace(ImGui.getID("Dockspace"));
+        style.setWindowMinSize(minWindowSize.x, minWindowSize.y);
 
         ImGui.beginMenuBar();
         if (ImGui.beginMenu("File")) {
