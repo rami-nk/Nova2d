@@ -65,7 +65,7 @@ public class EntityPanel {
 
     private void createEntityNode(Entity entity) {
         String tag = entity.getComponent(TagComponent.class).getTag();
-        var flags = ImGuiTreeNodeFlags.OpenOnArrow;
+        var flags = ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.SpanAvailWidth;
         if (selectedEntity == entity) {
             flags |= ImGuiTreeNodeFlags.Selected;
         }

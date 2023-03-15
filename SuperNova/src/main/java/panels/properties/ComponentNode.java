@@ -9,7 +9,7 @@ public class ComponentNode {
 
     public static <T extends Component> void create(Entity entity, String name, Class<T> clazz, Runnable content) {
         if (entity.hasComponent(clazz)) {
-            if (ImGui.treeNodeEx(name, ImGuiTreeNodeFlags.DefaultOpen)) {
+            if (ImGui.treeNodeEx(name, ImGuiTreeNodeFlags.DefaultOpen | ImGuiTreeNodeFlags.SpanAvailWidth)) {
                 content.run();
                 ImGui.treePop();
             }

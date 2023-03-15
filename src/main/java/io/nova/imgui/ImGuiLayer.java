@@ -21,7 +21,7 @@ public class ImGuiLayer extends Layer {
         io.addConfigFlags(ImGuiConfigFlags.DockingEnable);
 
         var openSans = "assets/fonts/opensans/static/OpenSans/OpenSans-Regular.ttf";
-        io.getFonts().addFontFromFileTTF(openSans, 18);
+        io.setFontDefault(io.getFonts().addFontFromFileTTF(openSans, 18.0f));
 
         var glfwWindow = Application.getWindow().getNativeWindow();
         imGuiImplGlfw.init(glfwWindow, true);
