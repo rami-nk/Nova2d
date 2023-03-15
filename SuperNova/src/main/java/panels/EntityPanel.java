@@ -27,6 +27,7 @@ public class EntityPanel {
             if (ImGui.isMouseDown(0) && ImGui.isWindowHovered()) {
                 selectedEntity = null;
             }
+            createEntityPopUpMenu();
         }
         ImGui.end();
 
@@ -37,6 +38,17 @@ public class EntityPanel {
             }
         }
         ImGui.end();
+    }
+
+    private void createEntityPopUpMenu() {
+        if (ImGui.beginPopupContextWindow()) {
+            if (ImGui.menuItem("New Entity")) {
+                var entity = scene.createEntity();
+                scene.activateEntities(entity);
+                selectedEntity = entity;
+            }
+            ImGui.endPopup();
+        }
     }
 
     private void createEntityNode(Entity entity) {
