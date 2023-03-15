@@ -5,8 +5,7 @@ import io.nova.core.application.ApplicationSpecification;
 public class Sandbox extends Application {
     public Sandbox(ApplicationSpecification specification) {
         super(specification);
-//        this.pushLayer(new Sandbox2d());
-        this.pushLayer(new EcsLayer());
+        this.pushLayer(new Sandbox2d());
     }
 
     public static Sandbox create(ApplicationCommandLineArgs args) {
