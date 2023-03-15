@@ -1,7 +1,6 @@
 package io.nova.imgui;
 
 import imgui.ImGui;
-import imgui.flag.ImGuiBackendFlags;
 import imgui.flag.ImGuiConfigFlags;
 import io.nova.core.application.Application;
 import io.nova.core.layer.Layer;
@@ -21,9 +20,25 @@ public class ImGuiLayer extends Layer {
         io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
         io.addConfigFlags(ImGuiConfigFlags.DockingEnable);
 
+        var openSans = "assets/fonts/opensans/static/OpenSans/OpenSans-Regular.ttf";
+        io.setFontDefault(io.getFonts().addFontFromFileTTF(openSans, 18.0f));
+
+        Themes.setDarkTheme();
+
         var glfwWindow = Application.getWindow().getNativeWindow();
         imGuiImplGlfw.init(glfwWindow, true);
         imGuiImplGl3.init("#version 330");
+    }
+
+    @Override
+    public void onDetach() {
+        imGuiImplGlfw.dispose();
+        imGuiImplGl3.dispose();
+        ImGui.destroyContext();
+    }
+
+    @Override
+    public void onImGuiRender() {
     }
 
     public void startFrame() {
@@ -41,16 +56,5 @@ public class ImGuiLayer extends Layer {
             ImGui.renderPlatformWindowsDefault();
             GLFW.glfwMakeContextCurrent(backupWindowPtr);
         }
-    }
-
-    @Override
-    public void onImGuiRender() {
-    }
-
-    @Override
-    public void onDetach() {
-        imGuiImplGlfw.dispose();
-        imGuiImplGl3.dispose();
-        ImGui.destroyContext();
     }
 }

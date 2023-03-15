@@ -1,6 +1,5 @@
 package io.nova.core.application;
 
-import imgui.ImGui;
 import io.nova.core.layer.Layer;
 import io.nova.core.layer.LayerStack;
 import io.nova.core.window.Window;
@@ -21,9 +20,9 @@ public class Application {
     private static Application application;
     private final ApplicationSpecification specification;
     private final Window window;
-    private boolean running;
     private final LayerStack layerStack;
     private final ImGuiLayer imGuiLayer;
+    private boolean running;
     private boolean minimized;
 
     public Application(ApplicationSpecification specification) {
@@ -35,7 +34,7 @@ public class Application {
             specification.setWorkingDirectory(currentDir);
         }
 
-        this.window = WindowFactory.create(new WindowProps());
+        this.window = WindowFactory.create(new WindowProps(specification.getName()));
         this.window.setEventCallback(this::onEvent);
 
         this.layerStack = new LayerStack();
@@ -44,6 +43,14 @@ public class Application {
 
         isRunning(true);
         minimized = false;
+    }
+
+    public static Application getInstance() {
+        return application;
+    }
+
+    public static Window getWindow() {
+        return getInstance().window;
     }
 
     public void onEvent(Event event) {
@@ -60,10 +67,6 @@ public class Application {
         }
     }
 
-    public static Application getInstance() {
-        return application;
-    }
-
     private boolean onWindowClosed(WindowClosedEvent event) {
         Application.getInstance().isRunning(false);
         return true;
@@ -76,10 +79,6 @@ public class Application {
         }
         minimized = false;
         return false;
-    }
-
-    public static Window getWindow() {
-        return getInstance().window;
     }
 
     public void run() {
@@ -98,13 +97,11 @@ public class Application {
             }
 
             imGuiLayer.startFrame();
-            ImGui.begin("window");
             {
                 for (var layer : layerStack.getLayers()) {
                     layer.onImGuiRender();
                 }
             }
-            ImGui.end();
             imGuiLayer.endFrame();
 
             window.onUpdate();
@@ -120,6 +117,10 @@ public class Application {
     public void pushLayer(Layer layer) {
         layerStack.pushLayer(layer);
         layer.onAttach();
+    }
+
+    public void close() {
+        running = false;
     }
 
     private void shutdown() {

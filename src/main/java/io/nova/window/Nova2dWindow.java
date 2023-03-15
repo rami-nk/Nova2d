@@ -27,8 +27,8 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class Nova2dWindow implements Window {
 
     private final WindowData windowData;
-    private long windowDataPointer;
     private final GraphicsContext context;
+    private long windowDataPointer;
 
     public Nova2dWindow(GraphicsContext context, WindowProps props) {
         this.context = context;
@@ -149,6 +149,16 @@ public class Nova2dWindow implements Window {
     }
 
     @Override
+    public int getWidth() {
+        return windowData.getWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return windowData.getHeight();
+    }
+
+    @Override
     public void setEventCallback(EventCallback eventCallback) {
         this.windowData.setEventCallback(eventCallback);
     }
@@ -157,6 +167,7 @@ public class Nova2dWindow implements Window {
     public boolean isVsync() {
         return windowData.isvSyncEnabled();
     }
+
 
     @Override
     public void setVsync(boolean enabled) {
@@ -182,13 +193,5 @@ public class Nova2dWindow implements Window {
         return context.getWindowHandle();
     }
 
-    @Override
-    public int getWidth() {
-        return windowData.getWidth();
-    }
 
-    @Override
-    public int getHeight() {
-        return windowData.getHeight();
-    }
 }

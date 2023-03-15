@@ -1,2 +1,3 @@
 rootProject.name = "Nova2d"
-include("sandbox")
+include("Sandbox")
+include("SuperNova")

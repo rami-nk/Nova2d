@@ -2,6 +2,7 @@ package io.nova.opengl.renderer;
 
 import io.nova.core.renderer.Renderer;
 import io.nova.core.renderer.buffer.*;
+import io.nova.core.renderer.camera.Camera;
 import io.nova.core.renderer.camera.OrthographicCamera;
 import io.nova.core.renderer.shader.Shader;
 import io.nova.core.renderer.shader.ShaderLibrary;
@@ -94,6 +95,19 @@ public class OpenGLRenderer implements Renderer {
     }
 
     @Override
+    public void beginScene(Camera camera, Matrix4f transform) {
+        shader.bind();
+
+        var projection = new Matrix4f(camera.getProjection());
+        transform = new Matrix4f(transform);
+        var viewProjection = projection.mul(transform.invert());
+
+        shader.setUniformMat4f("uViewProjection", viewProjection);
+
+        resetData();
+    }
+
+    @Override
     public void endScene() {
         var copy = Arrays.copyOfRange(quadData, 0, quadDataIndex);
         vertexBuffer.reBufferData(copy);
@@ -154,6 +168,13 @@ public class OpenGLRenderer implements Renderer {
     public void drawQuad(Vector3f position, Vector2f size, Texture texture, float tilingFactor) {
         var white = new Vector4f(1.0f);
         drawQuad(position, size, texture, tilingFactor, white);
+    }
+
+    @Override
+    public void drawQuad(Matrix4f transform, Vector4f color) {
+        var whiteTextureSlot = 0.0f;
+
+        addQuadData(transform, 1.0f, color, whiteTextureSlot);
     }
 
     @Override

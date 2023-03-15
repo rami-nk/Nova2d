@@ -62,6 +62,25 @@ public class OrthographicCameraController {
         cameraTranslationSpeed = zoomLevel;
     }
 
+    public void onEvent(Event event) {
+        var dispatcher = new EventDispatcher(event);
+        dispatcher.dispatch(MouseScrolledEvent.class, this::onMouseScrolled);
+        dispatcher.dispatch(WindowResizeEvent.class, this::onWindowResized);
+    }
+
+    private boolean onMouseScrolled(MouseScrolledEvent event) {
+        zoomLevel -= event.getYOffset() * 0.25;
+        zoomLevel = Math.max(zoomLevel, 0.25f);
+        calculateView();
+        return false;
+    }
+
+    private boolean onWindowResized(WindowResizeEvent event) {
+        aspectRatio = (float) event.getWidth() / (float) event.getHeight();
+        calculateView();
+        return false;
+    }
+
     public OrthographicCamera getCamera() {
         return camera;
     }
@@ -74,22 +93,17 @@ public class OrthographicCameraController {
         this.cameraRotationSpeed = cameraRotationSpeed;
     }
 
-    public void onEvent(Event event) {
-        var dispatcher = new EventDispatcher(event);
-        dispatcher.dispatch(MouseScrolledEvent.class, this::onMouseScrolled);
-        dispatcher.dispatch(WindowResizeEvent.class, this::onWindowResized);
+    public void setZoomLevel(float zoomLevel) {
+        this.zoomLevel = zoomLevel;
+        calculateView();
     }
 
-    private boolean onMouseScrolled(MouseScrolledEvent event) {
-        zoomLevel -= event.getYOffset() * 0.25;
-        zoomLevel = Math.max(zoomLevel, 0.25f);
+    private void calculateView() {
         camera.setProjection(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel);
-        return false;
     }
 
-    private boolean onWindowResized(WindowResizeEvent event) {
-        aspectRatio = (float) event.getWidth() / (float) event.getHeight();
-        camera.setProjection(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel);
-        return false;
+    public void setViewportSize(int width, int height) {
+        aspectRatio = (float) width / (float) height;
+        calculateView();
     }
 }

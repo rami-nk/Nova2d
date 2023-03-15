@@ -2,14 +2,19 @@ package io.nova.core.window;
 
 public class WindowProps {
 
-    private final String title;
-    private final int width;
-    private final int height;
+    private String title;
+    private int width;
+    private int height;
 
     public WindowProps() {
         this.title = "Nova2d Engine";
-        this.width = 1000;
-        this.height = 600;
+        this.width = 1300;
+        this.height = 900;
+    }
+
+    public WindowProps(String title) {
+        this();
+        this.title = title;
     }
 
     public WindowProps(String title, int width, int height) {
