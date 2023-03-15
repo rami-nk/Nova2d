@@ -4,6 +4,7 @@ import imgui.ImGui;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiTreeNodeFlags;
 import io.nova.ecs.component.Component;
+import io.nova.ecs.component.SceneCameraComponent;
 import io.nova.ecs.entity.Entity;
 
 public class ComponentNode {
@@ -37,6 +38,12 @@ public class ComponentNode {
             }
 
             if (removeComponent) {
+                if (entity.hasComponent(SceneCameraComponent.class)) {
+                    if (entity.getComponent(SceneCameraComponent.class).isPrimary()) {
+                        // TODO: Find a better way to handle this case
+                        return;
+                    }
+                }
                 var component = entity.getComponent(clazz);
                 entity.removeComponent(component);
             }

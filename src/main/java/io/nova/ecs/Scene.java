@@ -57,7 +57,7 @@ public class Scene {
             for (var camera : group) {
                 var cameraComponent = camera.getComponent(SceneCameraComponent.class);
 
-                if (cameraComponent.isPrimary()) {
+                if (!Objects.isNull(cameraComponent) && cameraComponent.isPrimary()) {
                     primaryCamera = cameraComponent.getCamera();
                     cameraTransform = camera.getComponent(TransformComponent.class).getTransform();
                     break;
