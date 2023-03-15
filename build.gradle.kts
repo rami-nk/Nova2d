@@ -24,7 +24,7 @@ val jomlVersion = "1.10.5"
 val lwjglNatives = "natives-macos-arm64"
 
 dependencies {
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.14.2")
+    api("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.14.2")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
 

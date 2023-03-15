@@ -1,5 +1,6 @@
 package io.nova.ecs.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.nova.ecs.Registry;
 import io.nova.ecs.component.Component;
 
@@ -13,7 +14,16 @@ public final class Entity {
     private final List<Component> components = new ArrayList<>();
     private final Map<Class<?>, Component> cache = new HashMap<>();
     private boolean activated;
+    @JsonIgnore
     private Registry registry;
+
+    public List<Component> getComponents() {
+        return components;
+    }
+
+    public Map<Class<?>, Component> getCache() {
+        return cache;
+    }
 
     public Registry getRegistry() {
         return registry;
@@ -51,7 +61,7 @@ public final class Entity {
         return null;
     }
 
-    public <T extends Component> List<T> getAllComponents(Class<T> clazz) {
+    public <T extends Component> List<T> getAllComponentsOfType(Class<T> clazz) {
         ArrayList<T> result = new ArrayList<>();
         for (Component c : components) {
             if (clazz.isInstance(c)) {
