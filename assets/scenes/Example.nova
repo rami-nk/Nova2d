@@ -1,0 +1,193 @@
+{
+  "registry" : {
+    "entities" : [ {
+      "components" : [ {
+        "__typename" : "TransformComponent",
+        "translation" : [ -2.2, 0.0, 0.0 ],
+        "rotation" : [ 0.0, 0.0, 0.0 ],
+        "scale" : [ 1.0, 1.0, 1.0 ],
+        "transform" : {
+          "finite" : true,
+          "affine" : true
+        }
+      }, {
+        "__typename" : "TagComponent",
+        "tag" : "Quad"
+      }, {
+        "__typename" : "SpriteRenderComponent",
+        "color" : [ 1.0, 0.0, 0.0, 1.0 ]
+      } ],
+      "cache" : {
+        "io.nova.ecs.component.TransformComponent" : {
+          "__typename" : "TransformComponent",
+          "translation" : [ -2.2, 0.0, 0.0 ],
+          "rotation" : [ 0.0, 0.0, 0.0 ],
+          "scale" : [ 1.0, 1.0, 1.0 ],
+          "transform" : {
+            "finite" : true,
+            "affine" : true
+          }
+        },
+        "io.nova.ecs.component.SpriteRenderComponent" : {
+          "__typename" : "SpriteRenderComponent",
+          "color" : [ 1.0, 0.0, 0.0, 1.0 ]
+        },
+        "io.nova.ecs.component.TagComponent" : {
+          "__typename" : "TagComponent",
+          "tag" : "Quad"
+        }
+      },
+      "activated" : true
+    }, {
+      "components" : [ {
+        "__typename" : "TransformComponent",
+        "translation" : [ 0.0, 0.0, 0.0 ],
+        "rotation" : [ 0.0, 0.0, 0.0 ],
+        "scale" : [ 1.0, 1.0, 1.0 ],
+        "transform" : {
+          "finite" : true,
+          "affine" : true
+        }
+      }, {
+        "__typename" : "TagComponent",
+        "tag" : "Quad2"
+      }, {
+        "__typename" : "SpriteRenderComponent",
+        "color" : [ 1.0, 0.0, 0.0, 1.0 ]
+      } ],
+      "cache" : {
+        "io.nova.ecs.component.TransformComponent" : {
+          "__typename" : "TransformComponent",
+          "translation" : [ 0.0, 0.0, 0.0 ],
+          "rotation" : [ 0.0, 0.0, 0.0 ],
+          "scale" : [ 1.0, 1.0, 1.0 ],
+          "transform" : {
+            "finite" : true,
+            "affine" : true
+          }
+        },
+        "io.nova.ecs.component.SpriteRenderComponent" : {
+          "__typename" : "SpriteRenderComponent",
+          "color" : [ 1.0, 0.0, 0.0, 1.0 ]
+        },
+        "io.nova.ecs.component.TagComponent" : {
+          "__typename" : "TagComponent",
+          "tag" : "Quad2"
+        }
+      },
+      "activated" : true
+    }, {
+      "components" : [ {
+        "__typename" : "TransformComponent",
+        "translation" : [ 0.0, 0.0, 0.0 ],
+        "rotation" : [ 0.0, 0.0, 109.5 ],
+        "scale" : [ 1.0, 1.0, 1.0 ],
+        "transform" : {
+          "finite" : true,
+          "affine" : true
+        }
+      }, {
+        "__typename" : "TagComponent",
+        "tag" : "Primary Camera"
+      }, {
+        "__typename" : "SceneCameraComponent",
+        "camera" : {
+          "projectionType" : "ORTHOGRAPHIC",
+          "aspectRatio" : 1.3140377,
+          "orthographicNearPlane" : -1.0,
+          "orthographicFarPlane" : 1.0,
+          "orthographicSize" : 10.0,
+          "fov" : 0.7853982,
+          "perspectiveNearPlane" : 0.1,
+          "perspectiveFarPlane" : 1000.0
+        },
+        "primary" : true,
+        "fixedAspectRatio" : false
+      } ],
+      "cache" : {
+        "io.nova.ecs.component.TransformComponent" : {
+          "__typename" : "TransformComponent",
+          "translation" : [ 0.0, 0.0, 0.0 ],
+          "rotation" : [ 0.0, 0.0, 109.5 ],
+          "scale" : [ 1.0, 1.0, 1.0 ],
+          "transform" : {
+            "finite" : true,
+            "affine" : true
+          }
+        },
+        "io.nova.ecs.component.TagComponent" : {
+          "__typename" : "TagComponent",
+          "tag" : "Primary Camera"
+        },
+        "io.nova.ecs.component.SceneCameraComponent" : {
+          "__typename" : "SceneCameraComponent",
+          "camera" : {
+            "projectionType" : "ORTHOGRAPHIC",
+            "aspectRatio" : 1.3140377,
+            "orthographicNearPlane" : -1.0,
+            "orthographicFarPlane" : 1.0,
+            "orthographicSize" : 10.0,
+            "fov" : 0.7853982,
+            "perspectiveNearPlane" : 0.1,
+            "perspectiveFarPlane" : 1000.0
+          },
+          "primary" : true,
+          "fixedAspectRatio" : false
+        }
+      },
+      "activated" : true
+    }, {
+      "components" : [ {
+        "__typename" : "TransformComponent",
+        "translation" : [ 0.0, 0.0, 0.0 ],
+        "rotation" : [ 0.0, 0.0, 0.0 ],
+        "scale" : [ 1.0, 1.0, 1.0 ],
+        "transform" : {
+          "finite" : true,
+          "affine" : true
+        }
+      }, {
+        "__typename" : "TagComponent",
+        "tag" : "Secondary Camera"
+      }, {
+        "__typename" : "SceneCameraComponent",
+        "camera" : {
+          "projectionType" : "ORTHOGRAPHIC",
+          "aspectRatio" : 1.3140377,
+          "orthographicNearPlane" : -1.0,
+          "orthographicFarPlane" : 1.0,
+          "orthographicSize" : 10.0,
+          "fov" : 0.7853982,
+          "perspectiveNearPlane" : 0.1,
+          "perspectiveFarPlane" : 1000.0
+        },
+        "primary" : false,
+        "fixedAspectRatio" : false
+      } ],
+      "cache" : {
+        "io.nova.ecs.component.TagComponent" : {
+          "__typename" : "TagComponent",
+          "tag" : "Secondary Camera"
+        },
+        "io.nova.ecs.component.SceneCameraComponent" : {
+          "__typename" : "SceneCameraComponent",
+          "camera" : {
+            "projectionType" : "ORTHOGRAPHIC",
+            "aspectRatio" : 1.3140377,
+            "orthographicNearPlane" : -1.0,
+            "orthographicFarPlane" : 1.0,
+            "orthographicSize" : 10.0,
+            "fov" : 0.7853982,
+            "perspectiveNearPlane" : 0.1,
+            "perspectiveFarPlane" : 1000.0
+          },
+          "primary" : false,
+          "fixedAspectRatio" : false
+        }
+      },
+      "activated" : true
+    } ]
+  },
+  "viewPortWidth" : 908,
+  "viewPortHeight" : 691
+}

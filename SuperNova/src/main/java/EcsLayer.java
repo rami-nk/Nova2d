@@ -8,53 +8,54 @@ import io.nova.core.renderer.*;
 import io.nova.core.renderer.camera.OrthographicCameraController;
 import io.nova.ecs.Scene;
 import io.nova.ecs.component.SceneCameraComponent;
-import io.nova.ecs.component.ScriptComponent;
 import io.nova.ecs.component.SpriteRenderComponent;
-import io.nova.ecs.component.TransformComponent;
 import io.nova.ecs.entity.Entity;
-import io.nova.ecs.entity.ScriptableEntity;
+import io.nova.ecs.serializer.SceneDeserializer;
+import io.nova.ecs.serializer.SceneSerializer;
 import io.nova.event.Event;
-import io.nova.window.Input;
 import org.joml.Vector2f;
 import panels.EntityPanel;
 
-import static io.nova.core.codes.KeyCodes.*;
+import java.io.IOException;
 
 public class EcsLayer extends Layer {
-
-    private final float[] cameraPosition = new float[3];
     private final Vector2f viewportSize = new Vector2f();
-    private final float[] orthographicSize = new float[]{1.0f};
     private Scene scene;
     private Renderer renderer;
     private OrthographicCameraController cameraController;
-    private Entity entity;
-    private Entity entity2;
-    private Entity primaryCamera;
-    private Entity secondaryCamera;
     private FrameBuffer frameBuffer;
     private EntityPanel entityPanel;
 
     public void onAttach() {
         cameraController = new OrthographicCameraController(16.0f / 9.0f, true);
         renderer = RendererFactory.create();
-        scene = new Scene(renderer);
 
-        entity = scene.createEntity("Quad");
-        entity.addComponent(new SpriteRenderComponent());
 
-        entity2 = scene.createEntity("Quad2");
-        entity2.addComponent(new SpriteRenderComponent());
+        try {
+            scene = SceneDeserializer.deserialize("assets/scenes/Example.nova");
+            scene.setRenderer(renderer);
+        } catch (IOException e) {
+            scene = new Scene(renderer);
+            System.err.println("Failed to load scene: " + e.getMessage());
+            System.err.println("Created default scene instead.");
 
-        primaryCamera = scene.createEntity("Primary Camera");
-        primaryCamera.addComponent(new SceneCameraComponent()).setPrimary(true);
+            Entity entity = scene.createEntity("Quad");
+            entity.addComponent(new SpriteRenderComponent());
 
-        secondaryCamera = scene.createEntity("Secondary Camera");
-        secondaryCamera.addComponent(new SceneCameraComponent());
+            Entity entity2 = scene.createEntity("Quad2");
+            entity2.addComponent(new SpriteRenderComponent());
 
-        secondaryCamera.addComponent(new ScriptComponent()).bind(CameraController.class);
+            Entity primaryCamera = scene.createEntity("Primary Camera");
+            primaryCamera.addComponent(new SceneCameraComponent()).setPrimary(true);
 
-        scene.activateEntities(entity, entity2, primaryCamera, secondaryCamera);
+            Entity secondaryCamera = scene.createEntity("Secondary Camera");
+            secondaryCamera.addComponent(new SceneCameraComponent());
+
+            // TODO: Add script component
+//            secondaryCamera.addComponent(new ScriptComponent()).bind(CameraController.class);
+
+            scene.activateEntities(entity, entity2, primaryCamera, secondaryCamera);
+        }
 
         var spec = new FrameBufferSpecification(Application.getWindow().getWidth(), Application.getWindow().getHeight());
         frameBuffer = FrameBufferFactory.create(spec);
@@ -63,13 +64,16 @@ public class EcsLayer extends Layer {
     }
 
     public void onDetach() {
+        try {
+            SceneSerializer.serialize(scene);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         scene.dispose();
         frameBuffer.dispose();
     }
 
     public void onUpdate(float deltaTime) {
-//        cameraController.onUpdate(deltaTime);
-
         // Resize
         FrameBufferSpecification spec = frameBuffer.getSpecification();
         if (viewportSize.x > 0 && viewportSize.y > 0 &&
@@ -162,23 +166,4 @@ public class EcsLayer extends Layer {
         cameraController.onEvent(event);
     }
 
-    public static class CameraController extends ScriptableEntity {
-        @Override
-        public void onUpdate(float deltaTime) {
-            var transformComponent = getComponent(TransformComponent.class);
-            var speed = 5.0f * deltaTime;
-
-            if (Input.isKeyPressed(NV_KEY_A)) {
-                transformComponent.translate(-speed, 0);
-            } else if (Input.isKeyPressed(NV_KEY_D)) {
-                transformComponent.translate(speed, 0);
-            }
-
-            if (Input.isKeyPressed(NV_KEY_W)) {
-                transformComponent.translate(0, speed);
-            } else if (Input.isKeyPressed(NV_KEY_S)) {
-                transformComponent.translate(0, -speed);
-            }
-        }
-    }
 }

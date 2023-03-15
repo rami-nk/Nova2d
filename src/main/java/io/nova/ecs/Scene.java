@@ -1,27 +1,57 @@
 package io.nova.ecs;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.nova.core.renderer.Renderer;
 import io.nova.core.renderer.camera.Camera;
 import io.nova.ecs.component.*;
 import io.nova.ecs.entity.Entity;
 import io.nova.ecs.entity.EntityListener;
 import io.nova.ecs.entity.Group;
-import io.nova.ecs.system.RenderSystem;
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 
 import java.util.Objects;
 
 public class Scene {
 
     private final Registry registry;
-    private final Renderer renderer;
+    @JsonIgnore
+    private Renderer renderer;
     private int viewPortWidth, viewPortHeight;
 
     public Scene(Renderer renderer) {
         this.renderer = renderer;
         registry = new Registry();
-        registry.addSystem(new RenderSystem(renderer));
+//        registry.addSystem(new RenderSystem(renderer));
         registry.addEntityListener(new CameraComponentAddEventListener(), Group.create(SceneCameraComponent.class));
+    }
+
+    public Scene() {
+        this(null);
+    }
+
+    public Renderer getRenderer() {
+        return renderer;
+    }
+
+    public void setRenderer(Renderer renderer) {
+        this.renderer = renderer;
+    }
+
+    public int getViewPortWidth() {
+        return viewPortWidth;
+    }
+
+    public void setViewPortWidth(int viewPortWidth) {
+        this.viewPortWidth = viewPortWidth;
+    }
+
+    public int getViewPortHeight() {
+        return viewPortHeight;
+    }
+
+    public void setViewPortHeight(int viewPortHeight) {
+        this.viewPortHeight = viewPortHeight;
     }
 
     public Registry getRegistry() {
@@ -71,7 +101,7 @@ public class Scene {
             for (var entity : group) {
                 var transform = entity.getComponent(TransformComponent.class);
                 var sprite = entity.getComponent(SpriteRenderComponent.class);
-                renderer.drawQuad(transform.getTransform(), sprite.getColor());
+                renderer.drawQuad(transform.getTransform(), new Vector4f(sprite.getColor()));
             }
             renderer.endScene();
         }
@@ -113,8 +143,13 @@ public class Scene {
         }
     }
 
+
     public void removeEntity(Entity entity) {
         registry.removeEntity(entity);
+    }
+
+    public Entity createVoidEntity() {
+        return new Entity();
     }
 
     private class CameraComponentAddEventListener implements EntityListener {

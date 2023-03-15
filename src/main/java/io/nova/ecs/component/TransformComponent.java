@@ -47,12 +47,6 @@ public class TransformComponent extends Component {
                 .scale(new Vector3f(scale[0], scale[1], scale[2]));
     }
 
-    public void setTransform(Matrix4f transform) {
-        scale = new float[]{transform.m00(), transform.m11(), transform.m22()};
-        translation = new float[]{transform.m30(), transform.m31(), transform.m32()};
-        rotation = new float[]{transform.m00(), transform.m11(), transform.m22()};
-    }
-
     public void translate(float x, float y, float z) {
         translation[0] += x;
         translation[1] += y;

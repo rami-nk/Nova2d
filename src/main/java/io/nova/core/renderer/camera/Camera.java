@@ -1,9 +1,11 @@
 package io.nova.core.renderer.camera;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.joml.Matrix4f;
 
 public class Camera {
     protected ProjectionType projectionType;
+    @JsonIgnore
     protected Matrix4f projection;
 
     public Camera() {
