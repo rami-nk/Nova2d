@@ -26,6 +26,7 @@ import org.joml.Vector2f;
 import panels.EntityPanel;
 
 import java.io.IOException;
+import java.nio.FloatBuffer;
 import java.util.Objects;
 
 import static io.nova.core.codes.KeyCodes.*;
@@ -195,15 +196,27 @@ public class EditorLayer extends Layer {
                     var cameraProjection = camera.getProjection();
                     var cameraView = transform.invert(new Matrix4f());
 
-                    var entityTransform = selectedEntity.getComponent(TransformComponent.class).getTransform();
+                    var selectedEntityTransformComponent = selectedEntity.getComponent(TransformComponent.class);
+                    var entityTransform = selectedEntityTransformComponent.getTransform();
 
+                    var cameraViewArr = cameraView.get(new float[16]);
+                    var cameraProjectionArr = cameraProjection.get(new float[16]);
+                    var entityTransformArr = entityTransform.get(new float[16]);
                     ImGuizmo.manipulate(
-                            cameraView.get(new float[16]),
-                            cameraProjection.get(new float[16]),
-                            entityTransform.get(new float[16]),
+                            cameraViewArr,
+                            cameraProjectionArr,
+                            entityTransformArr,
                             Operation.TRANSLATE,
                             Mode.LOCAL
                     );
+
+                    if (ImGuizmo.isUsing()) {
+                        var model = new Matrix4f(FloatBuffer.wrap(entityTransformArr));
+
+                        var translation = new float[]{model.m30(), model.m31(), model.m32()};
+
+                        selectedEntityTransformComponent.setTranslation(translation);
+                    }
                 }
             }
         }
