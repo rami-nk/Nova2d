@@ -24,6 +24,11 @@ val jomlVersion = "1.10.5"
 val lwjglNatives = "natives-macos-arm64"
 
 dependencies {
+    // Tintyfd
+    implementation("org.lwjgl", "lwjgl-tinyfd")
+    runtimeOnly("org.lwjgl", "lwjgl-tinyexr", classifier = lwjglNatives)
+    runtimeOnly("org.lwjgl", "lwjgl-tinyfd", classifier = lwjglNatives)
+
     api("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.14.2")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
