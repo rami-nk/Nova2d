@@ -199,7 +199,6 @@ public class EditorLayer extends Layer {
                     var cameraView = transform.invert(new Matrix4f());
 
                     var selectedEntityTransformComponent = selectedEntity.getComponent(TransformComponent.class);
-                    var selectedEntityTransform = selectedEntityTransformComponent.getTransform();
 
                     var model = new float[16];
                     var radRot = selectedEntityTransformComponent.getRotation();
@@ -214,12 +213,16 @@ public class EditorLayer extends Layer {
                             degRot,
                             selectedEntityTransformComponent.getScale());
 
+                    var canSnap = Input.isKeyPressed(NV_KEY_LEFT_CONTROL);
+                    var snapValue = gizmoOperation == ROTATE ? 45.0f : 0.5f;
+                    var snapValues = new float[]{snapValue, snapValue, snapValue};
                     ImGuizmo.manipulate(
                             cameraView.get(new float[16]),
                             cameraProjection.get(new float[16]),
                             model,
                             gizmoOperation,
-                            Mode.LOCAL
+                            Mode.LOCAL,
+                            canSnap ? snapValues : new float[3]
                     );
 
                     if (ImGuizmo.isUsing()) {
