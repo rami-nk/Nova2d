@@ -14,11 +14,16 @@ import io.nova.ecs.component.SpriteRenderComponent;
 import io.nova.ecs.entity.Entity;
 import io.nova.ecs.serializer.SceneSerializer;
 import io.nova.event.Event;
+import io.nova.event.EventDispatcher;
+import io.nova.event.key.KeyPressedEvent;
+import io.nova.window.Input;
 import org.joml.Vector2f;
 import panels.EntityPanel;
 
 import java.io.IOException;
 import java.util.Objects;
+
+import static io.nova.core.codes.KeyCodes.*;
 
 public class EcsLayer extends Layer {
     private final Vector2f viewportSize = new Vector2f();
@@ -125,57 +130,19 @@ public class EcsLayer extends Layer {
         ImGui.beginMenuBar();
         if (ImGui.beginMenu("File")) {
             if (ImGui.menuItem("New", "Ctrl+N")) {
-                scene = new Scene(renderer);
-                sceneSerializer = new SceneSerializer();
-                entityPanel = new EntityPanel(scene);
-                filePath = null;
+                newScene();
             }
             if (ImGui.menuItem("Open...", "Ctrl+O")) {
-                var filePath = FileDialog.openFileDialog("Nova files (*.nova)\0*.nova\0");
-                if (!Objects.isNull(filePath)) {
-                    try {
-                        scene = sceneSerializer.deserialize(filePath);
-                        scene.setRenderer(renderer);
-                        entityPanel = new EntityPanel(scene);
-                        scene.onViewportResize((int) viewportSize.x, (int) viewportSize.y);
-                        this.filePath = filePath;
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
+                openScene();
             }
             if (ImGui.menuItem("Save", "Ctrl+S")) {
-                if (!Objects.isNull(filePath)) {
-                    try {
-                        sceneSerializer.serialize(scene, filePath);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                } else {
-                    var filePath = FileDialog.saveFileDialog("Nova files (*.nova)\0*.nova\0");
-                    if (!Objects.isNull(filePath)) {
-                        try {
-                            sceneSerializer.serialize(scene, filePath);
-                            this.filePath = filePath;
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                }
+                saveFile();
             }
             if (ImGui.menuItem("Save as...", "Ctrl+Shift+S")) {
-                var filePath = FileDialog.saveFileDialog("Nova files (*.nova)\0*.nova\0");
-                if (!Objects.isNull(filePath)) {
-                    try {
-                        sceneSerializer.serialize(scene, filePath);
-                        this.filePath = filePath;
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
+                saveFileAs();
             }
-            if (ImGui.menuItem("Exit")) {
-                Application.getInstance().close();
+            if (ImGui.menuItem("Exit", "Ctrl+Q")) {
+                closeApplication();
             }
             ImGui.endMenu();
         }
@@ -215,5 +182,100 @@ public class EcsLayer extends Layer {
 
     public void onEvent(Event event) {
         cameraController.onEvent(event);
+
+        var dispatcher = new EventDispatcher(event);
+        dispatcher.dispatch(KeyPressedEvent.class, this::handleShortcuts);
+    }
+
+    private boolean handleShortcuts(KeyPressedEvent event) {
+        if (event.isRepeat()) return false;
+
+        var control = Input.isKeyPressed(NV_KEY_LEFT_CONTROL) || Input.isKeyPressed(NV_KEY_RIGHT_CONTROL);
+        var shift = Input.isKeyPressed(NV_KEY_LEFT_SHIFT) || Input.isKeyPressed(NV_KEY_RIGHT_SHIFT);
+        switch (event.getKeyCode()) {
+            case NV_KEY_S -> {
+                if (control && shift) {
+                    saveFileAs();
+                    return true;
+                }
+                if (control) {
+                    saveFile();
+                }
+            }
+            case NV_KEY_N -> {
+                if (control) {
+                    newScene();
+                }
+            }
+            case NV_KEY_O -> {
+                if (control) {
+                    openScene();
+                }
+            }
+            case NV_KEY_Q -> {
+                if (control) {
+                    closeApplication();
+                }
+            }
+        }
+        return true;
+    }
+
+    private void openScene() {
+        var filePath = FileDialog.openFileDialog("Nova files (*.nova)\0*.nova\0");
+        if (!Objects.isNull(filePath)) {
+            try {
+                scene = sceneSerializer.deserialize(filePath);
+                scene.setRenderer(renderer);
+                entityPanel = new EntityPanel(scene);
+                scene.onViewportResize((int) viewportSize.x, (int) viewportSize.y);
+                this.filePath = filePath;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private void newScene() {
+        scene = new Scene(renderer);
+        sceneSerializer = new SceneSerializer();
+        entityPanel = new EntityPanel(scene);
+        filePath = null;
+    }
+
+    private void saveFileAs() {
+        var filePath = FileDialog.saveFileDialog("Nova files (*.nova)\0*.nova\0");
+        if (!Objects.isNull(filePath)) {
+            try {
+                sceneSerializer.serialize(scene, filePath);
+                this.filePath = filePath;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private void saveFile() {
+        if (!Objects.isNull(filePath)) {
+            try {
+                sceneSerializer.serialize(scene, filePath);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            var filePath = FileDialog.saveFileDialog("Nova files (*.nova)\0*.nova\0");
+            if (!Objects.isNull(filePath)) {
+                try {
+                    sceneSerializer.serialize(scene, filePath);
+                    this.filePath = filePath;
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+
+    private void closeApplication() {
+        Application.getInstance().close();
     }
 }
