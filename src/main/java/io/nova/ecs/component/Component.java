@@ -38,7 +38,7 @@ public abstract class Component {
         return entity.getRegistry();
     }
 
-    public final boolean isActivated() {
+    public boolean isActivated() {
         return activated;
     }
 
