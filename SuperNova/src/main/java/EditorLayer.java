@@ -21,14 +21,15 @@ import io.nova.event.EventDispatcher;
 import io.nova.event.key.KeyPressedEvent;
 import io.nova.utils.FileDialog;
 import io.nova.window.Input;
+import org.joml.Math;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import panels.EntityPanel;
 
 import java.io.IOException;
-import java.nio.FloatBuffer;
 import java.util.Objects;
 
+import static imgui.extension.imguizmo.flag.Operation.*;
 import static io.nova.core.codes.KeyCodes.*;
 
 public class EditorLayer extends Layer {
@@ -40,6 +41,7 @@ public class EditorLayer extends Layer {
     private EntityPanel entityPanel;
     private SceneSerializer sceneSerializer;
     private String filePath;
+    private int guizmoOperation;
 
     public void onAttach() {
         cameraController = new OrthographicCameraController(16.0f / 9.0f, true);
@@ -185,7 +187,7 @@ public class EditorLayer extends Layer {
         {
             var selectedEntity = entityPanel.getSelectedEntity();
             var cameraEntity = scene.getPrimaryCameraEntity();
-            if (!Objects.isNull(selectedEntity) && !selectedEntity.equals(cameraEntity)) {
+            if (guizmoOperation != -1 && !Objects.isNull(selectedEntity) && !selectedEntity.equals(cameraEntity)) {
                 ImGuizmo.setOrthographic(false);
                 ImGuizmo.setDrawList();
                 ImGuizmo.setRect(ImGui.getWindowPosX(), ImGui.getWindowPosY(), ImGui.getWindowWidth(), ImGui.getWindowHeight());
@@ -197,25 +199,52 @@ public class EditorLayer extends Layer {
                     var cameraView = transform.invert(new Matrix4f());
 
                     var selectedEntityTransformComponent = selectedEntity.getComponent(TransformComponent.class);
-                    var entityTransform = selectedEntityTransformComponent.getTransform();
+                    var selectedEntityTransform = selectedEntityTransformComponent.getTransform();
 
                     var cameraViewArr = cameraView.get(new float[16]);
                     var cameraProjectionArr = cameraProjection.get(new float[16]);
-                    var entityTransformArr = entityTransform.get(new float[16]);
+                    var entityTransformArr = selectedEntityTransform.get(new float[16]);
+
                     ImGuizmo.manipulate(
                             cameraViewArr,
                             cameraProjectionArr,
                             entityTransformArr,
-                            Operation.TRANSLATE,
+                            guizmoOperation,
                             Mode.LOCAL
                     );
 
                     if (ImGuizmo.isUsing()) {
-                        var model = new Matrix4f(FloatBuffer.wrap(entityTransformArr));
+                        switch (guizmoOperation) {
+                            case TRANSLATE:
+                                var translation = new float[]{entityTransformArr[12], entityTransformArr[13], entityTransformArr[14]};
+                                selectedEntityTransformComponent.setTranslation(translation);
+                                break;
+                            case SCALE:
+//                                dest.x = Math.sqrt(m00() * m00() + m01() * m01() + m02() * m02());
+//                                dest.y = Math.sqrt(m10() * m10() + m11() * m11() + m12() * m12());
+//                                dest.z = Math.sqrt(m20() * m20() + m21() * m21() + m22() * m22());
 
-                        var translation = new float[]{model.m30(), model.m31(), model.m32()};
 
-                        selectedEntityTransformComponent.setTranslation(translation);
+//                                float m00, m01, m02, m03;
+//                                float m10, m11, m12, m13;
+//                                float m20, m21, m22, m23;
+//                                float m30, m31, m32, m33;
+                                var scale = new float[]{
+                                        Math.sqrt(entityTransformArr[0] * entityTransformArr[0] + entityTransformArr[1] * entityTransformArr[1] + entityTransformArr[2] * entityTransformArr[2]),
+                                        Math.sqrt(entityTransformArr[4] * entityTransformArr[4] + entityTransformArr[5] * entityTransformArr[5] + entityTransformArr[6] * entityTransformArr[6]),
+                                        Math.sqrt(entityTransformArr[8] * entityTransformArr[8] + entityTransformArr[9] * entityTransformArr[9] + entityTransformArr[10] * entityTransformArr[10])
+                                };
+                                selectedEntityTransformComponent.setScale(scale);
+                                break;
+                            case ROTATE:
+                                break;
+                        }
+//                        var model = new Matrix4f(FloatBuffer.wrap(entityTransformArr));
+//                        var translation = new float[]{model.m30(), model.m31(), model.m32()};
+////                        var scale = new float[]{model.m00(), model.m11(), model.m22()};
+//
+//                        selectedEntityTransformComponent.setTranslation(translation);
+////                        selectedEntityTransformComponent.setScale(scale);
                     }
                 }
             }
@@ -261,8 +290,13 @@ public class EditorLayer extends Layer {
             case NV_KEY_Q -> {
                 if (control) {
                     closeApplication();
+                } else {
+                    guizmoOperation = -1;
                 }
             }
+            case NV_KEY_W -> guizmoOperation = Operation.TRANSLATE;
+            case NV_KEY_E -> guizmoOperation = Operation.ROTATE;
+            case NV_KEY_R -> guizmoOperation = Operation.SCALE;
         }
         return true;
     }
