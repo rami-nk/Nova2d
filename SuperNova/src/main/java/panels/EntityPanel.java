@@ -69,7 +69,10 @@ public class EntityPanel {
         if (selectedEntity == entity) {
             flags |= ImGuiTreeNodeFlags.Selected;
         }
+        // push ID to avoid crash when ID is empty while editing
+        ImGui.pushID(entity.hashCode());
         boolean expanded = ImGui.treeNodeEx(tag, flags);
+        ImGui.popID();
         if (ImGui.isItemClicked()) {
             selectedEntity = entity;
         }
