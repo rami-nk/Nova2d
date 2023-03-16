@@ -149,6 +149,17 @@ public class Scene {
         return new Entity();
     }
 
+    public Entity getPrimaryCameraEntity() {
+        var cameraEntity = registry.getEntities(Group.create(SceneCameraComponent.class));
+        for (var entity : cameraEntity) {
+            var camera = entity.getComponent(SceneCameraComponent.class);
+            if (camera.isPrimary()) {
+                return entity;
+            }
+        }
+        return null;
+    }
+
     private class CameraComponentAddEventListener implements EntityListener {
 
         @Override

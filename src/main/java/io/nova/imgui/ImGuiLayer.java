@@ -1,6 +1,7 @@
 package io.nova.imgui;
 
 import imgui.ImGui;
+import imgui.extension.imguizmo.ImGuizmo;
 import imgui.flag.ImGuiConfigFlags;
 import io.nova.core.application.Application;
 import io.nova.core.layer.Layer;
@@ -44,6 +45,7 @@ public class ImGuiLayer extends Layer {
     public void startFrame() {
         imGuiImplGlfw.newFrame();
         ImGui.newFrame();
+        ImGuizmo.beginFrame();
     }
 
     public void endFrame() {

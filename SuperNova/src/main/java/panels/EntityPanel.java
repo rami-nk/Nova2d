@@ -94,4 +94,8 @@ public class EntityPanel {
             ImGui.endPopup();
         }
     }
+
+    public Entity getSelectedEntity() {
+        return selectedEntity;
+    }
 }

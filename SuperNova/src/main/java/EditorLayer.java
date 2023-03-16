@@ -1,8 +1,10 @@
 import imgui.ImGui;
+import imgui.extension.imguizmo.ImGuizmo;
+import imgui.extension.imguizmo.flag.Mode;
+import imgui.extension.imguizmo.flag.Operation;
 import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
-import io.nova.FileDialog;
 import io.nova.core.application.Application;
 import io.nova.core.layer.Layer;
 import io.nova.core.renderer.*;
@@ -11,12 +13,15 @@ import io.nova.ecs.Scene;
 import io.nova.ecs.component.SceneCameraComponent;
 import io.nova.ecs.component.ScriptComponent;
 import io.nova.ecs.component.SpriteRenderComponent;
+import io.nova.ecs.component.TransformComponent;
 import io.nova.ecs.entity.Entity;
 import io.nova.ecs.serializer.SceneSerializer;
 import io.nova.event.Event;
 import io.nova.event.EventDispatcher;
 import io.nova.event.key.KeyPressedEvent;
+import io.nova.utils.FileDialog;
 import io.nova.window.Input;
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import panels.EntityPanel;
 
@@ -25,7 +30,7 @@ import java.util.Objects;
 
 import static io.nova.core.codes.KeyCodes.*;
 
-public class EcsLayer extends Layer {
+public class EditorLayer extends Layer {
     private final Vector2f viewportSize = new Vector2f();
     private Scene scene;
     private Renderer renderer;
@@ -39,7 +44,7 @@ public class EcsLayer extends Layer {
         cameraController = new OrthographicCameraController(16.0f / 9.0f, true);
         renderer = RendererFactory.create();
         sceneSerializer = new SceneSerializer();
-        filePath = "assets/scenes/Example.nova";
+        filePath = "assets/scenes/Cube.nova";
 
         try {
             scene = sceneSerializer.deserialize(filePath);
@@ -173,6 +178,34 @@ public class EcsLayer extends Layer {
             ImGui.image(textureId, viewportSize.x, viewportSize.y, 0, 1, 1, 0);
             // We set the viewPortSize of the cameraController here to make sure the aspect ratio is correct after resizing the window
             cameraController.setViewportSize((int) viewportSize.x, (int) viewportSize.y);
+        }
+
+        // ImGuizmo
+        {
+            var selectedEntity = entityPanel.getSelectedEntity();
+            var cameraEntity = scene.getPrimaryCameraEntity();
+            if (!Objects.isNull(selectedEntity) && !selectedEntity.equals(cameraEntity)) {
+                ImGuizmo.setOrthographic(false);
+                ImGuizmo.setDrawList();
+                ImGuizmo.setRect(ImGui.getWindowPosX(), ImGui.getWindowPosY(), ImGui.getWindowWidth(), ImGui.getWindowHeight());
+
+                if (!Objects.isNull(cameraEntity)) {
+                    var camera = cameraEntity.getComponent(SceneCameraComponent.class).getCamera();
+                    var transform = cameraEntity.getComponent(TransformComponent.class).getTransform();
+                    var cameraProjection = camera.getProjection();
+                    var cameraView = transform.invert(new Matrix4f());
+
+                    var entityTransform = selectedEntity.getComponent(TransformComponent.class).getTransform();
+
+                    ImGuizmo.manipulate(
+                            cameraView.get(new float[16]),
+                            cameraProjection.get(new float[16]),
+                            entityTransform.get(new float[16]),
+                            Operation.TRANSLATE,
+                            Mode.LOCAL
+                    );
+                }
+            }
         }
         ImGui.end();
         ImGui.popStyleVar();

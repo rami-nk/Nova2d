@@ -6,7 +6,7 @@ public class SuperNovaEditor extends Application {
     public SuperNovaEditor(ApplicationSpecification specification) {
         super(specification);
 //        this.pushLayer(new SuperNovaDefaultEditorLayer());
-        this.pushLayer(new EcsLayer());
+        this.pushLayer(new EditorLayer());
     }
 
     public static SuperNovaEditor create(ApplicationCommandLineArgs args) {
