@@ -36,9 +36,10 @@ public class EcsLayer extends Layer {
             scene = sceneSerializer.deserialize("assets/scenes/Example.nova");
             scene.setRenderer(renderer);
         } catch (IOException e) {
-            scene = new Scene(renderer);
             System.err.println("Failed to load scene: " + e.getMessage());
             System.err.println("Created default scene instead.");
+
+            scene = new Scene(renderer);
 
             Entity entity = scene.createEntity("Quad");
             entity.addComponent(new SpriteRenderComponent());
@@ -64,11 +65,6 @@ public class EcsLayer extends Layer {
     }
 
     public void onDetach() {
-        try {
-            sceneSerializer.serialize(scene, "assets/scenes/Example.nova");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
         scene.dispose();
         frameBuffer.dispose();
     }
@@ -123,6 +119,13 @@ public class EcsLayer extends Layer {
 
         ImGui.beginMenuBar();
         if (ImGui.beginMenu("File")) {
+            if (ImGui.menuItem("Save")) {
+                try {
+                    sceneSerializer.serialize(scene, "assets/scenes/Example.nova");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
             if (ImGui.menuItem("Exit")) {
                 Application.getInstance().close();
             }
