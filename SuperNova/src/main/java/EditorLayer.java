@@ -40,7 +40,7 @@ public class EditorLayer extends Layer {
     private EntityPanel entityPanel;
     private SceneSerializer sceneSerializer;
     private String filePath;
-    private int guizmoOperation;
+    private int gizmoOperation;
 
 
     public void onAttach() {
@@ -187,7 +187,7 @@ public class EditorLayer extends Layer {
         {
             var selectedEntity = entityPanel.getSelectedEntity();
             var cameraEntity = scene.getPrimaryCameraEntity();
-            if (guizmoOperation != -1 && !Objects.isNull(selectedEntity) && !selectedEntity.equals(cameraEntity)) {
+            if (gizmoOperation != -1 && !Objects.isNull(selectedEntity) && !selectedEntity.equals(cameraEntity)) {
                 ImGuizmo.setOrthographic(false);
                 ImGuizmo.setDrawList();
                 ImGuizmo.setRect(ImGui.getWindowPosX(), ImGui.getWindowPosY(), ImGui.getWindowWidth(), ImGui.getWindowHeight());
@@ -201,27 +201,41 @@ public class EditorLayer extends Layer {
                     var selectedEntityTransformComponent = selectedEntity.getComponent(TransformComponent.class);
                     var selectedEntityTransform = selectedEntityTransformComponent.getTransform();
 
-                    var entityTransformArr = selectedEntityTransform.get(new float[16]);
+                    var model = new float[16];
+                    var radRot = selectedEntityTransformComponent.getRotation();
+                    var degRot = new float[3];
+                    for (int i = 0; i < radRot.length; i++) {
+                        degRot[i] = (float) Math.toDegrees(radRot[i]);
+                    }
+
+                    ImGuizmo.recomposeMatrixFromComponents(
+                            model,
+                            selectedEntityTransformComponent.getTranslation(),
+                            degRot,
+                            selectedEntityTransformComponent.getScale());
 
                     ImGuizmo.manipulate(
                             cameraView.get(new float[16]),
                             cameraProjection.get(new float[16]),
-                            entityTransformArr,
-                            guizmoOperation,
+                            model,
+                            gizmoOperation,
                             Mode.LOCAL
                     );
 
-                    var translation = new float[3];
-                    var rotation = new float[3];
-                    var scale = new float[3];
-
-                    ImGuizmo.decomposeMatrixToComponents(entityTransformArr, translation, rotation, scale);
-
                     if (ImGuizmo.isUsing()) {
-                        switch (guizmoOperation) {
+                        var translation = new float[3];
+                        var rotation = new float[3];
+                        var scale = new float[3];
+
+                        ImGuizmo.decomposeMatrixToComponents(model, translation, rotation, scale);
+
+                        for (int i = 0; i < rotation.length; i++) {
+                            rotation[i] = (float) Math.toRadians(rotation[i]);
+                        }
+
+                        switch (gizmoOperation) {
                             case TRANSLATE -> selectedEntityTransformComponent.setTranslation(translation);
                             case SCALE -> selectedEntityTransformComponent.setScale(scale);
-                            // TODO: Fix rotation
                             case ROTATE -> selectedEntityTransformComponent.setRotation(rotation);
                         }
                     }
@@ -270,12 +284,12 @@ public class EditorLayer extends Layer {
                 if (control) {
                     closeApplication();
                 } else {
-                    guizmoOperation = -1;
+                    gizmoOperation = -1;
                 }
             }
-            case NV_KEY_W -> guizmoOperation = Operation.TRANSLATE;
-            case NV_KEY_E -> guizmoOperation = Operation.ROTATE;
-            case NV_KEY_R -> guizmoOperation = Operation.SCALE;
+            case NV_KEY_W -> gizmoOperation = Operation.TRANSLATE;
+            case NV_KEY_E -> gizmoOperation = Operation.ROTATE;
+            case NV_KEY_R -> gizmoOperation = Operation.SCALE;
         }
         return true;
     }
