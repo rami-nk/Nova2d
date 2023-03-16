@@ -28,6 +28,10 @@
             "finite" : true
           }
         },
+        "io.nova.ecs.component.TagComponent" : {
+          "@class" : "io.nova.ecs.component.TagComponent",
+          "tag" : "Quad"
+        },
         "io.nova.ecs.component.TransformComponent" : {
           "@class" : "io.nova.ecs.component.TransformComponent",
           "translation" : [ -4.0, 0.0, 0.0 ],
@@ -37,10 +41,6 @@
             "finite" : true,
             "affine" : true
           }
-        },
-        "io.nova.ecs.component.TagComponent" : {
-          "@class" : "io.nova.ecs.component.TagComponent",
-          "tag" : "Quad"
         }
       },
       "activated" : true
@@ -72,6 +72,10 @@
             "finite" : true
           }
         },
+        "io.nova.ecs.component.TagComponent" : {
+          "@class" : "io.nova.ecs.component.TagComponent",
+          "tag" : "Quad2"
+        },
         "io.nova.ecs.component.TransformComponent" : {
           "@class" : "io.nova.ecs.component.TransformComponent",
           "translation" : [ 0.0, 0.0, 0.0 ],
@@ -81,17 +85,13 @@
             "finite" : true,
             "affine" : true
           }
-        },
-        "io.nova.ecs.component.TagComponent" : {
-          "@class" : "io.nova.ecs.component.TagComponent",
-          "tag" : "Quad2"
         }
       },
       "activated" : true
     }, {
       "components" : [ {
         "@class" : "io.nova.ecs.component.TransformComponent",
-        "translation" : [ 0.0, 0.0, 0.0 ],
+        "translation" : [ -4.7, 0.0, 0.0 ],
         "rotation" : [ 0.0, 0.0, 0.0 ],
         "scale" : [ 1.0, 1.0, 1.0 ],
         "transform" : {
@@ -132,26 +132,26 @@
           "primary" : true,
           "fixedAspectRatio" : false
         },
+        "io.nova.ecs.component.TagComponent" : {
+          "@class" : "io.nova.ecs.component.TagComponent",
+          "tag" : "Primary Camera"
+        },
         "io.nova.ecs.component.TransformComponent" : {
           "@class" : "io.nova.ecs.component.TransformComponent",
-          "translation" : [ 0.0, 0.0, 0.0 ],
+          "translation" : [ -4.7, 0.0, 0.0 ],
           "rotation" : [ 0.0, 0.0, 0.0 ],
           "scale" : [ 1.0, 1.0, 1.0 ],
           "transform" : {
             "finite" : true,
             "affine" : true
           }
-        },
-        "io.nova.ecs.component.TagComponent" : {
-          "@class" : "io.nova.ecs.component.TagComponent",
-          "tag" : "Primary Camera"
         }
       },
       "activated" : true
     }, {
       "components" : [ {
         "@class" : "io.nova.ecs.component.TransformComponent",
-        "translation" : [ -0.3645897, -2.6724768, 0.0 ],
+        "translation" : [ -2.9025745, 4.3084645, 0.0 ],
         "rotation" : [ 0.0, 0.0, 0.0 ],
         "scale" : [ 1.0, 1.0, 1.0 ],
         "transform" : {
@@ -183,13 +183,6 @@
         }
       } ],
       "cache" : {
-        "io.nova.ecs.component.ScriptComponent" : {
-          "@class" : "io.nova.ecs.component.ScriptComponent",
-          "activated" : true,
-          "instance" : {
-            "@type" : "CameraController"
-          }
-        },
         "io.nova.ecs.component.SceneCameraComponent" : {
           "@class" : "io.nova.ecs.component.SceneCameraComponent",
           "camera" : {
@@ -208,6 +201,13 @@
         "io.nova.ecs.component.TagComponent" : {
           "@class" : "io.nova.ecs.component.TagComponent",
           "tag" : "Secondary Camera"
+        },
+        "io.nova.ecs.component.ScriptComponent" : {
+          "@class" : "io.nova.ecs.component.ScriptComponent",
+          "activated" : true,
+          "instance" : {
+            "@type" : "CameraController"
+          }
         }
       },
       "activated" : true
