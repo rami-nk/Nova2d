@@ -39,12 +39,14 @@ public class TransformComponent extends Component {
     }
 
     public Matrix4f getTransform() {
-        var rotation = new Matrix4f().rotate((float) Math.toRadians(this.rotation[0]), new Vector3f(1, 0, 0))
-                .rotate((float) Math.toRadians(this.rotation[1]), new Vector3f(0, 1, 0))
-                .rotate((float) Math.toRadians(this.rotation[2]), new Vector3f(0, 0, 1));
-        return new Matrix4f().translate(new Vector3f(translation[0], translation[1], translation[2]))
-                .mul(rotation)
-                .scale(new Vector3f(scale[0], scale[1], scale[2]));
+        var rot = new Matrix4f()
+                .rotate(this.rotation[0], new Vector3f(1, 0, 0))
+                .rotate(this.rotation[1], new Vector3f(0, 1, 0))
+                .rotate(this.rotation[2], new Vector3f(0, 0, 1));
+        return new Matrix4f()
+                .translate(new Vector3f(translation[0], translation[1], translation[2]))
+                .mul(rot)
+                .scale(scale[0], scale[1], scale[2]);
     }
 
     public void translate(float x, float y, float z) {

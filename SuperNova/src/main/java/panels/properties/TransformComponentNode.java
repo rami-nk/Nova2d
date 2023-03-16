@@ -13,8 +13,10 @@ public class TransformComponentNode {
                 transform.setTranslation(position);
             }
 
-            var rotation = transform.getRotation();
+            var _rot = transform.getRotation();
+            var rotation = new float[]{(float) Math.toDegrees(_rot[0]), (float) Math.toDegrees(_rot[1]), (float) Math.toDegrees(_rot[2])};
             if (ImGui.dragFloat3("Rotation", rotation, 0.1f)) {
+                rotation = new float[]{(float) Math.toRadians(rotation[0]), (float) Math.toRadians(rotation[1]), (float) Math.toRadians(rotation[2])};
                 transform.setRotation(rotation);
             }
 
