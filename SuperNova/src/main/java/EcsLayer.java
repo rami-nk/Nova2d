@@ -28,14 +28,16 @@ public class EcsLayer extends Layer {
     private FrameBuffer frameBuffer;
     private EntityPanel entityPanel;
     private SceneSerializer sceneSerializer;
+    private String filePath;
 
     public void onAttach() {
         cameraController = new OrthographicCameraController(16.0f / 9.0f, true);
         renderer = RendererFactory.create();
         sceneSerializer = new SceneSerializer();
+        filePath = "assets/scenes/Example.nova";
 
         try {
-            scene = sceneSerializer.deserialize("assets/scenes/Example.nova");
+            scene = sceneSerializer.deserialize(filePath);
             scene.setRenderer(renderer);
         } catch (IOException e) {
             System.err.println("Failed to load scene: " + e.getMessage());
@@ -126,6 +128,7 @@ public class EcsLayer extends Layer {
                 scene = new Scene(renderer);
                 sceneSerializer = new SceneSerializer();
                 entityPanel = new EntityPanel(scene);
+                filePath = null;
             }
             if (ImGui.menuItem("Open...", "Ctrl+O")) {
                 var filePath = FileDialog.openFileDialog("Nova files (*.nova)\0*.nova\0");
@@ -134,8 +137,29 @@ public class EcsLayer extends Layer {
                         scene = sceneSerializer.deserialize(filePath);
                         scene.setRenderer(renderer);
                         entityPanel = new EntityPanel(scene);
+                        scene.onViewportResize((int) viewportSize.x, (int) viewportSize.y);
+                        this.filePath = filePath;
                     } catch (IOException e) {
                         throw new RuntimeException(e);
+                    }
+                }
+            }
+            if (ImGui.menuItem("Save", "Ctrl+S")) {
+                if (!Objects.isNull(filePath)) {
+                    try {
+                        sceneSerializer.serialize(scene, filePath);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    var filePath = FileDialog.saveFileDialog("Nova files (*.nova)\0*.nova\0");
+                    if (!Objects.isNull(filePath)) {
+                        try {
+                            sceneSerializer.serialize(scene, filePath);
+                            this.filePath = filePath;
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 }
             }
@@ -144,6 +168,7 @@ public class EcsLayer extends Layer {
                 if (!Objects.isNull(filePath)) {
                     try {
                         sceneSerializer.serialize(scene, filePath);
+                        this.filePath = filePath;
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
