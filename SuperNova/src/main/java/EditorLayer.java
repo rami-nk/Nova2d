@@ -21,7 +21,6 @@ import io.nova.event.EventDispatcher;
 import io.nova.event.key.KeyPressedEvent;
 import io.nova.utils.FileDialog;
 import io.nova.window.Input;
-import org.joml.Math;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import panels.EntityPanel;
@@ -42,6 +41,7 @@ public class EditorLayer extends Layer {
     private SceneSerializer sceneSerializer;
     private String filePath;
     private int guizmoOperation;
+
 
     public void onAttach() {
         cameraController = new OrthographicCameraController(16.0f / 9.0f, true);
@@ -201,50 +201,29 @@ public class EditorLayer extends Layer {
                     var selectedEntityTransformComponent = selectedEntity.getComponent(TransformComponent.class);
                     var selectedEntityTransform = selectedEntityTransformComponent.getTransform();
 
-                    var cameraViewArr = cameraView.get(new float[16]);
-                    var cameraProjectionArr = cameraProjection.get(new float[16]);
                     var entityTransformArr = selectedEntityTransform.get(new float[16]);
 
                     ImGuizmo.manipulate(
-                            cameraViewArr,
-                            cameraProjectionArr,
+                            cameraView.get(new float[16]),
+                            cameraProjection.get(new float[16]),
                             entityTransformArr,
                             guizmoOperation,
                             Mode.LOCAL
                     );
 
+                    var translation = new float[3];
+                    var rotation = new float[3];
+                    var scale = new float[3];
+
+                    ImGuizmo.decomposeMatrixToComponents(entityTransformArr, translation, rotation, scale);
+
                     if (ImGuizmo.isUsing()) {
                         switch (guizmoOperation) {
-                            case TRANSLATE:
-                                var translation = new float[]{entityTransformArr[12], entityTransformArr[13], entityTransformArr[14]};
-                                selectedEntityTransformComponent.setTranslation(translation);
-                                break;
-                            case SCALE:
-//                                dest.x = Math.sqrt(m00() * m00() + m01() * m01() + m02() * m02());
-//                                dest.y = Math.sqrt(m10() * m10() + m11() * m11() + m12() * m12());
-//                                dest.z = Math.sqrt(m20() * m20() + m21() * m21() + m22() * m22());
-
-
-//                                float m00, m01, m02, m03;
-//                                float m10, m11, m12, m13;
-//                                float m20, m21, m22, m23;
-//                                float m30, m31, m32, m33;
-                                var scale = new float[]{
-                                        Math.sqrt(entityTransformArr[0] * entityTransformArr[0] + entityTransformArr[1] * entityTransformArr[1] + entityTransformArr[2] * entityTransformArr[2]),
-                                        Math.sqrt(entityTransformArr[4] * entityTransformArr[4] + entityTransformArr[5] * entityTransformArr[5] + entityTransformArr[6] * entityTransformArr[6]),
-                                        Math.sqrt(entityTransformArr[8] * entityTransformArr[8] + entityTransformArr[9] * entityTransformArr[9] + entityTransformArr[10] * entityTransformArr[10])
-                                };
-                                selectedEntityTransformComponent.setScale(scale);
-                                break;
-                            case ROTATE:
-                                break;
+                            case TRANSLATE -> selectedEntityTransformComponent.setTranslation(translation);
+                            case SCALE -> selectedEntityTransformComponent.setScale(scale);
+                            // TODO: Fix rotation
+                            case ROTATE -> selectedEntityTransformComponent.setRotation(rotation);
                         }
-//                        var model = new Matrix4f(FloatBuffer.wrap(entityTransformArr));
-//                        var translation = new float[]{model.m30(), model.m31(), model.m32()};
-////                        var scale = new float[]{model.m00(), model.m11(), model.m22()};
-//
-//                        selectedEntityTransformComponent.setTranslation(translation);
-////                        selectedEntityTransformComponent.setScale(scale);
                     }
                 }
             }

@@ -4,7 +4,7 @@
       "components" : [ {
         "@class" : "io.nova.ecs.component.TransformComponent",
         "translation" : [ -0.7, 0.0, 0.0 ],
-        "rotation" : [ 0.0, -45.0, 0.0 ],
+        "rotation" : [ 0.0, -0.7853982, 0.0 ],
         "scale" : [ 1.0, 1.0, 1.0 ],
         "transform" : {
           "finite" : true,
@@ -35,7 +35,7 @@
         "io.nova.ecs.component.TransformComponent" : {
           "@class" : "io.nova.ecs.component.TransformComponent",
           "translation" : [ -0.7, 0.0, 0.0 ],
-          "rotation" : [ 0.0, -45.0, 0.0 ],
+          "rotation" : [ 0.0, -0.7853982, 0.0 ],
           "scale" : [ 1.0, 1.0, 1.0 ],
           "transform" : {
             "finite" : true,
@@ -48,7 +48,7 @@
       "components" : [ {
         "@class" : "io.nova.ecs.component.TransformComponent",
         "translation" : [ 0.0, 0.0, 0.0 ],
-        "rotation" : [ 0.0, 45.0, 0.0 ],
+        "rotation" : [ 0.0, 0.7853982, 0.0 ],
         "scale" : [ 1.0, 1.0, 1.0 ],
         "transform" : {
           "finite" : true,
@@ -79,7 +79,7 @@
         "io.nova.ecs.component.TransformComponent" : {
           "@class" : "io.nova.ecs.component.TransformComponent",
           "translation" : [ 0.0, 0.0, 0.0 ],
-          "rotation" : [ 0.0, 45.0, 0.0 ],
+          "rotation" : [ 0.0, 0.7853982, 0.0 ],
           "scale" : [ 1.0, 1.0, 1.0 ],
           "transform" : {
             "finite" : true,
@@ -105,7 +105,7 @@
         "@class" : "io.nova.ecs.component.SceneCameraComponent",
         "camera" : {
           "projectionType" : "PERSPECTIVE",
-          "aspectRatio" : 1.3487699,
+          "aspectRatio" : 1.118799,
           "orthographicNearPlane" : -1.0,
           "orthographicFarPlane" : 1.0,
           "orthographicSize" : 10.0,
@@ -125,7 +125,7 @@
           "@class" : "io.nova.ecs.component.SceneCameraComponent",
           "camera" : {
             "projectionType" : "PERSPECTIVE",
-            "aspectRatio" : 1.3487699,
+            "aspectRatio" : 1.118799,
             "orthographicNearPlane" : -1.0,
             "orthographicFarPlane" : 1.0,
             "orthographicSize" : 10.0,
@@ -150,6 +150,67 @@
       "activated" : true
     } ]
   },
-  "viewPortWidth" : 932,
-  "viewPortHeight" : 691
+  "viewPortWidth" : 857,
+  "viewPortHeight" : 766,
+  "primaryCameraEntity" : {
+    "components" : [ {
+      "@class" : "io.nova.ecs.component.TransformComponent",
+      "translation" : [ 0.0, 0.2, 2.9 ],
+      "rotation" : [ 0.0, 0.0, 0.0 ],
+      "scale" : [ 1.0, 1.0, 1.0 ],
+      "transform" : {
+        "finite" : true,
+        "affine" : true
+      }
+    }, {
+      "@class" : "io.nova.ecs.component.TagComponent",
+      "tag" : "Camera"
+    }, {
+      "@class" : "io.nova.ecs.component.SceneCameraComponent",
+      "camera" : {
+        "projectionType" : "PERSPECTIVE",
+        "aspectRatio" : 1.118799,
+        "orthographicNearPlane" : -1.0,
+        "orthographicFarPlane" : 1.0,
+        "orthographicSize" : 10.0,
+        "fov" : 0.7853982,
+        "perspectiveNearPlane" : 0.1,
+        "perspectiveFarPlane" : 1000.0
+      },
+      "primary" : true,
+      "fixedAspectRatio" : false
+    } ],
+    "cache" : {
+      "io.nova.ecs.component.TagComponent" : {
+        "@class" : "io.nova.ecs.component.TagComponent",
+        "tag" : "Camera"
+      },
+      "io.nova.ecs.component.SceneCameraComponent" : {
+        "@class" : "io.nova.ecs.component.SceneCameraComponent",
+        "camera" : {
+          "projectionType" : "PERSPECTIVE",
+          "aspectRatio" : 1.118799,
+          "orthographicNearPlane" : -1.0,
+          "orthographicFarPlane" : 1.0,
+          "orthographicSize" : 10.0,
+          "fov" : 0.7853982,
+          "perspectiveNearPlane" : 0.1,
+          "perspectiveFarPlane" : 1000.0
+        },
+        "primary" : true,
+        "fixedAspectRatio" : false
+      },
+      "io.nova.ecs.component.TransformComponent" : {
+        "@class" : "io.nova.ecs.component.TransformComponent",
+        "translation" : [ 0.0, 0.2, 2.9 ],
+        "rotation" : [ 0.0, 0.0, 0.0 ],
+        "scale" : [ 1.0, 1.0, 1.0 ],
+        "transform" : {
+          "finite" : true,
+          "affine" : true
+        }
+      }
+    },
+    "activated" : true
+  }
 }
