@@ -18,6 +18,10 @@
         "color" : [ 1.0, 0.0, 0.0, 1.0 ]
       } ],
       "cache" : {
+        "io.nova.ecs.component.TagComponent" : {
+          "__typename" : "TagComponent",
+          "tag" : "Quad"
+        },
         "io.nova.ecs.component.TransformComponent" : {
           "__typename" : "TransformComponent",
           "translation" : [ -2.2, 0.0, 0.0 ],
@@ -31,10 +35,6 @@
         "io.nova.ecs.component.SpriteRenderComponent" : {
           "__typename" : "SpriteRenderComponent",
           "color" : [ 1.0, 0.0, 0.0, 1.0 ]
-        },
-        "io.nova.ecs.component.TagComponent" : {
-          "__typename" : "TagComponent",
-          "tag" : "Quad"
         }
       },
       "activated" : true
@@ -56,6 +56,10 @@
         "color" : [ 1.0, 0.0, 0.0, 1.0 ]
       } ],
       "cache" : {
+        "io.nova.ecs.component.TagComponent" : {
+          "__typename" : "TagComponent",
+          "tag" : "Quad2"
+        },
         "io.nova.ecs.component.TransformComponent" : {
           "__typename" : "TransformComponent",
           "translation" : [ 0.0, 0.0, 0.0 ],
@@ -69,17 +73,13 @@
         "io.nova.ecs.component.SpriteRenderComponent" : {
           "__typename" : "SpriteRenderComponent",
           "color" : [ 1.0, 0.0, 0.0, 1.0 ]
-        },
-        "io.nova.ecs.component.TagComponent" : {
-          "__typename" : "TagComponent",
-          "tag" : "Quad2"
         }
       },
       "activated" : true
     }, {
       "components" : [ {
         "__typename" : "TransformComponent",
-        "translation" : [ 0.0, 0.0, 0.0 ],
+        "translation" : [ -2.8, 0.0, 0.0 ],
         "rotation" : [ 0.0, 0.0, 109.5 ],
         "scale" : [ 1.0, 1.0, 1.0 ],
         "transform" : {
@@ -93,7 +93,7 @@
         "__typename" : "SceneCameraComponent",
         "camera" : {
           "projectionType" : "ORTHOGRAPHIC",
-          "aspectRatio" : 1.3140377,
+          "aspectRatio" : 1.3487699,
           "orthographicNearPlane" : -1.0,
           "orthographicFarPlane" : 1.0,
           "orthographicSize" : 10.0,
@@ -105,9 +105,13 @@
         "fixedAspectRatio" : false
       } ],
       "cache" : {
+        "io.nova.ecs.component.TagComponent" : {
+          "__typename" : "TagComponent",
+          "tag" : "Primary Camera"
+        },
         "io.nova.ecs.component.TransformComponent" : {
           "__typename" : "TransformComponent",
-          "translation" : [ 0.0, 0.0, 0.0 ],
+          "translation" : [ -2.8, 0.0, 0.0 ],
           "rotation" : [ 0.0, 0.0, 109.5 ],
           "scale" : [ 1.0, 1.0, 1.0 ],
           "transform" : {
@@ -115,15 +119,11 @@
             "affine" : true
           }
         },
-        "io.nova.ecs.component.TagComponent" : {
-          "__typename" : "TagComponent",
-          "tag" : "Primary Camera"
-        },
         "io.nova.ecs.component.SceneCameraComponent" : {
           "__typename" : "SceneCameraComponent",
           "camera" : {
             "projectionType" : "ORTHOGRAPHIC",
-            "aspectRatio" : 1.3140377,
+            "aspectRatio" : 1.3487699,
             "orthographicNearPlane" : -1.0,
             "orthographicFarPlane" : 1.0,
             "orthographicSize" : 10.0,
@@ -153,7 +153,7 @@
         "__typename" : "SceneCameraComponent",
         "camera" : {
           "projectionType" : "ORTHOGRAPHIC",
-          "aspectRatio" : 1.3140377,
+          "aspectRatio" : 1.3487699,
           "orthographicNearPlane" : -1.0,
           "orthographicFarPlane" : 1.0,
           "orthographicSize" : 10.0,
@@ -173,7 +173,7 @@
           "__typename" : "SceneCameraComponent",
           "camera" : {
             "projectionType" : "ORTHOGRAPHIC",
-            "aspectRatio" : 1.3140377,
+            "aspectRatio" : 1.3487699,
             "orthographicNearPlane" : -1.0,
             "orthographicFarPlane" : 1.0,
             "orthographicSize" : 10.0,
@@ -188,6 +188,6 @@
       "activated" : true
     } ]
   },
-  "viewPortWidth" : 908,
+  "viewPortWidth" : 932,
   "viewPortHeight" : 691
 }

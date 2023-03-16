@@ -1,7 +1,7 @@
 package io.nova.ecs.serializer;
 
-import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.nova.ecs.Scene;
-import io.nova.ecs.component.*;
+import io.nova.ecs.component.Component;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -38,7 +38,7 @@ public class SceneDeserializer extends StdDeserializer<Scene> {
     }
 
     @Override
-    public Scene deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JacksonException {
+    public Scene deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         var mapper = new ObjectMapper();
         JsonNode node = p.getCodec().readTree(p);
 
@@ -49,21 +49,9 @@ public class SceneDeserializer extends StdDeserializer<Scene> {
         var entities = node.get("registry").get("entities");
         for (int i = 0; i < entities.size(); i++) {
             var entity = entities.get(i);
-            var components = new ArrayList<Component>();
+            var type = mapper.constructType(new TypeReference<ArrayList<Component>>() {});
+            ArrayList<Component> components = mapper.treeToValue(entity.get("components"), type);
 
-            for (int j = 0; j < entity.get("components").size(); j++) {
-                var component = entity.get("components").get(j);
-                var type = component.get("__typename").textValue();
-                Component c = null;
-                switch (type) {
-                    case "TagComponent" -> c = mapper.treeToValue(component, TagComponent.class);
-                    case "TransformComponent" -> c = mapper.treeToValue(component, TransformComponent.class);
-                    case "SpriteRenderComponent" -> c = mapper.treeToValue(component, SpriteRenderComponent.class);
-                    case "SceneCameraComponent" -> c = mapper.treeToValue(component, SceneCameraComponent.class);
-                    case "ScriptComponent" -> c = mapper.treeToValue(component, ScriptComponent.class);
-                }
-                components.add(c);
-            }
             var e = scene.createVoidEntity();
             for (Component component : components) {
                 e.addComponent(component);
