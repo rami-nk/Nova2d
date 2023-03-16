@@ -2,45 +2,7 @@
   "registry" : {
     "entities" : [ {
       "components" : [ {
-        "__typename" : "TransformComponent",
-        "translation" : [ -2.2, 0.0, 0.0 ],
-        "rotation" : [ 0.0, 0.0, 0.0 ],
-        "scale" : [ 1.0, 1.0, 1.0 ],
-        "transform" : {
-          "finite" : true,
-          "affine" : true
-        }
-      }, {
-        "__typename" : "TagComponent",
-        "tag" : "Quad"
-      }, {
-        "__typename" : "SpriteRenderComponent",
-        "color" : [ 1.0, 0.0, 0.0, 1.0 ]
-      } ],
-      "cache" : {
-        "io.nova.ecs.component.TagComponent" : {
-          "__typename" : "TagComponent",
-          "tag" : "Quad"
-        },
-        "io.nova.ecs.component.TransformComponent" : {
-          "__typename" : "TransformComponent",
-          "translation" : [ -2.2, 0.0, 0.0 ],
-          "rotation" : [ 0.0, 0.0, 0.0 ],
-          "scale" : [ 1.0, 1.0, 1.0 ],
-          "transform" : {
-            "finite" : true,
-            "affine" : true
-          }
-        },
-        "io.nova.ecs.component.SpriteRenderComponent" : {
-          "__typename" : "SpriteRenderComponent",
-          "color" : [ 1.0, 0.0, 0.0, 1.0 ]
-        }
-      },
-      "activated" : true
-    }, {
-      "components" : [ {
-        "__typename" : "TransformComponent",
+        "@class" : "io.nova.ecs.component.TransformComponent",
         "translation" : [ 0.0, 0.0, 0.0 ],
         "rotation" : [ 0.0, 0.0, 0.0 ],
         "scale" : [ 1.0, 1.0, 1.0 ],
@@ -49,19 +11,22 @@
           "affine" : true
         }
       }, {
-        "__typename" : "TagComponent",
-        "tag" : "Quad2"
+        "@class" : "io.nova.ecs.component.TagComponent",
+        "tag" : "Quad"
       }, {
-        "__typename" : "SpriteRenderComponent",
-        "color" : [ 1.0, 0.0, 0.0, 1.0 ]
+        "@class" : "io.nova.ecs.component.SpriteRenderComponent",
+        "color" : [ 1.0, 0.0, 0.0, 1.0 ],
+        "colorAsVec" : {
+          "finite" : true
+        }
       } ],
       "cache" : {
         "io.nova.ecs.component.TagComponent" : {
-          "__typename" : "TagComponent",
-          "tag" : "Quad2"
+          "@class" : "io.nova.ecs.component.TagComponent",
+          "tag" : "Quad"
         },
         "io.nova.ecs.component.TransformComponent" : {
-          "__typename" : "TransformComponent",
+          "@class" : "io.nova.ecs.component.TransformComponent",
           "translation" : [ 0.0, 0.0, 0.0 ],
           "rotation" : [ 0.0, 0.0, 0.0 ],
           "scale" : [ 1.0, 1.0, 1.0 ],
@@ -71,26 +36,73 @@
           }
         },
         "io.nova.ecs.component.SpriteRenderComponent" : {
-          "__typename" : "SpriteRenderComponent",
-          "color" : [ 1.0, 0.0, 0.0, 1.0 ]
+          "@class" : "io.nova.ecs.component.SpriteRenderComponent",
+          "color" : [ 1.0, 0.0, 0.0, 1.0 ],
+          "colorAsVec" : {
+            "finite" : true
+          }
         }
       },
       "activated" : true
     }, {
       "components" : [ {
-        "__typename" : "TransformComponent",
-        "translation" : [ -2.8, 0.0, 0.0 ],
-        "rotation" : [ 0.0, 0.0, 109.5 ],
+        "@class" : "io.nova.ecs.component.TransformComponent",
+        "translation" : [ 7.8, 0.0, 0.0 ],
+        "rotation" : [ 0.0, 0.0, 0.0 ],
         "scale" : [ 1.0, 1.0, 1.0 ],
         "transform" : {
           "finite" : true,
           "affine" : true
         }
       }, {
-        "__typename" : "TagComponent",
+        "@class" : "io.nova.ecs.component.TagComponent",
+        "tag" : "Quad2"
+      }, {
+        "@class" : "io.nova.ecs.component.SpriteRenderComponent",
+        "color" : [ 1.0, 0.0, 0.0, 1.0 ],
+        "colorAsVec" : {
+          "finite" : true
+        }
+      } ],
+      "cache" : {
+        "io.nova.ecs.component.TagComponent" : {
+          "@class" : "io.nova.ecs.component.TagComponent",
+          "tag" : "Quad2"
+        },
+        "io.nova.ecs.component.TransformComponent" : {
+          "@class" : "io.nova.ecs.component.TransformComponent",
+          "translation" : [ 7.8, 0.0, 0.0 ],
+          "rotation" : [ 0.0, 0.0, 0.0 ],
+          "scale" : [ 1.0, 1.0, 1.0 ],
+          "transform" : {
+            "finite" : true,
+            "affine" : true
+          }
+        },
+        "io.nova.ecs.component.SpriteRenderComponent" : {
+          "@class" : "io.nova.ecs.component.SpriteRenderComponent",
+          "color" : [ 1.0, 0.0, 0.0, 1.0 ],
+          "colorAsVec" : {
+            "finite" : true
+          }
+        }
+      },
+      "activated" : true
+    }, {
+      "components" : [ {
+        "@class" : "io.nova.ecs.component.TransformComponent",
+        "translation" : [ 5.1, 0.0, 0.0 ],
+        "rotation" : [ 0.0, 0.0, 0.0 ],
+        "scale" : [ 1.0, 1.0, 1.0 ],
+        "transform" : {
+          "finite" : true,
+          "affine" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.TagComponent",
         "tag" : "Primary Camera"
       }, {
-        "__typename" : "SceneCameraComponent",
+        "@class" : "io.nova.ecs.component.SceneCameraComponent",
         "camera" : {
           "projectionType" : "ORTHOGRAPHIC",
           "aspectRatio" : 1.3487699,
@@ -106,13 +118,13 @@
       } ],
       "cache" : {
         "io.nova.ecs.component.TagComponent" : {
-          "__typename" : "TagComponent",
+          "@class" : "io.nova.ecs.component.TagComponent",
           "tag" : "Primary Camera"
         },
         "io.nova.ecs.component.TransformComponent" : {
-          "__typename" : "TransformComponent",
-          "translation" : [ -2.8, 0.0, 0.0 ],
-          "rotation" : [ 0.0, 0.0, 109.5 ],
+          "@class" : "io.nova.ecs.component.TransformComponent",
+          "translation" : [ 5.1, 0.0, 0.0 ],
+          "rotation" : [ 0.0, 0.0, 0.0 ],
           "scale" : [ 1.0, 1.0, 1.0 ],
           "transform" : {
             "finite" : true,
@@ -120,7 +132,7 @@
           }
         },
         "io.nova.ecs.component.SceneCameraComponent" : {
-          "__typename" : "SceneCameraComponent",
+          "@class" : "io.nova.ecs.component.SceneCameraComponent",
           "camera" : {
             "projectionType" : "ORTHOGRAPHIC",
             "aspectRatio" : 1.3487699,
@@ -138,8 +150,8 @@
       "activated" : true
     }, {
       "components" : [ {
-        "__typename" : "TransformComponent",
-        "translation" : [ 0.0, 0.0, 0.0 ],
+        "@class" : "io.nova.ecs.component.TransformComponent",
+        "translation" : [ -1.5, 0.0, 0.0 ],
         "rotation" : [ 0.0, 0.0, 0.0 ],
         "scale" : [ 1.0, 1.0, 1.0 ],
         "transform" : {
@@ -147,10 +159,10 @@
           "affine" : true
         }
       }, {
-        "__typename" : "TagComponent",
+        "@class" : "io.nova.ecs.component.TagComponent",
         "tag" : "Secondary Camera"
       }, {
-        "__typename" : "SceneCameraComponent",
+        "@class" : "io.nova.ecs.component.SceneCameraComponent",
         "camera" : {
           "projectionType" : "ORTHOGRAPHIC",
           "aspectRatio" : 1.3487699,
@@ -166,11 +178,11 @@
       } ],
       "cache" : {
         "io.nova.ecs.component.TagComponent" : {
-          "__typename" : "TagComponent",
+          "@class" : "io.nova.ecs.component.TagComponent",
           "tag" : "Secondary Camera"
         },
         "io.nova.ecs.component.SceneCameraComponent" : {
-          "__typename" : "SceneCameraComponent",
+          "@class" : "io.nova.ecs.component.SceneCameraComponent",
           "camera" : {
             "projectionType" : "ORTHOGRAPHIC",
             "aspectRatio" : 1.3487699,

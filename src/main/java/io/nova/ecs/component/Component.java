@@ -2,22 +2,13 @@ package io.nova.ecs.component;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.nova.ecs.Registry;
 import io.nova.ecs.entity.Entity;
 import io.nova.ecs.system.EcSystem;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
-        property = "__typename")
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = TagComponent.class),
-        @JsonSubTypes.Type(value = TransformComponent.class),
-        @JsonSubTypes.Type(value = SpriteRenderComponent.class),
-        @JsonSubTypes.Type(value = ScriptComponent.class),
-        @JsonSubTypes.Type(value = SceneCameraComponent.class)
-})
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
 public abstract class Component {
 
     @JsonIgnore

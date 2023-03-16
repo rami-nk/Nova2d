@@ -1,5 +1,7 @@
 package io.nova.ecs.component;
 
+import org.joml.Vector4f;
+
 public class SpriteRenderComponent extends Component {
 
     private float[] color;
@@ -14,5 +16,9 @@ public class SpriteRenderComponent extends Component {
 
     public void setColor(float[] colorArray) {
         this.color = colorArray;
+    }
+
+    public Vector4f getColorAsVec() {
+        return new Vector4f(color);
     }
 }

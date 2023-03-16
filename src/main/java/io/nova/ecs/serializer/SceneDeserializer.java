@@ -42,6 +42,7 @@ public class SceneDeserializer extends StdDeserializer<Scene> {
         var mapper = new ObjectMapper();
         JsonNode node = p.getCodec().readTree(p);
 
+        // TODO: Make renderer a static class
         Scene scene = new Scene();
         scene.setViewPortWidth(node.get("viewPortWidth").asInt());
         scene.setViewPortHeight(node.get("viewPortHeight").asInt());
