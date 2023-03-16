@@ -1,57 +1,43 @@
 package io.nova.ecs.serializer;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.nova.ecs.Scene;
-import io.nova.ecs.entity.Entity;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
-public class SceneSerializer extends StdSerializer<Scene> {
+public class SceneSerializer {
 
-    protected SceneSerializer(Class<Scene> t) {
-        super(t);
-    }
+    private final ObjectMapper mapper;
 
     public SceneSerializer() {
-        this(null);
-    }
+        this.mapper = new ObjectMapper();
 
-    public static void serialize(Scene scene) throws IOException {
-        var mapper = new ObjectMapper();
         mapper.setVisibility(mapper.getSerializationConfig().getDefaultVisibilityChecker()
                 .withFieldVisibility(JsonAutoDetect.Visibility.NONE)
                 .withGetterVisibility(JsonAutoDetect.Visibility.PUBLIC_ONLY)
                 .withSetterVisibility(JsonAutoDetect.Visibility.PUBLIC_ONLY)
                 .withCreatorVisibility(JsonAutoDetect.Visibility.NONE));
 
-        var file = new File("assets/scenes/Example.nova");
-        new File("assets/scenes").mkdirs();
-        file.createNewFile();
-        mapper.writerWithDefaultPrettyPrinter().writeValue(file, scene);
+        // register custom deserializer
+        SimpleModule module = new SimpleModule();
+        module.addDeserializer(Scene.class, new SceneDeserializer());
+        mapper.registerModule(module);
     }
 
-    public static Scene deserialize(File file) throws IOException {
-        var mapper = new ObjectMapper(new YAMLFactory());
-        return mapper.readValue(file, Scene.class);
+    public Scene deserialize(String path) throws IOException {
+        var content = Files.readString(Path.of(path));
+        return mapper.readValue(content, Scene.class);
     }
 
-    @Override
-    public void serialize(Scene value, JsonGenerator gen, SerializerProvider provider) throws IOException {
-        gen.writeStartObject();
-        gen.writeNumberField("viewPortWidth", value.getViewPortWidth());
-        gen.writeNumberField("viewPortHeight", value.getViewPortHeight());
-
-        gen.writeArrayFieldStart("entities");
-        for (Entity entity : value.getRegistry().getEntities()) {
-            gen.writeObject(entity);
-        }
-        gen.writeEndArray();
-        gen.writeEndObject();
+    public void serialize(Scene context, String path) throws IOException {
+        var file = new File(path);
+        var ensureParentDirectoriesExist = file.getParentFile().mkdirs();
+        var fileCreated = file.createNewFile();
+        mapper.writerWithDefaultPrettyPrinter().writeValue(file, context);
     }
 }

@@ -11,7 +11,6 @@ import io.nova.ecs.component.SceneCameraComponent;
 import io.nova.ecs.component.ScriptComponent;
 import io.nova.ecs.component.SpriteRenderComponent;
 import io.nova.ecs.entity.Entity;
-import io.nova.ecs.serializer.SceneDeserializer;
 import io.nova.ecs.serializer.SceneSerializer;
 import io.nova.event.Event;
 import org.joml.Vector2f;
@@ -26,14 +25,15 @@ public class EcsLayer extends Layer {
     private OrthographicCameraController cameraController;
     private FrameBuffer frameBuffer;
     private EntityPanel entityPanel;
+    private SceneSerializer sceneSerializer;
 
     public void onAttach() {
         cameraController = new OrthographicCameraController(16.0f / 9.0f, true);
         renderer = RendererFactory.create();
-
+        sceneSerializer = new SceneSerializer();
 
         try {
-            scene = SceneDeserializer.deserialize("assets/scenes/Example.nova");
+            scene = sceneSerializer.deserialize("assets/scenes/Example.nova");
             scene.setRenderer(renderer);
         } catch (IOException e) {
             scene = new Scene(renderer);
@@ -65,7 +65,7 @@ public class EcsLayer extends Layer {
 
     public void onDetach() {
         try {
-            SceneSerializer.serialize(scene);
+            sceneSerializer.serialize(scene, "assets/scenes/Example.nova");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -165,5 +165,4 @@ public class EcsLayer extends Layer {
     public void onEvent(Event event) {
         cameraController.onEvent(event);
     }
-
 }

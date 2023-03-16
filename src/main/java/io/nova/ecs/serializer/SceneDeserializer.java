@@ -17,10 +17,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-public class SceneDeserializer extends StdDeserializer<Scene> {
+class SceneDeserializer extends StdDeserializer<Scene> {
 
     public SceneDeserializer() {
-        this(null);
+        this(Scene.class);
     }
 
     protected SceneDeserializer(Class<?> vc) {
