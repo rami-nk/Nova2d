@@ -18,6 +18,7 @@ import org.joml.Vector2f;
 import panels.EntityPanel;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class EcsLayer extends Layer {
     private final Vector2f viewportSize = new Vector2f();
@@ -118,21 +119,34 @@ public class EcsLayer extends Layer {
         ImGui.dockSpace(ImGui.getID("Dockspace"));
         style.setWindowMinSize(minWindowSize.x, minWindowSize.y);
 
+        // Menubar
         ImGui.beginMenuBar();
         if (ImGui.beginMenu("File")) {
-            if (ImGui.menuItem("New")) {
+            if (ImGui.menuItem("New", "Ctrl+N")) {
                 scene = new Scene(renderer);
                 sceneSerializer = new SceneSerializer();
                 entityPanel = new EntityPanel(scene);
             }
-            if (ImGui.menuItem("Open...")) {
-                FileDialog.openFileDialog("*");
+            if (ImGui.menuItem("Open...", "Ctrl+O")) {
+                var filePath = FileDialog.openFileDialog("Nova files (*.nova)\0*.nova\0");
+                if (!Objects.isNull(filePath)) {
+                    try {
+                        scene = sceneSerializer.deserialize(filePath);
+                        scene.setRenderer(renderer);
+                        entityPanel = new EntityPanel(scene);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
             }
-            if (ImGui.menuItem("Save")) {
-                try {
-                    sceneSerializer.serialize(scene, "assets/scenes/Example.nova");
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+            if (ImGui.menuItem("Save as...", "Ctrl+Shift+S")) {
+                var filePath = FileDialog.saveFileDialog("Nova files (*.nova)\0*.nova\0");
+                if (!Objects.isNull(filePath)) {
+                    try {
+                        sceneSerializer.serialize(scene, filePath);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
             if (ImGui.menuItem("Exit")) {

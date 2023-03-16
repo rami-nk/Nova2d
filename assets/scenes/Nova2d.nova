@@ -3,7 +3,7 @@
     "entities" : [ {
       "components" : [ {
         "@class" : "io.nova.ecs.component.TransformComponent",
-        "translation" : [ -1.2, 0.0, 0.0 ],
+        "translation" : [ -4.0, 0.0, 0.0 ],
         "rotation" : [ 0.0, 0.0, 0.0 ],
         "scale" : [ 1.0, 1.0, 1.0 ],
         "transform" : {
@@ -15,7 +15,7 @@
         "tag" : "Quad"
       }, {
         "@class" : "io.nova.ecs.component.SpriteRenderComponent",
-        "color" : [ 0.0, 0.45890784, 0.8030888, 0.9882353 ],
+        "color" : [ 1.0, 0.0, 0.0, 1.0 ],
         "colorAsVec" : {
           "finite" : true
         }
@@ -23,7 +23,7 @@
       "cache" : {
         "io.nova.ecs.component.SpriteRenderComponent" : {
           "@class" : "io.nova.ecs.component.SpriteRenderComponent",
-          "color" : [ 0.0, 0.45890784, 0.8030888, 0.9882353 ],
+          "color" : [ 1.0, 0.0, 0.0, 1.0 ],
           "colorAsVec" : {
             "finite" : true
           }
@@ -34,7 +34,7 @@
         },
         "io.nova.ecs.component.TransformComponent" : {
           "@class" : "io.nova.ecs.component.TransformComponent",
-          "translation" : [ -1.2, 0.0, 0.0 ],
+          "translation" : [ -4.0, 0.0, 0.0 ],
           "rotation" : [ 0.0, 0.0, 0.0 ],
           "scale" : [ 1.0, 1.0, 1.0 ],
           "transform" : {
@@ -47,7 +47,7 @@
     }, {
       "components" : [ {
         "@class" : "io.nova.ecs.component.TransformComponent",
-        "translation" : [ -0.7, 0.0, 0.0 ],
+        "translation" : [ 0.0, 0.0, 0.0 ],
         "rotation" : [ 0.0, 0.0, 0.0 ],
         "scale" : [ 1.0, 1.0, 1.0 ],
         "transform" : {
@@ -59,7 +59,7 @@
         "tag" : "Quad2"
       }, {
         "@class" : "io.nova.ecs.component.SpriteRenderComponent",
-        "color" : [ 1.0, 0.0, 0.9490196, 0.6666667 ],
+        "color" : [ 1.0, 0.0, 0.0, 1.0 ],
         "colorAsVec" : {
           "finite" : true
         }
@@ -67,7 +67,7 @@
       "cache" : {
         "io.nova.ecs.component.SpriteRenderComponent" : {
           "@class" : "io.nova.ecs.component.SpriteRenderComponent",
-          "color" : [ 1.0, 0.0, 0.9490196, 0.6666667 ],
+          "color" : [ 1.0, 0.0, 0.0, 1.0 ],
           "colorAsVec" : {
             "finite" : true
           }
@@ -78,7 +78,7 @@
         },
         "io.nova.ecs.component.TransformComponent" : {
           "@class" : "io.nova.ecs.component.TransformComponent",
-          "translation" : [ -0.7, 0.0, 0.0 ],
+          "translation" : [ 0.0, 0.0, 0.0 ],
           "rotation" : [ 0.0, 0.0, 0.0 ],
           "scale" : [ 1.0, 1.0, 1.0 ],
           "transform" : {
@@ -91,7 +91,7 @@
     }, {
       "components" : [ {
         "@class" : "io.nova.ecs.component.TransformComponent",
-        "translation" : [ -1.0, 0.0, 0.0 ],
+        "translation" : [ -4.7, 0.0, 0.0 ],
         "rotation" : [ 0.0, 0.0, 0.0 ],
         "scale" : [ 1.0, 1.0, 1.0 ],
         "transform" : {
@@ -108,12 +108,12 @@
           "aspectRatio" : 1.2995658,
           "orthographicNearPlane" : -1.0,
           "orthographicFarPlane" : 1.0,
-          "orthographicSize" : 4.2,
+          "orthographicSize" : 10.0,
           "fov" : 0.7853982,
           "perspectiveNearPlane" : 0.1,
           "perspectiveFarPlane" : 1000.0
         },
-        "primary" : true,
+        "primary" : false,
         "fixedAspectRatio" : false
       } ],
       "cache" : {
@@ -128,17 +128,17 @@
             "aspectRatio" : 1.2995658,
             "orthographicNearPlane" : -1.0,
             "orthographicFarPlane" : 1.0,
-            "orthographicSize" : 4.2,
+            "orthographicSize" : 10.0,
             "fov" : 0.7853982,
             "perspectiveNearPlane" : 0.1,
             "perspectiveFarPlane" : 1000.0
           },
-          "primary" : true,
+          "primary" : false,
           "fixedAspectRatio" : false
         },
         "io.nova.ecs.component.TransformComponent" : {
           "@class" : "io.nova.ecs.component.TransformComponent",
-          "translation" : [ -1.0, 0.0, 0.0 ],
+          "translation" : [ -4.7, 0.0, 0.0 ],
           "rotation" : [ 0.0, 0.0, 0.0 ],
           "scale" : [ 1.0, 1.0, 1.0 ],
           "transform" : {
@@ -151,7 +151,7 @@
     }, {
       "components" : [ {
         "@class" : "io.nova.ecs.component.TransformComponent",
-        "translation" : [ -2.3496284, 0.9954572, 14.6 ],
+        "translation" : [ -4.625, -0.16785383, 14.6 ],
         "rotation" : [ 0.0, 0.0, 0.0 ],
         "scale" : [ 1.0, 1.0, 1.0 ],
         "transform" : {
@@ -173,7 +173,7 @@
           "perspectiveNearPlane" : 6.0,
           "perspectiveFarPlane" : 1000.0
         },
-        "primary" : false,
+        "primary" : true,
         "fixedAspectRatio" : false
       }, {
         "@class" : "io.nova.ecs.component.ScriptComponent",
@@ -206,12 +206,12 @@
             "perspectiveNearPlane" : 6.0,
             "perspectiveFarPlane" : 1000.0
           },
-          "primary" : false,
+          "primary" : true,
           "fixedAspectRatio" : false
         },
         "io.nova.ecs.component.TransformComponent" : {
           "@class" : "io.nova.ecs.component.TransformComponent",
-          "translation" : [ -2.3496284, 0.9954572, 14.6 ],
+          "translation" : [ -4.625, -0.16785383, 14.6 ],
           "rotation" : [ 0.0, 0.0, 0.0 ],
           "scale" : [ 1.0, 1.0, 1.0 ],
           "transform" : {
