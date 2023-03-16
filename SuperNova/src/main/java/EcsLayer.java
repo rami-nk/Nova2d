@@ -2,6 +2,7 @@ import imgui.ImGui;
 import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
+import io.nova.FileDialog;
 import io.nova.core.application.Application;
 import io.nova.core.layer.Layer;
 import io.nova.core.renderer.*;
@@ -119,6 +120,14 @@ public class EcsLayer extends Layer {
 
         ImGui.beginMenuBar();
         if (ImGui.beginMenu("File")) {
+            if (ImGui.menuItem("New")) {
+                scene = new Scene(renderer);
+                sceneSerializer = new SceneSerializer();
+                entityPanel = new EntityPanel(scene);
+            }
+            if (ImGui.menuItem("Open...")) {
+                FileDialog.openFileDialog("*");
+            }
             if (ImGui.menuItem("Save")) {
                 try {
                     sceneSerializer.serialize(scene, "assets/scenes/Example.nova");
