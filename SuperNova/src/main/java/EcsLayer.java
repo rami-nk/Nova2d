@@ -8,6 +8,7 @@ import io.nova.core.renderer.*;
 import io.nova.core.renderer.camera.OrthographicCameraController;
 import io.nova.ecs.Scene;
 import io.nova.ecs.component.SceneCameraComponent;
+import io.nova.ecs.component.ScriptComponent;
 import io.nova.ecs.component.SpriteRenderComponent;
 import io.nova.ecs.entity.Entity;
 import io.nova.ecs.serializer.SceneDeserializer;
@@ -51,8 +52,7 @@ public class EcsLayer extends Layer {
             Entity secondaryCamera = scene.createEntity("Secondary Camera");
             secondaryCamera.addComponent(new SceneCameraComponent());
 
-            // TODO: Add script component
-//            secondaryCamera.addComponent(new ScriptComponent()).bind(CameraController.class);
+            secondaryCamera.addComponent(new ScriptComponent()).bind(CameraController.class);
 
             scene.activateEntities(entity, entity2, primaryCamera, secondaryCamera);
         }

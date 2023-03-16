@@ -8,17 +8,19 @@ public class ScriptComponent extends Component {
 
     private ScriptableEntity instance;
     private Class<? extends ScriptableEntity> clazz;
+    private boolean activated = false;
 
     public <T extends ScriptableEntity> void bind(Class<T> clazz) {
         this.clazz = clazz;
     }
 
     public void createInstance() {
-        if (instance != null) {
+        if (instance != null && activated) {
             throw new IllegalStateException("instance already created");
         }
         try {
             instance = clazz.getConstructor().newInstance();
+            activated = true;
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                  NoSuchMethodException e) {
             throw new RuntimeException(e);
@@ -31,6 +33,7 @@ public class ScriptComponent extends Component {
 
     public void onDestroy() {
         instance.onDestroy();
+        activated = false;
     }
 
     public void onUpdate(float deltaTime) {
@@ -43,5 +46,13 @@ public class ScriptComponent extends Component {
 
     public ScriptableEntity getInstance() {
         return instance;
+    }
+
+    public boolean isActivated() {
+        return activated;
+    }
+
+    public void setActivated(boolean activated) {
+        this.activated = activated;
     }
 }

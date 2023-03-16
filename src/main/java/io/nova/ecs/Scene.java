@@ -62,7 +62,7 @@ public class Scene {
             var group = registry.getEntities(Group.create(ScriptComponent.class));
             for (var entity : group) {
                 var script = entity.getComponent(ScriptComponent.class);
-                if (Objects.isNull(script.getInstance())) {
+                if (Objects.isNull(script.getInstance()) || !script.isActivated()) {
                     script.createInstance();
                     script.setInstanceEntity();
                     script.onCreate();
@@ -140,7 +140,6 @@ public class Scene {
             }
         }
     }
-
 
     public void removeEntity(Entity entity) {
         registry.removeEntity(entity);

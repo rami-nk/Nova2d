@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.nova.ecs.Scene;
 import io.nova.ecs.component.Component;
+import io.nova.ecs.component.ScriptComponent;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -55,6 +56,13 @@ public class SceneDeserializer extends StdDeserializer<Scene> {
 
             var e = scene.createVoidEntity();
             for (Component component : components) {
+                // Bind script to component
+                if (component instanceof ScriptComponent) {
+                    var scriptableEntityClass = ((ScriptComponent) component).getInstance().getClass();
+                    ((ScriptComponent) component).setActivated(false);
+                    ((ScriptComponent) e.addComponent(component)).bind(scriptableEntityClass);
+                    break;
+                }
                 e.addComponent(component);
             }
             scene.activateEntities(e);
