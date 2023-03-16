@@ -1,5 +1,5 @@
 plugins {
-    id("java")
+    id("java-library")
 }
 
 group = "io.nova"
@@ -24,8 +24,17 @@ val jomlVersion = "1.10.5"
 val lwjglNatives = "natives-macos-arm64"
 
 dependencies {
+    // Tintyfd
+    implementation("org.lwjgl", "lwjgl-tinyfd")
+    runtimeOnly("org.lwjgl", "lwjgl-tinyexr", classifier = lwjglNatives)
+    runtimeOnly("org.lwjgl", "lwjgl-tinyfd", classifier = lwjglNatives)
+
+    api("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.14.2")
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
+
     // IMGUI
-    implementation(fileTree("libs/imgui") {
+    api(fileTree("libs/imgui") {
         include("*.jar")
     })
 
@@ -45,5 +54,6 @@ dependencies {
     runtimeOnly("org.lwjgl", "lwjgl-openal", classifier = lwjglNatives)
     runtimeOnly("org.lwjgl", "lwjgl-opengl", classifier = lwjglNatives)
     runtimeOnly("org.lwjgl", "lwjgl-stb", classifier = lwjglNatives)
-    implementation("org.joml", "joml", jomlVersion)
+
+    api("org.joml", "joml", jomlVersion)
 }
