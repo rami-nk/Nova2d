@@ -12,4 +12,8 @@ public class FrameBufferAttachmentSpecification {
     public FrameBufferAttachmentSpecification(List<FrameBufferTextureSpecification> attachments) {
         this.attachments = attachments;
     }
+
+    public List<FrameBufferTextureSpecification> getAttachments() {
+        return attachments;
+    }
 }

@@ -2,22 +2,44 @@ package io.nova.opengl.renderer;
 
 import io.nova.core.renderer.framebuffer.FrameBuffer;
 import io.nova.core.renderer.framebuffer.FrameBufferSpecification;
+import io.nova.core.renderer.framebuffer.FrameBufferTextureFormat;
+import io.nova.core.renderer.framebuffer.FrameBufferTextureSpecification;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.*;
 
 public class OpenGLFrameBuffer implements FrameBuffer {
 
+    private final List<FrameBufferTextureSpecification> colorAttachmentSpecs;
     public FrameBufferSpecification specification;
     private int rendererId;
-    private int colorAttachment;
     private int depthAttachment;
+    private FrameBufferTextureSpecification depthAttachmentSpec;
+    private List<Integer> colorAttachments;
 
     public OpenGLFrameBuffer(FrameBufferSpecification specification) {
         this.specification = specification;
+        this.colorAttachmentSpecs = new ArrayList<>();
+        this.colorAttachments = new ArrayList<>();
+
+        for (var spec : specification.getAttachments().getAttachments()) {
+            if (!isDepthFormat(spec.getFormat())) {
+                colorAttachmentSpecs.add(spec);
+            } else {
+                depthAttachmentSpec = spec;
+            }
+        }
+
         invalidate();
+    }
+
+    public boolean isDepthFormat(FrameBufferTextureFormat format) {
+        return Objects.requireNonNull(format) == FrameBufferTextureFormat.DEPTH24STENCIL8;
     }
 
     @Override
@@ -29,18 +51,42 @@ public class OpenGLFrameBuffer implements FrameBuffer {
         rendererId = glGenFramebuffers();
         glBindFramebuffer(GL_FRAMEBUFFER, rendererId);
 
-        colorAttachment = glGenTextures();
-        glBindTexture(GL_TEXTURE_2D, colorAttachment);
+        if (colorAttachmentSpecs.size() != 0) {
+            createTextures();
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, specification.getWidth(), specification.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorAttachment, 0);
+            for (int i = 0; i < colorAttachmentSpecs.size(); i++) {
+                bindTexture(colorAttachments.get(i));
 
-        depthAttachment = glGenTextures();
-        glBindTexture(GL_TEXTURE_2D, depthAttachment);
-        glTexImage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, specification.getWidth(), specification.getHeight(), 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, (ByteBuffer) null);
-        glFramebufferTexture2D(GL_TEXTURE_2D, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depthAttachment, 0);
+                switch (colorAttachmentSpecs.get(i).getFormat()) {
+                    case RGBA8 -> attachColorTexture(colorAttachments.get(i), GL_RGBA8, i);
+                }
+            }
+        }
+
+        if (depthAttachmentSpec.getFormat() != FrameBufferTextureFormat.NONE) {
+            depthAttachment = glGenTextures();
+            bindTexture(depthAttachment);
+
+            glTexImage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, specification.getWidth(), specification.getHeight(), 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, (ByteBuffer) null);
+
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+            glFramebufferTexture2D(GL_TEXTURE_2D, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depthAttachment, 0);
+        }
+
+        if (colorAttachments.size() > 1) {
+            int[] attachments = new int[colorAttachments.size()];
+            for (int i = 0; i < colorAttachments.size(); i++) {
+                attachments[i] = GL_COLOR_ATTACHMENT0 + i;
+            }
+            glDrawBuffers(attachments);
+        } else if (colorAttachments.size() == 0) {
+            glDrawBuffer(GL_NONE);
+        }
 
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
             System.err.println("ERROR: Framebuffer is not complete!");
@@ -63,8 +109,12 @@ public class OpenGLFrameBuffer implements FrameBuffer {
     @Override
     public void dispose() {
         glDeleteFramebuffers(rendererId);
-        glDeleteTextures(colorAttachment);
+        for (int colorAttachment : colorAttachments) {
+            glDeleteTextures(colorAttachment);
+        }
         glDeleteTextures(depthAttachment);
+        colorAttachments = new ArrayList<>();
+        depthAttachment = 0;
     }
 
     @Override
@@ -73,8 +123,8 @@ public class OpenGLFrameBuffer implements FrameBuffer {
     }
 
     @Override
-    public int getColorAttachmentRendererId() {
-        return colorAttachment;
+    public int getColorAttachmentRendererId(int index) {
+        return colorAttachments.get(index);
     }
 
     @Override
@@ -87,5 +137,27 @@ public class OpenGLFrameBuffer implements FrameBuffer {
         specification.setHeight(height);
 
         invalidate();
+    }
+
+    private void attachColorTexture(int attachmentId, int format, int i) {
+        glTexImage2D(GL_TEXTURE_2D, 0, format, specification.getWidth(), specification.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, attachmentId, 0);
+    }
+
+    private void createTextures() {
+        for (var ignored : colorAttachmentSpecs) {
+            colorAttachments.add(glGenTextures());
+        }
+    }
+
+    private void bindTexture(int attachmentId) {
+        glBindTexture(GL_TEXTURE_2D, attachmentId);
     }
 }

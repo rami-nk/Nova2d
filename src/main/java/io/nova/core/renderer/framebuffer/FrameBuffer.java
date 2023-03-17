@@ -12,7 +12,11 @@ public interface FrameBuffer {
 
     FrameBufferSpecification getSpecification();
 
-    int getColorAttachmentRendererId();
+    default int getColorAttachmentRendererId() {
+        return getColorAttachmentRendererId(0);
+    }
+
+    int getColorAttachmentRendererId(int index);
 
     void resize(int width, int height);
 }

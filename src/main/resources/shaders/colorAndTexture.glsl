@@ -31,7 +31,7 @@ in vec4 fColor;
 in float fTexId;
 in float fTilingFactor;
 
-out vec4 color;
+layout (location = 0) out vec4 color;
 
 uniform sampler2D uTextures[16];
 
