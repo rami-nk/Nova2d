@@ -3,7 +3,6 @@ package io.nova.opengl.renderer;
 import io.nova.core.renderer.buffer.IndexBuffer;
 import io.nova.core.renderer.buffer.VertexArray;
 import io.nova.core.renderer.buffer.VertexBuffer;
-import io.nova.core.renderer.buffer.VertexBufferElement;
 
 import static org.lwjgl.opengl.GL30.*;
 
@@ -28,9 +27,9 @@ public class OpenGLVertexArray implements VertexArray {
         int offset = 0;
         int index = 0;
         for (var element : elements) {
-            glVertexAttribPointer(index, element.count(), element.type(), element.normalized(), vertexBufferLayout.getStride(), offset);
+            glVertexAttribPointer(index, element.count(), element.type().getValue(), element.normalized(), vertexBufferLayout.getStride(), offset);
             glEnableVertexAttribArray(index);
-            offset += element.count() * VertexBufferElement.getByteSize(element.type());
+            offset += element.count() * element.type().getByteSize();
             index++;
         }
     }

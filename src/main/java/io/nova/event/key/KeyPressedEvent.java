@@ -9,7 +9,7 @@ public class KeyPressedEvent extends KeyEvent {
     private boolean isRepeat;
 
     public KeyPressedEvent() {
-        super(KeyCode.KEY_UNKNOWN, EventType.KeyPressed);
+        super(KeyCode.UNKNOWN, EventType.KeyPressed);
     }
 
     public KeyPressedEvent(KeyCode keyCode) {

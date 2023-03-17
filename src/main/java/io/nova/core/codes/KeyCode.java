@@ -18,7 +18,7 @@ public enum KeyCode {
     /**
      * Unknown key
      **/
-    KEY_UNKNOWN(-1),
+    UNKNOWN(-1),
 
     /**
      * Printable keys
@@ -162,7 +162,7 @@ public enum KeyCode {
 
     public static KeyCode getKeyCode(int key) {
         KeyCode keyCode = KEYCODE_MAP.get(key);
-        return (keyCode != null) ? keyCode : KeyCode.KEY_UNKNOWN;
+        return (keyCode != null) ? keyCode : KeyCode.UNKNOWN;
     }
 
     public int getCode() {

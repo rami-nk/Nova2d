@@ -1,13 +1,11 @@
 package io.nova.opengl.renderer;
 
+import io.nova.core.codes.DataType;
 import io.nova.core.renderer.buffer.VertexBufferElement;
 import io.nova.core.renderer.buffer.VertexBufferLayout;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL11.GL_INT;
 
 public class OpenGLVertexBufferLayout implements VertexBufferLayout {
 
@@ -21,14 +19,14 @@ public class OpenGLVertexBufferLayout implements VertexBufferLayout {
 
     @Override
     public void pushFloat(String name, int count) {
-        elements.add(new VertexBufferElement(GL_FLOAT, count, false));
-        stride += count * VertexBufferElement.getByteSize(GL_FLOAT);
+        elements.add(new VertexBufferElement(DataType.FLOAT, count, false));
+        stride += count * DataType.FLOAT.getByteSize();
     }
 
     @Override
     public void pushInt(String name, int count) {
-        elements.add(new VertexBufferElement(GL_INT, count, false));
-        stride += count * VertexBufferElement.getByteSize(Integer.BYTES);
+        elements.add(new VertexBufferElement(DataType.INT, count, false));
+        stride += count * DataType.INT.getByteSize();
     }
 
     @Override

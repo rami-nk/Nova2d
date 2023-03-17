@@ -7,7 +7,7 @@ import io.nova.event.EventType;
 public class KeyTypedEvent extends KeyEvent {
 
     public KeyTypedEvent() {
-        super(KeyCode.KEY_UNKNOWN, EventType.KeyTyped);
+        super(KeyCode.UNKNOWN, EventType.KeyTyped);
     }
 
     public KeyTypedEvent(KeyCode keyCode) {
