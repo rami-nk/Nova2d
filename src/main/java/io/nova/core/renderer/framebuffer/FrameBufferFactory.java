@@ -1,5 +1,6 @@
-package io.nova.core.renderer;
+package io.nova.core.renderer.framebuffer;
 
+import io.nova.core.renderer.Renderer;
 import io.nova.opengl.renderer.OpenGLFrameBuffer;
 
 public class FrameBufferFactory {

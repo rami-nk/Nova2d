@@ -1,7 +1,7 @@
 package io.nova.opengl.renderer;
 
-import io.nova.core.renderer.FrameBuffer;
-import io.nova.core.renderer.FrameBufferSpecification;
+import io.nova.core.renderer.framebuffer.FrameBuffer;
+import io.nova.core.renderer.framebuffer.FrameBufferSpecification;
 
 import java.nio.ByteBuffer;
 

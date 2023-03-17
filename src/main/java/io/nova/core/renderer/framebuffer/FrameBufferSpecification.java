@@ -1,10 +1,13 @@
-package io.nova.core.renderer;
+package io.nova.core.renderer.framebuffer;
+
+import java.util.List;
 
 public class FrameBufferSpecification {
 
-    private int width;
-    private int height;
+    private int width, height;
     private boolean swapChainTarget;
+
+    private FrameBufferAttachmentSpecification attachments;
 
     public FrameBufferSpecification() {
     }
@@ -33,6 +36,18 @@ public class FrameBufferSpecification {
 
     public void setHeight(int height) {
         this.height = height;
+    }
+
+    public FrameBufferAttachmentSpecification getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(FrameBufferAttachmentSpecification attachments) {
+        this.attachments = attachments;
+    }
+
+    public void setAttachments(FrameBufferTextureSpecification... attachments) {
+        this.attachments = new FrameBufferAttachmentSpecification(List.of(attachments));
     }
 
     public boolean isSwapChainTarget() {

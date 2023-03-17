@@ -8,9 +8,11 @@ import imgui.flag.ImGuiWindowFlags;
 import io.nova.core.application.Application;
 import io.nova.core.codes.KeyCode;
 import io.nova.core.layer.Layer;
-import io.nova.core.renderer.*;
+import io.nova.core.renderer.Renderer;
+import io.nova.core.renderer.RendererFactory;
 import io.nova.core.renderer.camera.EditorCamera;
 import io.nova.core.renderer.camera.OrthographicCameraController;
+import io.nova.core.renderer.framebuffer.*;
 import io.nova.ecs.Scene;
 import io.nova.ecs.component.SceneCameraComponent;
 import io.nova.ecs.component.ScriptComponent;
@@ -76,6 +78,10 @@ public class EditorLayer extends Layer {
         }
 
         var spec = new FrameBufferSpecification(Application.getWindow().getWidth(), Application.getWindow().getHeight());
+        spec.setAttachments(
+                new FrameBufferTextureSpecification(FrameBufferTextureFormat.RGBA8),
+                new FrameBufferTextureSpecification(FrameBufferTextureFormat.DEPTH24STENCIL8)
+        );
         frameBuffer = FrameBufferFactory.create(spec);
 
         entityPanel = new EntityPanel(scene);

@@ -1,4 +1,4 @@
-package io.nova.core.renderer;
+package io.nova.core.renderer.framebuffer;
 
 public interface FrameBuffer {
 
