@@ -1,5 +1,6 @@
 package io.nova.core.application;
 
+import io.nova.core.codes.KeyCode;
 import io.nova.core.layer.Layer;
 import io.nova.core.layer.LayerStack;
 import io.nova.core.window.Window;
@@ -12,8 +13,6 @@ import io.nova.event.window.WindowResizeEvent;
 import io.nova.imgui.ImGuiLayer;
 import io.nova.utils.Time;
 import io.nova.window.Input;
-
-import static io.nova.core.codes.KeyCodes.NV_KEY_ESCAPE;
 
 public class Application {
 
@@ -84,7 +83,7 @@ public class Application {
     public void run() {
         float endTime = 0;
 
-        while (running && !Input.isKeyPressed(NV_KEY_ESCAPE)) {
+        while (running && !Input.isKeyPressed(KeyCode.KEY_ESCAPE)) {
 
             float startTime = Time.getElapsedTimeSinceApplicationStartInSeconds();
             float deltaTime = startTime - endTime;

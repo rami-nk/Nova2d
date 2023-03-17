@@ -6,6 +6,7 @@ import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 import io.nova.core.application.Application;
+import io.nova.core.codes.KeyCode;
 import io.nova.core.layer.Layer;
 import io.nova.core.renderer.*;
 import io.nova.core.renderer.camera.EditorCamera;
@@ -30,7 +31,6 @@ import java.io.IOException;
 import java.util.Objects;
 
 import static imgui.extension.imguizmo.flag.Operation.*;
-import static io.nova.core.codes.KeyCodes.*;
 
 public class EditorLayer extends Layer {
     private final Vector2f viewportSize = new Vector2f();
@@ -219,7 +219,7 @@ public class EditorLayer extends Layer {
                             degRot,
                             selectedEntityTransformComponent.getScale());
 
-                    var canSnap = Input.isKeyPressed(NV_KEY_LEFT_CONTROL);
+                    var canSnap = Input.isKeyPressed(KeyCode.KEY_LEFT_CONTROL);
                     var snapValue = gizmoOperation == ROTATE ? 45.0f : 0.5f;
                     var snapValues = new float[]{snapValue, snapValue, snapValue};
                     ImGuizmo.manipulate(
@@ -268,10 +268,10 @@ public class EditorLayer extends Layer {
     private boolean handleShortcuts(KeyPressedEvent event) {
         if (event.isRepeat()) return false;
 
-        var control = Input.isKeyPressed(NV_KEY_LEFT_CONTROL) || Input.isKeyPressed(NV_KEY_RIGHT_CONTROL);
-        var shift = Input.isKeyPressed(NV_KEY_LEFT_SHIFT) || Input.isKeyPressed(NV_KEY_RIGHT_SHIFT);
+        var control = Input.isKeyPressed(KeyCode.KEY_LEFT_CONTROL) || Input.isKeyPressed(KeyCode.KEY_RIGHT_CONTROL);
+        var shift = Input.isKeyPressed(KeyCode.KEY_LEFT_SHIFT) || Input.isKeyPressed(KeyCode.KEY_RIGHT_SHIFT);
         switch (event.getKeyCode()) {
-            case NV_KEY_S -> {
+            case KEY_S -> {
                 if (control && shift) {
                     saveFileAs();
                     return true;
@@ -280,26 +280,26 @@ public class EditorLayer extends Layer {
                     saveFile();
                 }
             }
-            case NV_KEY_N -> {
+            case KEY_N -> {
                 if (control) {
                     newScene();
                 }
             }
-            case NV_KEY_O -> {
+            case KEY_O -> {
                 if (control) {
                     openScene();
                 }
             }
-            case NV_KEY_Q -> {
+            case KEY_Q -> {
                 if (control) {
                     closeApplication();
                 } else {
                     gizmoOperation = -1;
                 }
             }
-            case NV_KEY_W -> gizmoOperation = Operation.TRANSLATE;
-            case NV_KEY_E -> gizmoOperation = Operation.ROTATE;
-            case NV_KEY_R -> gizmoOperation = Operation.SCALE;
+            case KEY_W -> gizmoOperation = Operation.TRANSLATE;
+            case KEY_E -> gizmoOperation = Operation.ROTATE;
+            case KEY_R -> gizmoOperation = Operation.SCALE;
         }
         return true;
     }

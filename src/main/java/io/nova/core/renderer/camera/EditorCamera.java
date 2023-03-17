@@ -1,5 +1,6 @@
 package io.nova.core.renderer.camera;
 
+import io.nova.core.codes.KeyCode;
 import io.nova.core.codes.MouseCode;
 import io.nova.event.Event;
 import io.nova.event.EventDispatcher;
@@ -9,8 +10,6 @@ import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-
-import static io.nova.core.codes.KeyCodes.NV_KEY_LEFT_SHIFT;
 
 public class EditorCamera extends Camera {
 
@@ -35,7 +34,7 @@ public class EditorCamera extends Camera {
     }
 
     public void onUpdate(float deltaTime) {
-        if (Input.isKeyPressed(NV_KEY_LEFT_SHIFT)) {
+        if (Input.isKeyPressed(KeyCode.KEY_LEFT_SHIFT)) {
             var mouse = Input.getMousePosition();
             var delta = new Vector2f(mouse).sub(initialMousePosition).mul(0.003f);
             initialMousePosition = mouse;

@@ -1,15 +1,16 @@
 package io.nova.event.key;
 
+import io.nova.core.codes.KeyCode;
 import io.nova.event.EventCategory;
 import io.nova.event.EventType;
 
 public class KeyReleasedEvent extends KeyEvent {
 
     public KeyReleasedEvent() {
-        super(0, EventType.KeyReleased);
+        super(KeyCode.KEY_UNKNOWN, EventType.KeyReleased);
     }
 
-    public KeyReleasedEvent(int keyCode) {
+    public KeyReleasedEvent(KeyCode keyCode) {
         super(keyCode, EventType.KeyReleased);
     }
 

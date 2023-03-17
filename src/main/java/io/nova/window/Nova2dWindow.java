@@ -1,5 +1,7 @@
 package io.nova.window;
 
+import io.nova.core.codes.KeyCode;
+import io.nova.core.codes.MouseCode;
 import io.nova.core.renderer.GraphicsContext;
 import io.nova.core.window.EventCallback;
 import io.nova.core.window.Window;
@@ -91,11 +93,12 @@ public class Nova2dWindow implements Window {
             var windowDataPointer = glfwGetWindowUserPointer(glfwWindowPointer);
             var data = (WindowData) MemoryUtil.memGlobalRefToObject(windowDataPointer);
 
+            var novaKey = KeyCode.getKeyCode(key);
             Event event = null;
             switch (action) {
-                case GLFW_PRESS -> event = new KeyPressedEvent(key);
-                case GLFW_RELEASE -> event = new KeyReleasedEvent(key);
-                case GLFW_REPEAT -> event = new KeyPressedEvent(key, true);
+                case GLFW_PRESS -> event = new KeyPressedEvent(novaKey);
+                case GLFW_RELEASE -> event = new KeyReleasedEvent(novaKey);
+                case GLFW_REPEAT -> event = new KeyPressedEvent(novaKey, true);
             }
             data.getEventCallback().dispatch(event);
         });
@@ -104,10 +107,12 @@ public class Nova2dWindow implements Window {
             var windowDataPointer = glfwGetWindowUserPointer(glfwWindowPointer);
             var data = (WindowData) MemoryUtil.memGlobalRefToObject(windowDataPointer);
 
+            var novaButton = MouseCode.getMouseCode(button);
+
             Event event = null;
             switch (action) {
-                case GLFW_PRESS -> event = new MouseButtonPressedEvent(button);
-                case GLFW_RELEASE -> event = new MouseButtonReleasedEvent(button);
+                case GLFW_PRESS -> event = new MouseButtonPressedEvent(novaButton);
+                case GLFW_RELEASE -> event = new MouseButtonReleasedEvent(novaButton);
             }
             data.getEventCallback().dispatch(event);
         });
