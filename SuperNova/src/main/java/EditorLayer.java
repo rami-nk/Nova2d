@@ -44,6 +44,7 @@ public class EditorLayer extends Layer {
     private String filePath;
     private int gizmoOperation;
     private EditorCamera editorCamera;
+    private Vector2f[] viewPortBounds = new Vector2f[2];
 
     public void onAttach() {
         cameraController = new OrthographicCameraController(16.0f / 9.0f, true);
@@ -80,6 +81,7 @@ public class EditorLayer extends Layer {
         var spec = new FrameBufferSpecification(Application.getWindow().getWidth(), Application.getWindow().getHeight());
         spec.setAttachments(
                 new FrameBufferTextureSpecification(FrameBufferTextureFormat.RGBA8),
+                new FrameBufferTextureSpecification(FrameBufferTextureFormat.RED_INTEGER),
                 new FrameBufferTextureSpecification(FrameBufferTextureFormat.DEPTH24STENCIL8)
         );
         frameBuffer = FrameBufferFactory.create(spec);
@@ -114,6 +116,26 @@ public class EditorLayer extends Layer {
 
         // Update
         scene.onUpdateEditor(editorCamera, deltaTime);
+
+        if (viewPortBounds[0] != null) {
+            var m = ImGui.getMousePos();
+            m.x -= viewPortBounds[0].x;
+            m.y -= viewPortBounds[0].y;
+
+            var vs = viewPortBounds[1].sub(viewPortBounds[0], new Vector2f());
+
+            m.y = viewportSize.y - m.y;
+
+            int mouseX = (int) m.x;
+            int mouseY = (int) m.y;
+
+            if (mouseX >= 0 && mouseX < vs.x && mouseY >= 0 && mouseY < vs.y) {
+                int id = frameBuffer.readPixel(1, mouseX, mouseY);
+                System.out.println(id);
+            }
+
+        }
+
         frameBuffer.unbind();
     }
 
@@ -182,6 +204,8 @@ public class EditorLayer extends Layer {
         ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 0, 0);
         ImGui.begin("Viewport");
         {
+            var viewPortOffset = ImGui.getCursorPos();
+
             var viewportSize = ImGui.getContentRegionAvail();
             if (viewportSize.x != this.viewportSize.x || viewportSize.y != this.viewportSize.y) {
                 this.viewportSize.x = viewportSize.x;
@@ -190,6 +214,16 @@ public class EditorLayer extends Layer {
 
             var textureId = frameBuffer.getColorAttachmentRendererId();
             ImGui.image(textureId, viewportSize.x, viewportSize.y, 0, 1, 1, 0);
+
+            var windowSize = ImGui.getWindowSize();
+            var minBound = ImGui.getWindowPos();
+            minBound.x += viewPortOffset.x;
+            minBound.y += viewPortOffset.y;
+
+            var maxBound = new Vector2f(minBound.x + windowSize.x, minBound.y + windowSize.y);
+            viewPortBounds[0] = new Vector2f(minBound.x, minBound.y);
+            viewPortBounds[1] = maxBound;
+
             // We set the viewPortSize of the cameraController here to make sure the aspect ratio is correct after resizing the window
             cameraController.setViewportSize((int) viewportSize.x, (int) viewportSize.y);
         }

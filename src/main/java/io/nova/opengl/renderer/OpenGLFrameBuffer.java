@@ -4,6 +4,7 @@ import io.nova.core.renderer.framebuffer.FrameBuffer;
 import io.nova.core.renderer.framebuffer.FrameBufferSpecification;
 import io.nova.core.renderer.framebuffer.FrameBufferTextureFormat;
 import io.nova.core.renderer.framebuffer.FrameBufferTextureSpecification;
+import org.lwjgl.BufferUtils;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -58,7 +59,8 @@ public class OpenGLFrameBuffer implements FrameBuffer {
                 bindTexture(colorAttachments.get(i));
 
                 switch (colorAttachmentSpecs.get(i).getFormat()) {
-                    case RGBA8 -> attachColorTexture(colorAttachments.get(i), GL_RGBA8, i);
+                    case RGBA8 -> attachColorTexture(colorAttachments.get(i), GL_RGBA8, GL_RGBA, i);
+                    case RED_INTEGER -> attachColorTexture(colorAttachments.get(i), GL_R32I, GL_RED_INTEGER, i);
                 }
             }
         }
@@ -139,8 +141,15 @@ public class OpenGLFrameBuffer implements FrameBuffer {
         invalidate();
     }
 
-    private void attachColorTexture(int attachmentId, int format, int i) {
-        glTexImage2D(GL_TEXTURE_2D, 0, format, specification.getWidth(), specification.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
+    public int readPixel(int attachmentIndex, int x, int y) {
+        glReadBuffer(GL_COLOR_ATTACHMENT0 + attachmentIndex);
+        var buffer = BufferUtils.createIntBuffer(1);
+        glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, buffer);
+        return buffer.get();
+    }
+
+    private void attachColorTexture(int attachmentId, int internalFormat, int format, int i) {
+        glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, specification.getWidth(), specification.getHeight(), 0, format, GL_UNSIGNED_BYTE, (ByteBuffer) null);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
