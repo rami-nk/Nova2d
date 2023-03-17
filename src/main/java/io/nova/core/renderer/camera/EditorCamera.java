@@ -9,7 +9,7 @@ import org.joml.Quaternionf;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-import static io.nova.core.codes.KeyCodes.NV_KEY_LEFT_ALT;
+import static io.nova.core.codes.KeyCodes.NV_KEY_LEFT_SHIFT;
 import static io.nova.core.codes.MouseCodes.*;
 
 public class EditorCamera extends Camera {
@@ -35,7 +35,7 @@ public class EditorCamera extends Camera {
     }
 
     public void onUpdate(float deltaTime) {
-        if (Input.isKeyPressed(NV_KEY_LEFT_ALT)) {
+        if (Input.isKeyPressed(NV_KEY_LEFT_SHIFT)) {
             var mouse = Input.getMousePosition();
             var delta = new Vector2f(mouse).sub(initialMousePosition).mul(0.003f);
             initialMousePosition = mouse;
@@ -44,7 +44,7 @@ public class EditorCamera extends Camera {
                 mousePan(new Vector3f(delta, 0));
             } else if (Input.isMouseButtonPressed(NV_MOUSE_BUTTON_LEFT)) {
                 mouseRotate(new Vector3f(delta, 0));
-            } else if (Input.isKeyPressed(NV_MOUSE_BUTTON_RIGHT)) {
+            } else if (Input.isMouseButtonPressed(NV_MOUSE_BUTTON_RIGHT)) {
                 mouseZoom(delta.y);
             }
         }
