@@ -148,7 +148,8 @@ public class EditorCamera extends Camera {
     private void mouseZoom(float delta) {
         distance -= delta * zoomSpeed();
         if (distance < 1.0f) {
-            focalPoint.add(getForwardDirection());
+            // TODO: check if this is correct
+//            focalPoint.add(getForwardDirection());
             distance = 1.0f;
         }
     }
