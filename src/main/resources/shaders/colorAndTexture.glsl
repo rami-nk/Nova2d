@@ -32,10 +32,12 @@ in float fTexId;
 in float fTilingFactor;
 
 layout (location = 0) out vec4 color;
+layout (location = 1) out int id;
 
 uniform sampler2D uTextures[16];
 
 void main()
 {
     color = texture(uTextures[int(fTexId)], fTexCoords * fTilingFactor) * fColor;
+    id = 50;
 }
