@@ -141,8 +141,8 @@ public class EditorCamera extends Camera {
 
     private void mouseRotate(Vector3f delta) {
         float yawSign = getUpDirection().y < 0.0f ? -1.0f : 1.0f;
-        yaw += yawSign * delta.x * rotationSpeed();
-        pitch += delta.y * rotationSpeed();
+        yaw += yawSign * delta.x * rotationSpeed() * 40;
+        pitch += delta.y * rotationSpeed() * 40;
     }
 
     private void mouseZoom(float delta) {
