@@ -39,10 +39,11 @@ public class EditorCamera extends Camera {
             var delta = new Vector2f(mouse).sub(initialMousePosition).mul(0.003f);
             initialMousePosition = mouse;
 
-            if (Input.isMouseButtonPressed(MouseCode.BUTTON_MIDDLE)) {
-                mousePan(new Vector3f(delta, 0));
-            } else if (Input.isMouseButtonPressed(MouseCode.BUTTON_LEFT)) {
+            if (Input.isMouseButtonPressed(MouseCode.BUTTON_LEFT) &&
+                    Input.isKeyPressed(KeyCode.KEY_LEFT_CONTROL)) {
                 mouseRotate(new Vector3f(delta, 0));
+            } else if (Input.isMouseButtonPressed(MouseCode.BUTTON_LEFT)) {
+                mousePan(new Vector3f(delta, 0));
             } else if (Input.isMouseButtonPressed(MouseCode.BUTTON_RIGHT)) {
                 mouseZoom(delta.y);
             }
@@ -135,7 +136,7 @@ public class EditorCamera extends Camera {
 
     private void mousePan(Vector3f delta) {
         var speed = panSpeed();
-        focalPoint.add(getRightDirection().mul(delta.x * speed.x * distance));
+        focalPoint.add(getRightDirection().mul(-delta.x * speed.x * distance));
         focalPoint.add(getUpDirection().mul(delta.y * speed.y * distance));
     }
 
