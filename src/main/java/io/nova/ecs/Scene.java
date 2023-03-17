@@ -66,6 +66,7 @@ public class Scene {
             renderer.drawQuad(transform.getTransform(), sprite.getColorAsVec());
         }
         renderer.endScene();
+        registry.update(deltaTime);
     }
 
     public void onUpdateRuntime(float deltaTime) {
