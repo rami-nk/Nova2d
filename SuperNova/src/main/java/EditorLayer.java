@@ -23,7 +23,6 @@ import io.nova.event.EventDispatcher;
 import io.nova.event.key.KeyPressedEvent;
 import io.nova.utils.FileDialog;
 import io.nova.window.Input;
-import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import panels.EntityPanel;
 
@@ -192,61 +191,62 @@ public class EditorLayer extends Layer {
         // ImGuizmo
         {
             var selectedEntity = entityPanel.getSelectedEntity();
-            var cameraEntity = scene.getPrimaryCameraEntity();
-            if (gizmoOperation != -1 && !Objects.isNull(selectedEntity) && !selectedEntity.equals(cameraEntity)) {
+            if (gizmoOperation != -1 && !Objects.isNull(selectedEntity)) {
                 ImGuizmo.setOrthographic(false);
                 ImGuizmo.setDrawList();
                 ImGuizmo.setRect(ImGui.getWindowPosX(), ImGui.getWindowPosY(), ImGui.getWindowWidth(), ImGui.getWindowHeight());
 
-                if (!Objects.isNull(cameraEntity)) {
-                    var camera = cameraEntity.getComponent(SceneCameraComponent.class).getCamera();
-                    var transform = cameraEntity.getComponent(TransformComponent.class).getTransform();
-                    var cameraProjection = camera.getProjection();
-                    var cameraView = transform.invert(new Matrix4f());
+                // Runtime code, we will need it later
+//                var camera = cameraEntity.getComponent(SceneCameraComponent.class).getCamera();
+//                var transform = cameraEntity.getComponent(TransformComponent.class).getTransform();
+//                var cameraProjection = camera.getProjection();
+//                var cameraView = transform.invert(new Matrix4f());
 
-                    var selectedEntityTransformComponent = selectedEntity.getComponent(TransformComponent.class);
+                var cameraProjection = editorCamera.getProjection();
+                var cameraView = editorCamera.getViewMatrix();
 
-                    var model = new float[16];
-                    var radRot = selectedEntityTransformComponent.getRotation();
-                    var degRot = new float[3];
-                    for (int i = 0; i < radRot.length; i++) {
-                        degRot[i] = (float) Math.toDegrees(radRot[i]);
+                var selectedEntityTransformComponent = selectedEntity.getComponent(TransformComponent.class);
+
+                var model = new float[16];
+                var radRot = selectedEntityTransformComponent.getRotation();
+                var degRot = new float[3];
+                for (int i = 0; i < radRot.length; i++) {
+                    degRot[i] = (float) Math.toDegrees(radRot[i]);
+                }
+
+                ImGuizmo.recomposeMatrixFromComponents(
+                        model,
+                        selectedEntityTransformComponent.getTranslation(),
+                        degRot,
+                        selectedEntityTransformComponent.getScale());
+
+                var canSnap = Input.isKeyPressed(KeyCode.KEY_LEFT_CONTROL);
+                var snapValue = gizmoOperation == ROTATE ? 45.0f : 0.5f;
+                var snapValues = new float[]{snapValue, snapValue, snapValue};
+                ImGuizmo.manipulate(
+                        cameraView.get(new float[16]),
+                        cameraProjection.get(new float[16]),
+                        model,
+                        gizmoOperation,
+                        Mode.LOCAL,
+                        canSnap ? snapValues : new float[3]
+                );
+
+                if (ImGuizmo.isUsing()) {
+                    var translation = new float[3];
+                    var rotation = new float[3];
+                    var scale = new float[3];
+
+                    ImGuizmo.decomposeMatrixToComponents(model, translation, rotation, scale);
+
+                    for (int i = 0; i < rotation.length; i++) {
+                        rotation[i] = (float) Math.toRadians(rotation[i]);
                     }
 
-                    ImGuizmo.recomposeMatrixFromComponents(
-                            model,
-                            selectedEntityTransformComponent.getTranslation(),
-                            degRot,
-                            selectedEntityTransformComponent.getScale());
-
-                    var canSnap = Input.isKeyPressed(KeyCode.KEY_LEFT_CONTROL);
-                    var snapValue = gizmoOperation == ROTATE ? 45.0f : 0.5f;
-                    var snapValues = new float[]{snapValue, snapValue, snapValue};
-                    ImGuizmo.manipulate(
-                            cameraView.get(new float[16]),
-                            cameraProjection.get(new float[16]),
-                            model,
-                            gizmoOperation,
-                            Mode.LOCAL,
-                            canSnap ? snapValues : new float[3]
-                    );
-
-                    if (ImGuizmo.isUsing()) {
-                        var translation = new float[3];
-                        var rotation = new float[3];
-                        var scale = new float[3];
-
-                        ImGuizmo.decomposeMatrixToComponents(model, translation, rotation, scale);
-
-                        for (int i = 0; i < rotation.length; i++) {
-                            rotation[i] = (float) Math.toRadians(rotation[i]);
-                        }
-
-                        switch (gizmoOperation) {
-                            case TRANSLATE -> selectedEntityTransformComponent.setTranslation(translation);
-                            case SCALE -> selectedEntityTransformComponent.setScale(scale);
-                            case ROTATE -> selectedEntityTransformComponent.setRotation(rotation);
-                        }
+                    switch (gizmoOperation) {
+                        case TRANSLATE -> selectedEntityTransformComponent.setTranslation(translation);
+                        case SCALE -> selectedEntityTransformComponent.setScale(scale);
+                        case ROTATE -> selectedEntityTransformComponent.setRotation(rotation);
                     }
                 }
             }
