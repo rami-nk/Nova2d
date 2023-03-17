@@ -1,6 +1,7 @@
 package io.nova.window;
 
 import io.nova.core.application.Application;
+import io.nova.core.codes.MouseCode;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 
@@ -14,9 +15,9 @@ public class Input {
         return state == GLFW_PRESS;
     }
 
-    public static boolean isMouseButtonPressed(int mouseButton) {
+    public static boolean isMouseButtonPressed(MouseCode mouseCode) {
         var window = Application.getWindow().getNativeWindow();
-        var state = glfwGetMouseButton(window, mouseButton);
+        var state = glfwGetMouseButton(window, mouseCode.getCode());
         return state == GLFW_PRESS;
     }
 

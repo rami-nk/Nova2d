@@ -1,5 +1,6 @@
 package io.nova.core.renderer.camera;
 
+import io.nova.core.codes.MouseCode;
 import io.nova.event.Event;
 import io.nova.event.EventDispatcher;
 import io.nova.event.mouse.MouseScrolledEvent;
@@ -10,7 +11,6 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import static io.nova.core.codes.KeyCodes.NV_KEY_LEFT_SHIFT;
-import static io.nova.core.codes.MouseCodes.*;
 
 public class EditorCamera extends Camera {
 
@@ -40,11 +40,11 @@ public class EditorCamera extends Camera {
             var delta = new Vector2f(mouse).sub(initialMousePosition).mul(0.003f);
             initialMousePosition = mouse;
 
-            if (Input.isMouseButtonPressed(NV_MOUSE_BUTTON_MIDDLE)) {
+            if (Input.isMouseButtonPressed(MouseCode.BUTTON_MIDDLE)) {
                 mousePan(new Vector3f(delta, 0));
-            } else if (Input.isMouseButtonPressed(NV_MOUSE_BUTTON_LEFT)) {
+            } else if (Input.isMouseButtonPressed(MouseCode.BUTTON_LEFT)) {
                 mouseRotate(new Vector3f(delta, 0));
-            } else if (Input.isMouseButtonPressed(NV_MOUSE_BUTTON_RIGHT)) {
+            } else if (Input.isMouseButtonPressed(MouseCode.BUTTON_RIGHT)) {
                 mouseZoom(delta.y);
             }
         }
