@@ -3,6 +3,7 @@ package io.nova.ecs;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.nova.core.renderer.Renderer;
 import io.nova.core.renderer.camera.Camera;
+import io.nova.core.renderer.camera.EditorCamera;
 import io.nova.ecs.component.*;
 import io.nova.ecs.entity.Entity;
 import io.nova.ecs.entity.EntityListener;
@@ -56,7 +57,18 @@ public class Scene {
         return registry;
     }
 
-    public void onUpdate(float deltaTime) {
+    public void onUpdateEditor(EditorCamera camera, float deltaTime) {
+        renderer.beginScene(camera);
+        var group = registry.getEntities(Group.create(SpriteRenderComponent.class, TransformComponent.class));
+        for (var entity : group) {
+            var transform = entity.getComponent(TransformComponent.class);
+            var sprite = entity.getComponent(SpriteRenderComponent.class);
+            renderer.drawQuad(transform.getTransform(), sprite.getColorAsVec());
+        }
+        renderer.endScene();
+    }
+
+    public void onUpdateRuntime(float deltaTime) {
         // Update scripts
         {
             var group = registry.getEntities(Group.create(ScriptComponent.class));

@@ -8,6 +8,7 @@ import imgui.flag.ImGuiWindowFlags;
 import io.nova.core.application.Application;
 import io.nova.core.layer.Layer;
 import io.nova.core.renderer.*;
+import io.nova.core.renderer.camera.EditorCamera;
 import io.nova.core.renderer.camera.OrthographicCameraController;
 import io.nova.ecs.Scene;
 import io.nova.ecs.component.SceneCameraComponent;
@@ -41,7 +42,7 @@ public class EditorLayer extends Layer {
     private SceneSerializer sceneSerializer;
     private String filePath;
     private int gizmoOperation;
-
+    private EditorCamera editorCamera;
 
     public void onAttach() {
         cameraController = new OrthographicCameraController(16.0f / 9.0f, true);
@@ -79,6 +80,7 @@ public class EditorLayer extends Layer {
         frameBuffer = FrameBufferFactory.create(spec);
 
         entityPanel = new EntityPanel(scene);
+        editorCamera = new EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
     }
 
     public void onDetach() {
@@ -93,7 +95,11 @@ public class EditorLayer extends Layer {
                 (viewportSize.x != spec.getWidth() || viewportSize.y != spec.getHeight())) {
             frameBuffer.resize((int) viewportSize.x, (int) viewportSize.y);
             scene.onViewportResize((int) viewportSize.x, (int) viewportSize.y);
+            editorCamera.setViewportSize(viewportSize.x, viewportSize.y);
         }
+
+        // Update camera
+        editorCamera.onUpdate(deltaTime);
 
         // Render
         frameBuffer.bind();
@@ -102,7 +108,7 @@ public class EditorLayer extends Layer {
         renderer.clear();
 
         // Update
-        scene.onUpdate(deltaTime);
+        scene.onUpdateEditor(editorCamera, deltaTime);
         frameBuffer.unbind();
     }
 
@@ -253,6 +259,7 @@ public class EditorLayer extends Layer {
 
     public void onEvent(Event event) {
         cameraController.onEvent(event);
+        editorCamera.onEvent(event);
 
         var dispatcher = new EventDispatcher(event);
         dispatcher.dispatch(KeyPressedEvent.class, this::handleShortcuts);

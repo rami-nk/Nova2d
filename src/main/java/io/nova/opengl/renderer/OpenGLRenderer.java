@@ -3,6 +3,7 @@ package io.nova.opengl.renderer;
 import io.nova.core.renderer.Renderer;
 import io.nova.core.renderer.buffer.*;
 import io.nova.core.renderer.camera.Camera;
+import io.nova.core.renderer.camera.EditorCamera;
 import io.nova.core.renderer.camera.OrthographicCamera;
 import io.nova.core.renderer.shader.Shader;
 import io.nova.core.renderer.shader.ShaderLibrary;
@@ -86,6 +87,7 @@ public class OpenGLRenderer implements Renderer {
         return whiteTextureData;
     }
 
+    @Deprecated
     @Override
     public void beginScene(OrthographicCamera camera) {
         shader.bind();
@@ -103,6 +105,14 @@ public class OpenGLRenderer implements Renderer {
         var viewProjection = projection.mul(transform.invert());
 
         shader.setUniformMat4f("uViewProjection", viewProjection);
+
+        resetData();
+    }
+
+    @Override
+    public void beginScene(EditorCamera camera) {
+        shader.bind();
+        shader.setUniformMat4f("uViewProjection", camera.getViewProjection());
 
         resetData();
     }
