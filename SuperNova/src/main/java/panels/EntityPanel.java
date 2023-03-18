@@ -98,4 +98,8 @@ public class EntityPanel {
     public Entity getSelectedEntity() {
         return selectedEntity;
     }
+
+    public void setSelectedEntity(Entity entity) {
+        selectedEntity = entity;
+    }
 }

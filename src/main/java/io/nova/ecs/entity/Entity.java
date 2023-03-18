@@ -11,11 +11,21 @@ import java.util.Map;
 
 public final class Entity {
 
+    private static int counter = 1;
     private final List<Component> components = new ArrayList<>();
     private final Map<Class<?>, Component> cache = new HashMap<>();
+    private final int id;
     private boolean activated;
     @JsonIgnore
     private Registry registry;
+
+    public Entity() {
+        id = counter++;
+    }
+
+    public int getId() {
+        return id;
+    }
 
     public List<Component> getComponents() {
         return components;
