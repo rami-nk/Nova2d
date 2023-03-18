@@ -17,6 +17,9 @@ public class ContentBrowserPanel {
     private final Map<File, File[]> directoryContentCache;
     private File currentDirectory;
     private int validCacheTimeout = 50;
+    private float padding = 16.0f;
+    private float iconSize = 64.0f;
+    private float cellSize = iconSize + padding;
 
     public ContentBrowserPanel() {
         var userDir = System.getProperty("user.dir");
@@ -47,29 +50,38 @@ public class ContentBrowserPanel {
 
     private void createDirectoryContent(File[] files) {
         if (Objects.nonNull(files)) {
+            var panelWidth = ImGui.getContentRegionAvail().x;
+            int columns = (int) (panelWidth / cellSize);
+            columns = columns == 0 ? 5 : (columns * (cellSize + 1) <= panelWidth ? columns : columns - 1);
+            ImGui.columns(columns, "content_browser", false);
             for (var file : files) {
                 if (file.isDirectory()) {
                     var texture = TextureLibrary.getOrElseUploadTexture("directory.png");
                     ImGui.pushStyleColor(ImGuiCol.Button, 0, 0, 0, 0);
                     ImGui.pushID(file.getName());
-                    ImGui.imageButton(texture.getId(), 64, 64, 0, 1, 1, 0);
+                    ImGui.imageButton(texture.getId(), iconSize, iconSize, 0, 1, 1, 0);
                     if (ImGui.isItemHovered() && ImGui.isMouseDoubleClicked(ImGuiMouseButton.Left)) {
                         currentDirectory = file;
                     }
                     ImGui.popID();
                     ImGui.popStyleColor();
+                    ImGui.textWrapped(file.getName());
+                    ImGui.nextColumn();
                 } else if (!file.isHidden()) {
                     var texture = TextureLibrary.getOrElseUploadTexture("document.png");
                     ImGui.pushStyleColor(ImGuiCol.Button, 0, 0, 0, 0);
                     ImGui.pushID(file.getName());
 
-                    ImGui.imageButton(texture.getId(), 64, 64, 0, 1, 1, 0);
+                    ImGui.imageButton(texture.getId(), iconSize, iconSize, 0, 1, 1, 0);
+
+                    ImGui.textWrapped(file.getName());
 
                     ImGui.popStyleColor();
                     ImGui.popID();
+                    ImGui.nextColumn();
                 }
-                ImGui.sameLine();
             }
+            ImGui.columns();
         }
     }
 }
