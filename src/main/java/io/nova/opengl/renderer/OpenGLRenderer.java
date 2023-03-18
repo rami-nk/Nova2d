@@ -24,7 +24,7 @@ import static org.lwjgl.opengl.GL30.*;
 public class OpenGLRenderer implements Renderer {
 
     private static final int MAX_QUADS = 100_000;
-    private static final int ELEMENTS_PER_VERTEX = 11;
+    private static final int ELEMENTS_PER_VERTEX = 12;
     private static final int VERTICES_PER_QUAD = 4;
     private static final int MAX_VERTICES = MAX_QUADS * VERTICES_PER_QUAD;
     private static final int MAX_INDICES = MAX_QUADS * 6;
@@ -48,6 +48,7 @@ public class OpenGLRenderer implements Renderer {
         layout.pushFloat("aTextureCoordinates", 2);
         layout.pushFloat("aTextureIndex", 1);
         layout.pushFloat("aTilingFactor", 1);
+        layout.pushFloat("aEntityID", 1);
         vertexArray.addVertexBuffer(vertexBuffer, layout);
 
         IndexBuffer indexBuffer;
@@ -188,6 +189,13 @@ public class OpenGLRenderer implements Renderer {
     }
 
     @Override
+    public void drawQuad(Matrix4f transform, Vector4f color, int entityID) {
+        var whiteTextureSlot = 0.0f;
+
+        addQuadData(transform, 1.0f, color, whiteTextureSlot, entityID);
+    }
+
+    @Override
     public void drawQuad(Vector3f position, Vector2f size, SubTexture subTexture, float tilingFactor) {
         var white = new Vector4f(1.0f);
         drawQuad(position, size, subTexture, tilingFactor, white);
@@ -278,6 +286,10 @@ public class OpenGLRenderer implements Renderer {
     }
 
     private void addQuadData(Matrix4f transform, float tilingFactor, Vector4f color, float textureSlot) {
+        addQuadData(transform, tilingFactor, color, textureSlot, -1);
+    }
+
+    private void addQuadData(Matrix4f transform, float tilingFactor, Vector4f color, float textureSlot, int entityID) {
         if (indexCount >= MAX_INDICES) {
             endScene();
             resetData();
@@ -315,6 +327,7 @@ public class OpenGLRenderer implements Renderer {
 
             quadData[quadDataIndex++] = textureSlot;
             quadData[quadDataIndex++] = tilingFactor;
+            quadData[quadDataIndex++] = entityID;
         }
         indexCount += 6;
         stats.quadCount++;

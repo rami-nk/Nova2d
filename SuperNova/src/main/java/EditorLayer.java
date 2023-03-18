@@ -7,6 +7,7 @@ import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 import io.nova.core.application.Application;
 import io.nova.core.codes.KeyCode;
+import io.nova.core.codes.MouseCode;
 import io.nova.core.layer.Layer;
 import io.nova.core.renderer.Renderer;
 import io.nova.core.renderer.RendererFactory;
@@ -117,6 +118,7 @@ public class EditorLayer extends Layer {
         // Update
         scene.onUpdateEditor(editorCamera, deltaTime);
 
+        // Mouse picking
         if (viewPortBounds[0] != null) {
             var m = ImGui.getMousePos();
             m.x -= viewPortBounds[0].x;
@@ -131,9 +133,17 @@ public class EditorLayer extends Layer {
 
             if (mouseX >= 0 && mouseX < vs.x && mouseY >= 0 && mouseY < vs.y) {
                 int id = frameBuffer.readPixel(1, mouseX, mouseY);
-                System.out.println(id);
+                if (id > 0) {
+                    var entity = scene.getRegistry().getEntity(id);
+                    if (entity != null) {
+                        if (Input.isMouseButtonPressed(MouseCode.BUTTON_LEFT))
+                            entityPanel.setSelectedEntity(entity);
+                    }
+                } else {
+                    if (Input.isMouseButtonPressed(MouseCode.BUTTON_LEFT))
+                        entityPanel.setSelectedEntity(null);
+                }
             }
-
         }
 
         frameBuffer.unbind();
