@@ -63,7 +63,7 @@ public class Scene {
         for (var entity : group) {
             var transform = entity.getComponent(TransformComponent.class);
             var sprite = entity.getComponent(SpriteRenderComponent.class);
-            renderer.drawQuad(transform.getTransform(), sprite.getColorAsVec(), entity.getId());
+            renderer.drawSprite(transform.getTransform(), sprite, entity.getId());
         }
         renderer.endScene();
         registry.update(deltaTime);

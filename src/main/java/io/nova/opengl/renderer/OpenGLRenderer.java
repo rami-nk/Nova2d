@@ -10,6 +10,7 @@ import io.nova.core.renderer.shader.ShaderLibrary;
 import io.nova.core.renderer.texture.SubTexture;
 import io.nova.core.renderer.texture.Texture;
 import io.nova.core.renderer.texture.TextureFactory;
+import io.nova.ecs.component.SpriteRenderComponent;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -190,16 +191,16 @@ public class OpenGLRenderer implements Renderer {
     }
 
     @Override
-    public void drawQuad(Matrix4f transform, Vector4f color, int entityID) {
-        var whiteTextureSlot = 0.0f;
-
-        addQuadData(transform, 1.0f, color, whiteTextureSlot, entityID);
-    }
-
-    @Override
     public void drawQuad(Vector3f position, Vector2f size, SubTexture subTexture, float tilingFactor) {
         var white = new Vector4f(1.0f);
         drawQuad(position, size, subTexture, tilingFactor, white);
+    }
+
+    @Override
+    public void drawSprite(Matrix4f transform, SpriteRenderComponent component, int entityID) {
+        var whiteTextureSlot = 0.0f;
+
+        addQuadData(transform, 1.0f, component.getColorAsVec(), whiteTextureSlot, entityID);
     }
 
     @Override
