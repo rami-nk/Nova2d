@@ -1,6 +1,8 @@
 package panels;
 
 import imgui.ImGui;
+import imgui.flag.ImGuiCol;
+import io.nova.core.renderer.texture.TextureLibrary;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -46,12 +48,25 @@ public class ContentBrowserPanel {
         if (Objects.nonNull(files)) {
             for (var file : files) {
                 if (file.isDirectory()) {
-                    if (ImGui.button(file.getName() + "##" + file.getName())) {
+                    var texture = TextureLibrary.getOrElseUploadTexture("directory.png");
+                    ImGui.pushStyleColor(ImGuiCol.Button, 0, 0, 0, 0);
+                    ImGui.pushID(file.getName());
+                    if (ImGui.imageButton(texture.getId(), 64, 64, 0, 1, 1, 0)) {
                         currentDirectory = file;
                     }
+                    ImGui.popID();
+                    ImGui.popStyleColor();
                 } else if (!file.isHidden()) {
-                    ImGui.text(file.getName());
+                    var texture = TextureLibrary.getOrElseUploadTexture("document.png");
+                    ImGui.pushStyleColor(ImGuiCol.Button, 0, 0, 0, 0);
+                    ImGui.pushID(file.getName());
+
+                    ImGui.imageButton(texture.getId(), 64, 64, 0, 1, 1, 0);
+
+                    ImGui.popStyleColor();
+                    ImGui.popID();
                 }
+                ImGui.sameLine();
             }
         }
     }
