@@ -148,6 +148,11 @@ public class OpenGLFrameBuffer implements FrameBuffer {
         return buffer.get();
     }
 
+    @Override
+    public void clearAttachment(int index, int value) {
+        // TODO: Figure out for opengl <= 4.1
+    }
+
     private void attachColorTexture(int attachmentId, int internalFormat, int format, int i) {
         glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, specification.getWidth(), specification.getHeight(), 0, format, GL_UNSIGNED_BYTE, (ByteBuffer) null);
 

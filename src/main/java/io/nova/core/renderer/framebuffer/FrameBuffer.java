@@ -21,4 +21,6 @@ public interface FrameBuffer {
     void resize(int width, int height);
 
     int readPixel(int attachmentIndex, int x, int y);
+
+    void clearAttachment(int index, int value);
 }

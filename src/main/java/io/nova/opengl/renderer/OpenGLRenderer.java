@@ -48,6 +48,7 @@ public class OpenGLRenderer implements Renderer {
         layout.pushFloat("aTextureCoordinates", 2);
         layout.pushFloat("aTextureIndex", 1);
         layout.pushFloat("aTilingFactor", 1);
+        // Editor only
         layout.pushFloat("aEntityID", 1);
         vertexArray.addVertexBuffer(vertexBuffer, layout);
 
