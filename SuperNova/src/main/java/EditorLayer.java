@@ -24,6 +24,7 @@ import io.nova.ecs.serializer.SceneSerializer;
 import io.nova.event.Event;
 import io.nova.event.EventDispatcher;
 import io.nova.event.key.KeyPressedEvent;
+import io.nova.event.mouse.MouseButtonPressedEvent;
 import io.nova.utils.FileDialog;
 import io.nova.window.Input;
 import org.joml.Vector2f;
@@ -45,7 +46,9 @@ public class EditorLayer extends Layer {
     private String filePath;
     private int gizmoOperation;
     private EditorCamera editorCamera;
-    private Vector2f[] viewPortBounds = new Vector2f[2];
+    private Vector2f[] viewportBounds = new Vector2f[2];
+    private Entity hoveredEntity;
+    private boolean viewportHovered = false;
 
     public void onAttach() {
         cameraController = new OrthographicCameraController(16.0f / 9.0f, true);
@@ -121,12 +124,12 @@ public class EditorLayer extends Layer {
         scene.onUpdateEditor(editorCamera, deltaTime);
 
         // Mouse picking
-        if (viewPortBounds[0] != null) {
+        if (viewportBounds[0] != null) {
             var m = ImGui.getMousePos();
-            m.x -= viewPortBounds[0].x;
-            m.y -= viewPortBounds[0].y;
+            m.x -= viewportBounds[0].x;
+            m.y -= viewportBounds[0].y;
 
-            var vs = viewPortBounds[1].sub(viewPortBounds[0], new Vector2f());
+            var vs = viewportBounds[1].sub(viewportBounds[0], new Vector2f());
 
             m.y = viewportSize.y - m.y;
 
@@ -134,16 +137,14 @@ public class EditorLayer extends Layer {
             int mouseY = (int) m.y;
 
             if (mouseX >= 0 && mouseX < vs.x && mouseY >= 0 && mouseY < vs.y) {
-                if (Input.isMouseButtonPressed(MouseCode.BUTTON_LEFT)) {
-                    int id = frameBuffer.readPixel(1, mouseX, mouseY);
-                    if (id > 0) {
-                        var entity = scene.getRegistry().getEntity(id);
-                        if (entity != null) {
-                            entityPanel.setSelectedEntity(entity);
-                        }
-                    } else {
-                        entityPanel.setSelectedEntity(null);
+                int id = frameBuffer.readPixel(1, mouseX, mouseY);
+                if (id > 0) {
+                    var entity = scene.getRegistry().getEntity(id);
+                    if (entity != null) {
+                        hoveredEntity = entity;
                     }
+                } else {
+                    hoveredEntity = null;
                 }
             }
         }
@@ -224,8 +225,7 @@ public class EditorLayer extends Layer {
                 this.viewportSize.y = viewportSize.y;
             }
 
-            var textureId = frameBuffer.getColorAttachmentRendererId();
-            ImGui.image(textureId, viewportSize.x, viewportSize.y, 0, 1, 1, 0);
+            viewportHovered = ImGui.isWindowHovered();
 
             var windowSize = ImGui.getWindowSize();
             var minBound = ImGui.getWindowPos();
@@ -233,8 +233,12 @@ public class EditorLayer extends Layer {
             minBound.y += viewPortOffset.y;
 
             var maxBound = new Vector2f(minBound.x + windowSize.x, minBound.y + windowSize.y);
-            viewPortBounds[0] = new Vector2f(minBound.x, minBound.y);
-            viewPortBounds[1] = maxBound;
+            viewportBounds[0] = new Vector2f(minBound.x, minBound.y);
+            viewportBounds[1] = maxBound;
+
+            var textureId = frameBuffer.getColorAttachmentRendererId();
+            ImGui.image(textureId, viewportSize.x, viewportSize.y, 0, 1, 1, 0);
+
 
             // We set the viewPortSize of the cameraController here to make sure the aspect ratio is correct after resizing the window
             cameraController.setViewportSize((int) viewportSize.x, (int) viewportSize.y);
@@ -315,6 +319,7 @@ public class EditorLayer extends Layer {
 
         var dispatcher = new EventDispatcher(event);
         dispatcher.dispatch(KeyPressedEvent.class, this::handleShortcuts);
+        dispatcher.dispatch(MouseButtonPressedEvent.class, this::handleMouePicking);
     }
 
     private boolean handleShortcuts(KeyPressedEvent event) {
@@ -408,6 +413,16 @@ public class EditorLayer extends Layer {
                 }
             }
         }
+    }
+
+    private boolean handleMouePicking(MouseButtonPressedEvent event) {
+        if (event.getMouseCode() == MouseCode.BUTTON_LEFT) {
+            boolean notUsingGizmos = !ImGuizmo.isUsing() && !ImGuizmo.isOver();
+            if (notUsingGizmos && viewportHovered && !editorCamera.isMoving()) {
+                entityPanel.setSelectedEntity(hoveredEntity);
+            }
+        }
+        return false;
     }
 
     private void closeApplication() {

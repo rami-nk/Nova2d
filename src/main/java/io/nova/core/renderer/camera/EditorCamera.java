@@ -23,6 +23,7 @@ public class EditorCamera extends Camera {
     private Vector2f initialMousePosition = new Vector2f();
     private float distance = 10.0f, pitch = 0.0f, yaw = 0.0f;
     private float viewportWidth = 1280.0f, viewportHeight = 720.0f;
+    private boolean isMoving = false;
 
     public EditorCamera(float fov, float aspectRatio, float nearClip, float farClip) {
         super(new Matrix4f().perspective((float) Math.toRadians(fov), aspectRatio, nearClip, farClip));
@@ -35,6 +36,7 @@ public class EditorCamera extends Camera {
 
     public void onUpdate(float deltaTime) {
         if (Input.isKeyPressed(KeyCode.KEY_LEFT_SHIFT)) {
+            isMoving = true;
             var mouse = Input.getMousePosition();
             var delta = new Vector2f(mouse).sub(initialMousePosition).mul(0.003f);
             initialMousePosition = mouse;
@@ -47,6 +49,8 @@ public class EditorCamera extends Camera {
             } else if (Input.isMouseButtonPressed(MouseCode.BUTTON_RIGHT)) {
                 mouseZoom(delta.y);
             }
+        } else {
+            isMoving = false;
         }
         updateView();
     }
@@ -178,5 +182,9 @@ public class EditorCamera extends Camera {
         float speed = distance * distance;
         speed = Math.min(speed, 100.0f);
         return speed;
+    }
+
+    public boolean isMoving() {
+        return isMoving;
     }
 }
