@@ -115,6 +115,8 @@ public class EditorLayer extends Layer {
         renderer.setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         renderer.clear();
 
+        frameBuffer.clearAttachment(1, -1);
+
         // Update
         scene.onUpdateEditor(editorCamera, deltaTime);
 
@@ -132,16 +134,16 @@ public class EditorLayer extends Layer {
             int mouseY = (int) m.y;
 
             if (mouseX >= 0 && mouseX < vs.x && mouseY >= 0 && mouseY < vs.y) {
-                int id = frameBuffer.readPixel(1, mouseX, mouseY);
-                if (id > 0) {
-                    var entity = scene.getRegistry().getEntity(id);
-                    if (entity != null) {
-                        if (Input.isMouseButtonPressed(MouseCode.BUTTON_LEFT))
+                if (Input.isMouseButtonPressed(MouseCode.BUTTON_LEFT)) {
+                    int id = frameBuffer.readPixel(1, mouseX, mouseY);
+                    if (id > 0) {
+                        var entity = scene.getRegistry().getEntity(id);
+                        if (entity != null) {
                             entityPanel.setSelectedEntity(entity);
-                    }
-                } else {
-                    if (Input.isMouseButtonPressed(MouseCode.BUTTON_LEFT))
+                        }
+                    } else {
                         entityPanel.setSelectedEntity(null);
+                    }
                 }
             }
         }
