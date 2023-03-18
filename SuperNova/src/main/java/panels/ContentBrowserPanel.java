@@ -2,6 +2,7 @@ package panels;
 
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
+import imgui.flag.ImGuiMouseButton;
 import io.nova.core.renderer.texture.TextureLibrary;
 
 import java.io.File;
@@ -51,7 +52,8 @@ public class ContentBrowserPanel {
                     var texture = TextureLibrary.getOrElseUploadTexture("directory.png");
                     ImGui.pushStyleColor(ImGuiCol.Button, 0, 0, 0, 0);
                     ImGui.pushID(file.getName());
-                    if (ImGui.imageButton(texture.getId(), 64, 64, 0, 1, 1, 0)) {
+                    ImGui.imageButton(texture.getId(), 64, 64, 0, 1, 1, 0);
+                    if (ImGui.isItemHovered() && ImGui.isMouseDoubleClicked(ImGuiMouseButton.Left)) {
                         currentDirectory = file;
                     }
                     ImGui.popID();
