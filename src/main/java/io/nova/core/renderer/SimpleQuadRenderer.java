@@ -30,8 +30,6 @@ public interface SimpleQuadRenderer {
 
     void drawQuad(Matrix4f transform, Vector4f color);
 
-    void drawQuad(Matrix4f transform, Vector4f color, int entityID);
-
     /*
      * ###########################################################################
      * ##########################  SUB-TEXTURES ##################################
