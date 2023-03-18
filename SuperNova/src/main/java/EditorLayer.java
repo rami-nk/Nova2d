@@ -28,6 +28,7 @@ import io.nova.event.mouse.MouseButtonPressedEvent;
 import io.nova.utils.FileDialog;
 import io.nova.window.Input;
 import org.joml.Vector2f;
+import panels.ContentBrowserPanel;
 import panels.EntityPanel;
 
 import java.io.IOException;
@@ -42,6 +43,7 @@ public class EditorLayer extends Layer {
     private OrthographicCameraController cameraController;
     private FrameBuffer frameBuffer;
     private EntityPanel entityPanel;
+    private ContentBrowserPanel contentBrowserPanel;
     private SceneSerializer sceneSerializer;
     private String filePath;
     private int gizmoOperation;
@@ -49,6 +51,7 @@ public class EditorLayer extends Layer {
     private Vector2f[] viewportBounds = new Vector2f[2];
     private Entity hoveredEntity;
     private boolean viewportHovered = false;
+    private boolean viewportFocused = false;
 
     public void onAttach() {
         cameraController = new OrthographicCameraController(16.0f / 9.0f, true);
@@ -91,6 +94,7 @@ public class EditorLayer extends Layer {
         frameBuffer = FrameBufferFactory.create(spec);
 
         entityPanel = new EntityPanel(scene);
+        contentBrowserPanel = new ContentBrowserPanel();
         editorCamera = new EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
     }
 
@@ -203,6 +207,7 @@ public class EditorLayer extends Layer {
         ImGui.endMenuBar();
 
         entityPanel.onImGuiRender();
+        contentBrowserPanel.onImGuiRender();
 
         ImGui.begin("Renderer stats");
         {
@@ -226,6 +231,7 @@ public class EditorLayer extends Layer {
             }
 
             viewportHovered = ImGui.isWindowHovered();
+            viewportFocused = ImGui.isWindowFocused();
 
             var windowSize = ImGui.getWindowSize();
             var minBound = ImGui.getWindowPos();
@@ -315,7 +321,11 @@ public class EditorLayer extends Layer {
 
     public void onEvent(Event event) {
         cameraController.onEvent(event);
-        editorCamera.onEvent(event);
+        // TODO: Make application block event function
+        // Example: application.blockEvent(event, condition)
+        if (viewportFocused && viewportHovered) {
+            editorCamera.onEvent(event);
+        }
 
         var dispatcher = new EventDispatcher(event);
         dispatcher.dispatch(KeyPressedEvent.class, this::handleShortcuts);
