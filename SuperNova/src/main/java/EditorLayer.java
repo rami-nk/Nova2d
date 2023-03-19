@@ -122,7 +122,7 @@ public class EditorLayer extends Layer {
         // Render
         frameBuffer.bind();
         renderer.resetStats();
-        renderer.setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        renderer.setClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         renderer.clear();
 
         frameBuffer.clearAttachment(1, -1);

@@ -4,6 +4,7 @@ import io.nova.core.renderer.texture.Texture;
 import org.lwjgl.BufferUtils;
 
 import java.nio.ByteBuffer;
+import java.nio.file.Path;
 import java.util.Objects;
 
 import static org.lwjgl.opengl.GL30.*;
@@ -17,8 +18,8 @@ public class OpenGLTexture implements Texture {
     private int height;
     private int internalFormat;
 
-    public OpenGLTexture(String filepath) {
-        this.filepath = filepath;
+    public OpenGLTexture(Path path) {
+        this.filepath = path.toString();
         rendererId = glGenTextures();
         bind();
 
