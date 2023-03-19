@@ -3,6 +3,8 @@ package panels;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiMouseButton;
+import imgui.flag.ImGuiStyleVar;
+import imgui.flag.ImGuiWindowFlags;
 import io.nova.core.renderer.texture.TextureLibrary;
 
 import java.io.File;
@@ -31,7 +33,8 @@ public class ContentBrowserPanel {
     }
 
     public void onImGuiRender() {
-        ImGui.begin("Content browser");
+        ImGui.pushStyleVar(ImGuiStyleVar.ScrollbarSize, 10.0f);
+        ImGui.begin("Content browser", ImGuiWindowFlags.AlwaysVerticalScrollbar);
 
         boolean isRoot = currentDirectory.getAbsolutePath().equals(resourceRootDirectory);
         if (!isRoot && ImGui.button("<-")) {
@@ -47,13 +50,14 @@ public class ContentBrowserPanel {
         validCacheTimeout--;
 
         ImGui.end();
+        ImGui.popStyleVar();
     }
 
     private void createDirectoryContent(File[] files) {
         if (Objects.nonNull(files)) {
-            var panelWidth = ImGui.getContentRegionAvail().x;
+            var panelWidth = ImGui.getContentRegionAvailX();
             int columns = (int) (panelWidth / cellSize);
-            columns = columns == 0 ? 5 : (columns * (cellSize + 1) <= panelWidth ? columns : columns - 1);
+            columns = columns == 0 ? 1 : columns;
             ImGui.columns(columns, "content_browser", false);
             for (var file : files) {
                 if (file.isDirectory()) {
