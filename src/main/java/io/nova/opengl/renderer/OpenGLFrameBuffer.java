@@ -150,7 +150,7 @@ public class OpenGLFrameBuffer implements FrameBuffer {
 
     @Override
     public void clearAttachment(int index, int value) {
-        // TODO: Figure out for opengl <= 4.1
+        glClearBufferiv(GL_COLOR, index, new int[]{value});
     }
 
     private void attachColorTexture(int attachmentId, int internalFormat, int format, int i) {
