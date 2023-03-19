@@ -20,6 +20,7 @@ public class ContentBrowserPanel {
     private float padding = 16.0f;
     private float iconSize = 64.0f;
     private float cellSize = iconSize + padding;
+    private String draggedContent = "";
 
     public ContentBrowserPanel() {
         var userDir = System.getProperty("user.dir");
@@ -60,11 +61,13 @@ public class ContentBrowserPanel {
                     ImGui.pushStyleColor(ImGuiCol.Button, 0, 0, 0, 0);
                     ImGui.pushID(file.getName());
                     ImGui.imageButton(texture.getId(), iconSize, iconSize, 0, 1, 1, 0);
+
                     if (ImGui.isItemHovered() && ImGui.isMouseDoubleClicked(ImGuiMouseButton.Left)) {
                         currentDirectory = file;
                     }
                     ImGui.popID();
                     ImGui.popStyleColor();
+
                     ImGui.textWrapped(file.getName());
                     ImGui.nextColumn();
                 } else if (!file.isHidden()) {
@@ -73,7 +76,12 @@ public class ContentBrowserPanel {
                     ImGui.pushID(file.getName());
 
                     ImGui.imageButton(texture.getId(), iconSize, iconSize, 0, 1, 1, 0);
-
+                    if (ImGui.beginDragDropSource()) {
+                        ImGui.setDragDropPayload(DragAndDropDataType.CONTENT_BROWSER_ITEM, file.getAbsolutePath());
+                        ImGui.image(texture.getId(), iconSize, iconSize, 0, 1, 1, 0);
+                        ImGui.text(file.getName());
+                        ImGui.endDragDropSource();
+                    }
                     ImGui.textWrapped(file.getName());
 
                     ImGui.popStyleColor();
