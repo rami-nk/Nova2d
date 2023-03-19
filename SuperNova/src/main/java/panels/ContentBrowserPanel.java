@@ -18,8 +18,7 @@ public class ContentBrowserPanel {
 
     private final String resourceRootDirectory;
     private final Map<File, File[]> directoryContentCache;
-    private final Texture directoryIconTexture;
-    private final Texture documentIconTexture;
+    private final Texture directoryIconTexture, documentIconTexture, returnIconTexture;
     private File currentDirectory;
     private int validCacheTimeout = 50;
     private float padding = 16.0f;
@@ -34,6 +33,7 @@ public class ContentBrowserPanel {
         directoryContentCache = new HashMap<>();
         directoryIconTexture = TextureLibrary.uploadAndGet(Path.of("SuperNova/src/main/resources/icons/directory.png"));
         documentIconTexture = TextureLibrary.uploadAndGet(Path.of("SuperNova/src/main/resources/icons/document.png"));
+        returnIconTexture = TextureLibrary.uploadAndGet(Path.of("SuperNova/src/main/resources/icons/back-arrow.png"));
     }
 
     public void onImGuiRender() {
@@ -41,7 +41,12 @@ public class ContentBrowserPanel {
         ImGui.begin("Content browser", ImGuiWindowFlags.AlwaysVerticalScrollbar);
 
         boolean isRoot = currentDirectory.getAbsolutePath().equals(resourceRootDirectory);
-        if (!isRoot && ImGui.button("<-")) {
+
+        ImGui.pushStyleColor(ImGuiCol.Button, 0, 0, 0, 0);
+        ImGui.imageButton(returnIconTexture.getId(), 32.0f, 32.0f, 0, 1, 1, 0);
+        ImGui.popStyleColor();
+
+        if (!isRoot && ImGui.isItemHovered() && ImGui.isMouseDoubleClicked(ImGuiMouseButton.Left)) {
             currentDirectory = currentDirectory.getParentFile();
         }
         if (validCacheTimeout != 0 && directoryContentCache.containsKey(currentDirectory)) {
