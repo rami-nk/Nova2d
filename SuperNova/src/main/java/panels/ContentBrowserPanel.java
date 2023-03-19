@@ -10,6 +10,7 @@ import io.nova.core.renderer.texture.TextureLibrary;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -36,6 +37,18 @@ public class ContentBrowserPanel {
         returnIconTexture = TextureLibrary.uploadAndGet(Path.of("SuperNova/src/main/resources/icons/back-arrow.png"));
     }
 
+    private static void sortByDirectoriesFirst(File[] files) {
+        Arrays.sort(files, (f1, f2) -> {
+            if (f1.isDirectory() && !f2.isDirectory()) {
+                return -1;
+            } else if (!f1.isDirectory() && f2.isDirectory()) {
+                return 1;
+            } else {
+                return f1.getName().compareTo(f2.getName());
+            }
+        });
+    }
+
     public void onImGuiRender() {
         ImGui.pushStyleVar(ImGuiStyleVar.ScrollbarSize, 10.0f);
         ImGui.begin("Content browser", ImGuiWindowFlags.AlwaysVerticalScrollbar);
@@ -53,8 +66,10 @@ public class ContentBrowserPanel {
             createDirectoryContent(directoryContentCache.get(currentDirectory));
         } else {
             validCacheTimeout = 100;
-            directoryContentCache.put(currentDirectory, currentDirectory.listFiles());
-            createDirectoryContent(currentDirectory.listFiles());
+            var files = currentDirectory.listFiles();
+            sortByDirectoriesFirst(files);
+            directoryContentCache.put(currentDirectory, files);
+            createDirectoryContent(files);
         }
         validCacheTimeout--;
 
