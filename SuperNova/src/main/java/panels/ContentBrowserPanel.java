@@ -52,7 +52,7 @@ public class ContentBrowserPanel {
         if (validCacheTimeout != 0 && directoryContentCache.containsKey(currentDirectory)) {
             createDirectoryContent(directoryContentCache.get(currentDirectory));
         } else {
-            validCacheTimeout = 1000;
+            validCacheTimeout = 100;
             directoryContentCache.put(currentDirectory, currentDirectory.listFiles());
             createDirectoryContent(currentDirectory.listFiles());
         }
