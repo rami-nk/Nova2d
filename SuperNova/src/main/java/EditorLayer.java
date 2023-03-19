@@ -29,10 +29,13 @@ import io.nova.utils.FileDialog;
 import io.nova.window.Input;
 import org.joml.Vector2f;
 import panels.ContentBrowserPanel;
+import panels.DragAndDropDataType;
 import panels.EntityPanel;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Objects;
+import java.util.function.Function;
 
 import static imgui.extension.imguizmo.flag.Operation.*;
 
@@ -245,6 +248,14 @@ public class EditorLayer extends Layer {
             var textureId = frameBuffer.getColorAttachmentRendererId();
             ImGui.image(textureId, viewportSize.x, viewportSize.y, 0, 1, 1, 0);
 
+            if (ImGui.beginDragDropTarget()) {
+                var payload = ImGui.acceptDragDropPayload(DragAndDropDataType.CONTENT_BROWSER_ITEM);
+                if (payload != null) {
+                    var path = payload.toString();
+                    openScene(path);
+                }
+                ImGui.endDragDropTarget();
+            }
 
             // We set the viewPortSize of the cameraController here to make sure the aspect ratio is correct after resizing the window
             cameraController.setViewportSize((int) viewportSize.x, (int) viewportSize.y);
@@ -373,13 +384,18 @@ public class EditorLayer extends Layer {
 
     private void openScene() {
         var filePath = FileDialog.openFileDialog("Nova files (*.nova)\0*.nova\0");
-        if (!Objects.isNull(filePath)) {
+        openScene(filePath);
+    }
+
+    private void openScene(String path) {
+        Function<String, Boolean> isNovaFile = (String p) -> Path.of(p).getFileName().toString().split("\\.")[1].equals("nova");
+        if (!Objects.isNull(path) && isNovaFile.apply(path)) {
             try {
-                scene = sceneSerializer.deserialize(filePath);
+                scene = sceneSerializer.deserialize(path);
                 scene.setRenderer(renderer);
                 entityPanel = new EntityPanel(scene);
                 scene.onViewportResize((int) viewportSize.x, (int) viewportSize.y);
-                this.filePath = filePath;
+                this.filePath = path;
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
