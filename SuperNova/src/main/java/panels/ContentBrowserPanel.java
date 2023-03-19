@@ -1,6 +1,7 @@
 package panels;
 
 import imgui.ImGui;
+import imgui.ImVec2;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiMouseButton;
 import imgui.flag.ImGuiStyleVar;
@@ -56,10 +57,17 @@ public class ContentBrowserPanel {
         boolean isRoot = currentDirectory.getAbsolutePath().equals(resourceRootDirectory);
 
         ImGui.pushStyleColor(ImGuiCol.Button, 0, 0, 0, 0);
-        boolean isReturnClicked = ImGui.imageButton(returnIconTexture.getId(), 32.0f, 32.0f, 0, 1, 1, 0);
+        var returnIconSize = 32.0f;
+        boolean isReturnClicked = ImGui.imageButton(returnIconTexture.getId(), returnIconSize, returnIconSize, 0, 1, 1, 0);
         ImGui.popStyleColor();
 
-        if (!isRoot && ImGui.isItemHovered() && isReturnClicked) {
+        ImGui.sameLine();
+        var textSize = new ImVec2();
+        ImGui.calcTextSize(textSize, currentDirectory.getName());
+        ImGui.setCursorPosY(ImGui.getCursorPosY() + (returnIconSize / 2.0f) - (textSize.y / 2.0f));
+        ImGui.text(currentDirectory.getName());
+
+        if (!isRoot && isReturnClicked) {
             currentDirectory = currentDirectory.getParentFile();
         }
         if (validCacheTimeout != 0 && directoryContentCache.containsKey(currentDirectory)) {
