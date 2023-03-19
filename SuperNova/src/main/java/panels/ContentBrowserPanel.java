@@ -5,6 +5,7 @@ import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiMouseButton;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
+import io.nova.core.renderer.texture.Texture;
 import io.nova.core.renderer.texture.TextureLibrary;
 
 import java.io.File;
@@ -23,6 +24,8 @@ public class ContentBrowserPanel {
     private float iconSize = 64.0f;
     private float cellSize = iconSize + padding;
     private String draggedContent = "";
+    private Texture directoryIconTexture;
+    private Texture documentIconTexture;
 
     public ContentBrowserPanel() {
         var userDir = System.getProperty("user.dir");
@@ -30,6 +33,8 @@ public class ContentBrowserPanel {
         currentDirectory = new File(path.toUri());
         resourceRootDirectory = path.toString();
         directoryContentCache = new HashMap<>();
+        directoryIconTexture = TextureLibrary.getOrElseUploadTexture("directory.png");
+        documentIconTexture = TextureLibrary.getOrElseUploadTexture("document.png");
     }
 
     public void onImGuiRender() {
@@ -61,10 +66,9 @@ public class ContentBrowserPanel {
             ImGui.columns(columns, "content_browser", false);
             for (var file : files) {
                 if (file.isDirectory()) {
-                    var texture = TextureLibrary.getOrElseUploadTexture("directory.png");
                     ImGui.pushStyleColor(ImGuiCol.Button, 0, 0, 0, 0);
                     ImGui.pushID(file.getName());
-                    ImGui.imageButton(texture.getId(), iconSize, iconSize, 0, 1, 1, 0);
+                    ImGui.imageButton(directoryIconTexture.getId(), iconSize, iconSize, 0, 1, 1, 0);
 
                     if (ImGui.isItemHovered() && ImGui.isMouseDoubleClicked(ImGuiMouseButton.Left)) {
                         currentDirectory = file;
@@ -75,14 +79,13 @@ public class ContentBrowserPanel {
                     ImGui.textWrapped(file.getName());
                     ImGui.nextColumn();
                 } else if (!file.isHidden()) {
-                    var texture = TextureLibrary.getOrElseUploadTexture("document.png");
                     ImGui.pushStyleColor(ImGuiCol.Button, 0, 0, 0, 0);
                     ImGui.pushID(file.getName());
 
-                    ImGui.imageButton(texture.getId(), iconSize, iconSize, 0, 1, 1, 0);
+                    ImGui.imageButton(documentIconTexture.getId(), iconSize, iconSize, 0, 1, 1, 0);
                     if (ImGui.beginDragDropSource()) {
                         ImGui.setDragDropPayload(DragAndDropDataType.CONTENT_BROWSER_ITEM, file.getAbsolutePath());
-                        ImGui.image(texture.getId(), iconSize, iconSize, 0, 1, 1, 0);
+                        ImGui.image(documentIconTexture.getId(), iconSize, iconSize, 0, 1, 1, 0);
                         ImGui.text(file.getName());
                         ImGui.endDragDropSource();
                     }
