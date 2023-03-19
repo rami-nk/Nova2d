@@ -6,5 +6,5 @@
 
 2d Game Engine
 
-<img src="images/supernova-editor.png" alt="spritesheet-gif">
+<img src="images/content-browser.png" alt="spritesheet-gif">
 </div>
