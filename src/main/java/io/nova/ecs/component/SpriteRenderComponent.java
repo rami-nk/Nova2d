@@ -1,13 +1,33 @@
 package io.nova.ecs.component;
 
+import io.nova.core.renderer.texture.Texture;
 import org.joml.Vector4f;
 
 public class SpriteRenderComponent extends Component {
 
     private float[] color;
+    private Texture texture;
+    private float tilingFactor;
 
     public SpriteRenderComponent() {
         this.color = new float[]{1.0f, 0.0f, 0.0f, 1.0f};
+        this.tilingFactor = 1.0f;
+    }
+
+    public float getTilingFactor() {
+        return tilingFactor;
+    }
+
+    public void setTilingFactor(float tilingFactor) {
+        this.tilingFactor = tilingFactor;
+    }
+
+    public Texture getTexture() {
+        return texture;
+    }
+
+    public void setTexture(Texture texture) {
+        this.texture = texture;
     }
 
     public float[] getColor() {

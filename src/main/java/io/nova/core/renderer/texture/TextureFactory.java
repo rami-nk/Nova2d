@@ -3,9 +3,11 @@ package io.nova.core.renderer.texture;
 import io.nova.core.renderer.Renderer;
 import io.nova.opengl.renderer.OpenGLTexture;
 
+import java.nio.file.Path;
+
 public class TextureFactory {
 
-    public static Texture create(String path) {
+    public static Texture create(Path path) {
         switch (Renderer.API) {
             case OpenGL -> {
                 return new OpenGLTexture(path);

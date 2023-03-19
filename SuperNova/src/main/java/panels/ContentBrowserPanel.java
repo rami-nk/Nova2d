@@ -18,14 +18,13 @@ public class ContentBrowserPanel {
 
     private final String resourceRootDirectory;
     private final Map<File, File[]> directoryContentCache;
+    private final Texture directoryIconTexture;
+    private final Texture documentIconTexture;
     private File currentDirectory;
     private int validCacheTimeout = 50;
     private float padding = 16.0f;
     private float iconSize = 64.0f;
     private float cellSize = iconSize + padding;
-    private String draggedContent = "";
-    private Texture directoryIconTexture;
-    private Texture documentIconTexture;
 
     public ContentBrowserPanel() {
         var userDir = System.getProperty("user.dir");
@@ -33,8 +32,8 @@ public class ContentBrowserPanel {
         currentDirectory = new File(path.toUri());
         resourceRootDirectory = path.toString();
         directoryContentCache = new HashMap<>();
-        directoryIconTexture = TextureLibrary.getOrElseUploadTexture("directory.png");
-        documentIconTexture = TextureLibrary.getOrElseUploadTexture("document.png");
+        directoryIconTexture = TextureLibrary.uploadAndGet(Path.of("SuperNova/src/main/resources/icons/directory.png"));
+        documentIconTexture = TextureLibrary.uploadAndGet(Path.of("SuperNova/src/main/resources/icons/document.png"));
     }
 
     public void onImGuiRender() {

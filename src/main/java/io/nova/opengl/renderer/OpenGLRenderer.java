@@ -198,9 +198,14 @@ public class OpenGLRenderer implements Renderer {
 
     @Override
     public void drawSprite(Matrix4f transform, SpriteRenderComponent component, int entityID) {
-        var whiteTextureSlot = 0.0f;
 
-        addQuadData(transform, 1.0f, component.getColorAsVec(), whiteTextureSlot, entityID);
+        if (component.getTexture() != null) {
+            var textureSlot = textureSlotManager.add(component.getTexture());
+            addQuadData(transform, component.getTilingFactor(), component.getColorAsVec(), textureSlot, entityID);
+        } else {
+            var whiteTextureSlot = 0.0f;
+            addQuadData(transform, 1.0f, component.getColorAsVec(), whiteTextureSlot, entityID);
+        }
     }
 
     @Override
