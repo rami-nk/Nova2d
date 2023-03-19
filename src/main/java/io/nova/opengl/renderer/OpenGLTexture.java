@@ -12,11 +12,15 @@ import static org.lwjgl.stb.STBImage.*;
 
 public class OpenGLTexture implements Texture {
 
-    private final int rendererId;
+    private int rendererId;
     private String filepath;
     private int width;
     private int height;
     private int internalFormat;
+
+    private OpenGLTexture() {
+        // For deserialization purposes
+    }
 
     public OpenGLTexture(Path path) {
         this.filepath = path.toString();
@@ -103,13 +107,32 @@ public class OpenGLTexture implements Texture {
         return width;
     }
 
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
     @Override
     public int getHeight() {
         return height;
     }
 
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
     @Override
     public int getId() {
         return rendererId;
+    }
+
+    @Override
+    public String getFilepath() {
+        var absolutePath = Path.of(filepath).toAbsolutePath();
+        var userDirPath = Path.of(System.getProperty("user.dir"));
+        return userDirPath.relativize(absolutePath).toString();
+    }
+
+    public void setFilepath(String filepath) {
+        this.filepath = filepath;
     }
 }
