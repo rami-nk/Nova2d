@@ -81,7 +81,12 @@ public class ContentBrowserPanel {
                     ImGui.pushStyleColor(ImGuiCol.Button, 0, 0, 0, 0);
                     ImGui.pushID(file.getName());
 
-                    ImGui.imageButton(documentIconTexture.getId(), iconSize, iconSize, 0, 1, 1, 0);
+                    if (file.getName().endsWith(".png") || file.getName().endsWith(".jpg")) {
+                        var texture = TextureLibrary.uploadAndGet(file.toPath());
+                        ImGui.imageButton(texture.getId(), iconSize, iconSize, 0, 1, 1, 0);
+                    } else {
+                        ImGui.imageButton(documentIconTexture.getId(), iconSize, iconSize, 0, 1, 1, 0);
+                    }
                     if (ImGui.beginDragDropSource()) {
                         ImGui.setDragDropPayload(DragAndDropDataType.CONTENT_BROWSER_ITEM, file.getAbsolutePath());
                         ImGui.image(documentIconTexture.getId(), iconSize, iconSize, 0, 1, 1, 0);
