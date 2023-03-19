@@ -16,18 +16,13 @@
       }, {
         "@class" : "io.nova.ecs.component.SpriteRenderComponent",
         "color" : [ 1.0, 0.0, 0.0, 1.0 ],
+        "texture" : null,
+        "tilingFactor" : 1.0,
         "colorAsVec" : {
           "finite" : true
         }
       } ],
       "cache" : {
-        "io.nova.ecs.component.SpriteRenderComponent" : {
-          "@class" : "io.nova.ecs.component.SpriteRenderComponent",
-          "color" : [ 1.0, 0.0, 0.0, 1.0 ],
-          "colorAsVec" : {
-            "finite" : true
-          }
-        },
         "io.nova.ecs.component.TagComponent" : {
           "@class" : "io.nova.ecs.component.TagComponent",
           "tag" : "Quad"
@@ -41,15 +36,25 @@
             "finite" : true,
             "affine" : true
           }
+        },
+        "io.nova.ecs.component.SpriteRenderComponent" : {
+          "@class" : "io.nova.ecs.component.SpriteRenderComponent",
+          "color" : [ 1.0, 0.0, 0.0, 1.0 ],
+          "texture" : null,
+          "tilingFactor" : 1.0,
+          "colorAsVec" : {
+            "finite" : true
+          }
         }
       },
+      "id" : 4,
       "activated" : true
     }, {
       "components" : [ {
         "@class" : "io.nova.ecs.component.TransformComponent",
         "translation" : [ 0.0, 0.0, 0.0 ],
         "rotation" : [ 0.0, 0.0, 0.0 ],
-        "scale" : [ 1.0, 1.0, 1.0 ],
+        "scale" : [ 2.0, 1.0, 1.0 ],
         "transform" : {
           "finite" : true,
           "affine" : true
@@ -59,19 +64,19 @@
         "tag" : "Quad2"
       }, {
         "@class" : "io.nova.ecs.component.SpriteRenderComponent",
-        "color" : [ 1.0, 0.0, 0.0, 1.0 ],
+        "color" : [ 1.0, 1.0, 1.0, 1.0 ],
+        "texture" : {
+          "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+          "filepath" : "SuperNova/src/main/resources/textures/openGlLogo.png",
+          "width" : 1280,
+          "height" : 530
+        },
+        "tilingFactor" : 1.0,
         "colorAsVec" : {
           "finite" : true
         }
       } ],
       "cache" : {
-        "io.nova.ecs.component.SpriteRenderComponent" : {
-          "@class" : "io.nova.ecs.component.SpriteRenderComponent",
-          "color" : [ 1.0, 0.0, 0.0, 1.0 ],
-          "colorAsVec" : {
-            "finite" : true
-          }
-        },
         "io.nova.ecs.component.TagComponent" : {
           "@class" : "io.nova.ecs.component.TagComponent",
           "tag" : "Quad2"
@@ -80,13 +85,28 @@
           "@class" : "io.nova.ecs.component.TransformComponent",
           "translation" : [ 0.0, 0.0, 0.0 ],
           "rotation" : [ 0.0, 0.0, 0.0 ],
-          "scale" : [ 1.0, 1.0, 1.0 ],
+          "scale" : [ 2.0, 1.0, 1.0 ],
           "transform" : {
             "finite" : true,
             "affine" : true
           }
+        },
+        "io.nova.ecs.component.SpriteRenderComponent" : {
+          "@class" : "io.nova.ecs.component.SpriteRenderComponent",
+          "color" : [ 1.0, 1.0, 1.0, 1.0 ],
+          "texture" : {
+            "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+            "filepath" : "SuperNova/src/main/resources/textures/openGlLogo.png",
+            "width" : 1280,
+            "height" : 530
+          },
+          "tilingFactor" : 1.0,
+          "colorAsVec" : {
+            "finite" : true
+          }
         }
       },
+      "id" : 5,
       "activated" : true
     }, {
       "components" : [ {
@@ -105,7 +125,7 @@
         "@class" : "io.nova.ecs.component.SceneCameraComponent",
         "camera" : {
           "projectionType" : "ORTHOGRAPHIC",
-          "aspectRatio" : 1.2995658,
+          "aspectRatio" : 1.078067,
           "orthographicNearPlane" : -1.0,
           "orthographicFarPlane" : 1.0,
           "orthographicSize" : 10.0,
@@ -125,7 +145,7 @@
           "@class" : "io.nova.ecs.component.SceneCameraComponent",
           "camera" : {
             "projectionType" : "ORTHOGRAPHIC",
-            "aspectRatio" : 1.2995658,
+            "aspectRatio" : 1.078067,
             "orthographicNearPlane" : -1.0,
             "orthographicFarPlane" : 1.0,
             "orthographicSize" : 10.0,
@@ -135,18 +155,9 @@
           },
           "primary" : false,
           "fixedAspectRatio" : false
-        },
-        "io.nova.ecs.component.TransformComponent" : {
-          "@class" : "io.nova.ecs.component.TransformComponent",
-          "translation" : [ -4.7, 0.0, 0.0 ],
-          "rotation" : [ 0.0, 0.0, 0.0 ],
-          "scale" : [ 1.0, 1.0, 1.0 ],
-          "transform" : {
-            "finite" : true,
-            "affine" : true
-          }
         }
       },
+      "id" : 6,
       "activated" : true
     }, {
       "components" : [ {
@@ -165,7 +176,7 @@
         "@class" : "io.nova.ecs.component.SceneCameraComponent",
         "camera" : {
           "projectionType" : "PERSPECTIVE",
-          "aspectRatio" : 1.2995658,
+          "aspectRatio" : 1.078067,
           "orthographicNearPlane" : -1.0,
           "orthographicFarPlane" : 1.0,
           "orthographicSize" : 10.0,
@@ -177,7 +188,7 @@
         "fixedAspectRatio" : false
       }, {
         "@class" : "io.nova.ecs.component.ScriptComponent",
-        "activated" : true,
+        "activated" : false,
         "instance" : {
           "@type" : "CameraController"
         }
@@ -187,18 +198,11 @@
           "@class" : "io.nova.ecs.component.TagComponent",
           "tag" : "Secondary Camera"
         },
-        "io.nova.ecs.component.ScriptComponent" : {
-          "@class" : "io.nova.ecs.component.ScriptComponent",
-          "activated" : true,
-          "instance" : {
-            "@type" : "CameraController"
-          }
-        },
         "io.nova.ecs.component.SceneCameraComponent" : {
           "@class" : "io.nova.ecs.component.SceneCameraComponent",
           "camera" : {
             "projectionType" : "PERSPECTIVE",
-            "aspectRatio" : 1.2995658,
+            "aspectRatio" : 1.078067,
             "orthographicNearPlane" : -1.0,
             "orthographicFarPlane" : 1.0,
             "orthographicSize" : 10.0,
@@ -208,21 +212,70 @@
           },
           "primary" : true,
           "fixedAspectRatio" : false
-        },
-        "io.nova.ecs.component.TransformComponent" : {
-          "@class" : "io.nova.ecs.component.TransformComponent",
-          "translation" : [ -4.625, -0.16785383, 14.6 ],
-          "rotation" : [ 0.0, 0.0, 0.0 ],
-          "scale" : [ 1.0, 1.0, 1.0 ],
-          "transform" : {
-            "finite" : true,
-            "affine" : true
-          }
         }
       },
+      "id" : 7,
       "activated" : true
     } ]
   },
-  "viewPortWidth" : 898,
-  "viewPortHeight" : 691
+  "viewPortWidth" : 580,
+  "viewPortHeight" : 538,
+  "primaryCameraEntity" : {
+    "components" : [ {
+      "@class" : "io.nova.ecs.component.TransformComponent",
+      "translation" : [ -4.625, -0.16785383, 14.6 ],
+      "rotation" : [ 0.0, 0.0, 0.0 ],
+      "scale" : [ 1.0, 1.0, 1.0 ],
+      "transform" : {
+        "finite" : true,
+        "affine" : true
+      }
+    }, {
+      "@class" : "io.nova.ecs.component.TagComponent",
+      "tag" : "Secondary Camera"
+    }, {
+      "@class" : "io.nova.ecs.component.SceneCameraComponent",
+      "camera" : {
+        "projectionType" : "PERSPECTIVE",
+        "aspectRatio" : 1.078067,
+        "orthographicNearPlane" : -1.0,
+        "orthographicFarPlane" : 1.0,
+        "orthographicSize" : 10.0,
+        "fov" : 0.6928957,
+        "perspectiveNearPlane" : 6.0,
+        "perspectiveFarPlane" : 1000.0
+      },
+      "primary" : true,
+      "fixedAspectRatio" : false
+    }, {
+      "@class" : "io.nova.ecs.component.ScriptComponent",
+      "activated" : false,
+      "instance" : {
+        "@type" : "CameraController"
+      }
+    } ],
+    "cache" : {
+      "io.nova.ecs.component.TagComponent" : {
+        "@class" : "io.nova.ecs.component.TagComponent",
+        "tag" : "Secondary Camera"
+      },
+      "io.nova.ecs.component.SceneCameraComponent" : {
+        "@class" : "io.nova.ecs.component.SceneCameraComponent",
+        "camera" : {
+          "projectionType" : "PERSPECTIVE",
+          "aspectRatio" : 1.078067,
+          "orthographicNearPlane" : -1.0,
+          "orthographicFarPlane" : 1.0,
+          "orthographicSize" : 10.0,
+          "fov" : 0.6928957,
+          "perspectiveNearPlane" : 6.0,
+          "perspectiveFarPlane" : 1000.0
+        },
+        "primary" : true,
+        "fixedAspectRatio" : false
+      }
+    },
+    "id" : 7,
+    "activated" : true
+  }
 }

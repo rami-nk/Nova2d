@@ -6,16 +6,16 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import io.nova.core.renderer.texture.TextureLibrary;
 import io.nova.ecs.Scene;
 import io.nova.ecs.component.Component;
 import io.nova.ecs.component.ScriptComponent;
+import io.nova.ecs.component.SpriteRenderComponent;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Objects;
 
 class SceneDeserializer extends StdDeserializer<Scene> {
 
@@ -25,17 +25,6 @@ class SceneDeserializer extends StdDeserializer<Scene> {
 
     protected SceneDeserializer(Class<?> vc) {
         super(vc);
-    }
-
-    public static Scene deserialize(String path) throws IOException {
-        var content = Files.readString(Path.of(path));
-        var mapper = new ObjectMapper(new YAMLFactory());
-
-        SimpleModule module = new SimpleModule();
-        module.addDeserializer(Scene.class, new SceneDeserializer(Scene.class));
-        mapper.registerModule(module);
-
-        return mapper.readValue(content, Scene.class);
     }
 
     @Override
@@ -62,6 +51,13 @@ class SceneDeserializer extends StdDeserializer<Scene> {
                     ((ScriptComponent) component).setActivated(false);
                     ((ScriptComponent) e.addComponent(component)).bind(scriptableEntityClass);
                     break;
+                }
+                if (component instanceof SpriteRenderComponent) {
+                    var texture = ((SpriteRenderComponent) component).getTexture();
+                    if (!Objects.isNull(texture)) {
+                        texture = TextureLibrary.uploadAndGet(Path.of(texture.getFilepath()));
+                        ((SpriteRenderComponent) component).setTexture(texture);
+                    }
                 }
                 e.addComponent(component);
             }

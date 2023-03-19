@@ -43,10 +43,10 @@ public class ContentBrowserPanel {
         boolean isRoot = currentDirectory.getAbsolutePath().equals(resourceRootDirectory);
 
         ImGui.pushStyleColor(ImGuiCol.Button, 0, 0, 0, 0);
-        ImGui.imageButton(returnIconTexture.getId(), 32.0f, 32.0f, 0, 1, 1, 0);
+        boolean isReturnClicked = ImGui.imageButton(returnIconTexture.getId(), 32.0f, 32.0f, 0, 1, 1, 0);
         ImGui.popStyleColor();
 
-        if (!isRoot && ImGui.isItemHovered() && ImGui.isMouseDoubleClicked(ImGuiMouseButton.Left)) {
+        if (!isRoot && ImGui.isItemHovered() && isReturnClicked) {
             currentDirectory = currentDirectory.getParentFile();
         }
         if (validCacheTimeout != 0 && directoryContentCache.containsKey(currentDirectory)) {
