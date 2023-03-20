@@ -15,6 +15,7 @@ import java.util.Objects;
 public class Scene {
 
     private final Registry registry;
+    private SceneState state;
     @JsonIgnore
     private Renderer renderer;
     private int viewPortWidth, viewPortHeight;
@@ -23,10 +24,15 @@ public class Scene {
         this.renderer = renderer;
         registry = new Registry();
         registry.addEntityListener(new CameraComponentAddEventListener(), Group.create(SceneCameraComponent.class));
+        state = SceneState.STOPPED;
     }
 
     public Scene() {
         this(null);
+    }
+
+    public SceneState getState() {
+        return state;
     }
 
     public Renderer getRenderer() {
@@ -112,7 +118,7 @@ public class Scene {
             for (var entity : group) {
                 var transform = entity.getComponent(TransformComponent.class);
                 var sprite = entity.getComponent(SpriteRenderComponent.class);
-                renderer.drawQuad(transform.getTransform(), sprite.getColorAsVec());
+                renderer.drawSprite(transform.getTransform(), sprite, entity.getId());
             }
             renderer.endScene();
         }
@@ -152,6 +158,14 @@ public class Scene {
                 sceneCamera.getCamera().setViewport(width, height);
             }
         }
+    }
+
+    public void play() {
+        state = SceneState.RUNNING;
+    }
+
+    public void stop() {
+        state = SceneState.STOPPED;
     }
 
     public void removeEntity(Entity entity) {
