@@ -15,6 +15,7 @@ import io.nova.core.renderer.camera.EditorCamera;
 import io.nova.core.renderer.camera.OrthographicCameraController;
 import io.nova.core.renderer.framebuffer.*;
 import io.nova.ecs.Scene;
+import io.nova.ecs.SceneState;
 import io.nova.ecs.component.SceneCameraComponent;
 import io.nova.ecs.component.ScriptComponent;
 import io.nova.ecs.component.SpriteRenderComponent;
@@ -31,6 +32,7 @@ import org.joml.Vector2f;
 import panels.ContentBrowserPanel;
 import panels.DragAndDropDataType;
 import panels.EntityPanel;
+import panels.Toolbar;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -55,6 +57,7 @@ public class EditorLayer extends Layer {
     private Entity hoveredEntity;
     private boolean viewportHovered = false;
     private boolean viewportFocused = false;
+    private Toolbar toolbar;
 
     public void onAttach() {
         cameraController = new OrthographicCameraController(16.0f / 9.0f, true);
@@ -97,6 +100,7 @@ public class EditorLayer extends Layer {
         frameBuffer = FrameBufferFactory.create(spec);
 
         entityPanel = new EntityPanel(scene);
+        toolbar = new Toolbar(scene);
         contentBrowserPanel = new ContentBrowserPanel();
         editorCamera = new EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
     }
@@ -128,7 +132,11 @@ public class EditorLayer extends Layer {
         frameBuffer.clearAttachment(1, -1);
 
         // Update
-        scene.onUpdateEditor(editorCamera, deltaTime);
+        if (scene.getState() == SceneState.STOPPED) {
+            scene.onUpdateEditor(editorCamera, deltaTime);
+        } else {
+            scene.onUpdateRuntime(deltaTime);
+        }
 
         // Mouse picking
         if (viewportBounds[0] != null) {
@@ -211,6 +219,7 @@ public class EditorLayer extends Layer {
 
         entityPanel.onImGuiRender();
         contentBrowserPanel.onImGuiRender();
+        toolbar.onImGuiRender();
 
         ImGui.begin("Renderer stats");
         {
