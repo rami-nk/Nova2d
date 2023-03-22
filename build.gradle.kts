@@ -38,6 +38,11 @@ dependencies {
         include("*.jar")
     })
 
+    // BOX2D
+    api(fileTree("libs/jbox2d") {
+        include("*.jar")
+    })
+
     // LWJGL
     implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
     implementation("org.lwjgl", "lwjgl")
