@@ -17,7 +17,7 @@ public class SceneCamera extends Camera {
 
     public SceneCamera(ProjectionType projectionType) {
         this.projectionType = projectionType;
-        aspectRatio = 16.0f / 9.0f;
+        this.aspectRatio = 16.0f / 9.0f;
 
         setDefaultPerspectiveParams();
         setDefaultOrthographicParams();
@@ -88,7 +88,9 @@ public class SceneCamera extends Camera {
     }
 
     public void setViewport(int width, int height) {
-        this.aspectRatio = (float) width / (float) height;
+        if (width != 0 && height != 0) {
+            this.aspectRatio = (float) width / (float) height;
+        }
         updateProjection();
     }
 

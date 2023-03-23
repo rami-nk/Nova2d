@@ -402,7 +402,8 @@ public class EditorLayer extends Layer {
             try {
                 scene = sceneSerializer.deserialize(path);
                 scene.setRenderer(renderer);
-                entityPanel = new EntityPanel(scene);
+                entityPanel.setContext(scene);
+                toolbar.setContext(scene);
                 scene.onViewportResize((int) viewportSize.x, (int) viewportSize.y);
                 this.filePath = path;
             } catch (IOException e) {
@@ -413,8 +414,8 @@ public class EditorLayer extends Layer {
 
     private void newScene() {
         scene = new Scene(renderer);
-        sceneSerializer = new SceneSerializer();
-        entityPanel = new EntityPanel(scene);
+        entityPanel.setContext(scene);
+        toolbar.setContext(scene);
         filePath = null;
     }
 

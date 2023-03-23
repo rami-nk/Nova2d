@@ -9,5 +9,7 @@ public class EntityPropertiesPanel {
         TransformComponentNode.create(entity);
         SpriteRenderComponentNode.create(entity);
         SceneCameraComponentNode.create(entity);
+        BoxColliderComponentNode.create(entity);
+        RigidBodyComponentNode.create(entity);
     }
 }
