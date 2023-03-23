@@ -28,7 +28,6 @@ public class Toolbar {
     }
 
     public void onImGuiRender() {
-
         ImGui.begin("##itembar", ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoBringToFrontOnFocus);
         {
             float size = 32.0f;
