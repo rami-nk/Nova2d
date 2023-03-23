@@ -387,6 +387,7 @@ public class EditorLayer extends Layer {
         runtimeScene = activeScene.copy();
         activeScene = runtimeScene;
         activeScene.setRenderer(renderer);
+        entityPanel.setContext(activeScene);
         activeScene.onRuntimeStart();
         sceneState = SceneState.RUNNING;
     }
@@ -395,6 +396,7 @@ public class EditorLayer extends Layer {
         activeScene.onRuntimeStop();
         runtimeScene = null;
         activeScene = editorScene;
+        entityPanel.setContext(activeScene);
         sceneState = SceneState.EDITING;
     }
 
@@ -467,6 +469,9 @@ public class EditorLayer extends Layer {
     }
 
     private void openScene(String path) {
+        if (sceneState == SceneState.RUNNING) {
+            stop();
+        }
         Function<String, Boolean> isNovaFile = (String p) -> Path.of(p).getFileName().toString().split("\\.")[1].equals("nova");
         if (!Objects.isNull(path) && isNovaFile.apply(path)) {
             try {
