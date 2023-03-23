@@ -1,7 +1,6 @@
 package io.nova.ecs;
 
 public enum SceneState {
-    STOPPED,
+    EDITING,
     RUNNING,
-    PAUSED
 }

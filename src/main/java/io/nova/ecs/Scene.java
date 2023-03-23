@@ -1,6 +1,7 @@
 package io.nova.ecs;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.nova.core.renderer.Renderer;
 import io.nova.core.renderer.camera.Camera;
 import io.nova.core.renderer.camera.EditorCamera;
@@ -21,7 +22,6 @@ import java.util.Objects;
 public class Scene {
 
     private final Registry registry;
-    private SceneState state;
     @JsonIgnore
     private Renderer renderer;
     private int viewPortWidth, viewPortHeight;
@@ -32,7 +32,6 @@ public class Scene {
         this.renderer = renderer;
         registry = new Registry();
         registry.addEntityListener(new CameraComponentAddEventListener(), Group.create(SceneCameraComponent.class));
-        state = SceneState.STOPPED;
     }
 
     public Scene() {
@@ -47,7 +46,7 @@ public class Scene {
         };
     }
 
-    private void onRuntimeStart() {
+    public void onRuntimeStart() {
         physicsWorld = new World(new Vec2(0, -9.81f));
         var group = registry.getEntities(Group.create(RigidBodyComponent.class));
         for (var entity : group) {
@@ -79,12 +78,8 @@ public class Scene {
         }
     }
 
-    private void onRuntimeStop() {
+    public void onRuntimeStop() {
         physicsWorld = null;
-    }
-
-    public SceneState getState() {
-        return state;
     }
 
     public Renderer getRenderer() {
@@ -226,16 +221,6 @@ public class Scene {
         }
     }
 
-    public void play() {
-        onRuntimeStart();
-        state = SceneState.RUNNING;
-    }
-
-    public void stop() {
-        onRuntimeStop();
-        state = SceneState.STOPPED;
-    }
-
     public void removeEntity(Entity entity) {
         registry.removeEntity(entity);
     }
@@ -244,6 +229,7 @@ public class Scene {
         return new Entity();
     }
 
+    @JsonIgnore
     public Entity getPrimaryCameraEntity() {
         var cameraEntity = registry.getEntities(Group.create(SceneCameraComponent.class));
         for (var entity : cameraEntity) {
@@ -253,6 +239,11 @@ public class Scene {
             }
         }
         return null;
+    }
+
+    public Scene copy() {
+        var mapper = new ObjectMapper();
+        return mapper.convertValue(mapper.convertValue(this, Object.class), this.getClass());
     }
 
     private class CameraComponentAddEventListener implements EntityListener {
