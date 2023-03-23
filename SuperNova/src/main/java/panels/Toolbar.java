@@ -13,8 +13,9 @@ import io.nova.ecs.SceneState;
 import java.nio.file.Path;
 
 public class Toolbar {
+    private final Texture playButtonTexture;
+    private final Texture stopButtonTexture;
     private Scene context;
-    private Texture playButtonTexture, stopButtonTexture;
 
     public Toolbar(Scene context) {
         this.context = context;
@@ -22,8 +23,11 @@ public class Toolbar {
         this.stopButtonTexture = TextureLibrary.uploadAndGet(Path.of("SuperNova/src/main/resources/icons/stop-button.png"));
     }
 
-    public void onImGuiRender() {
+    public void setContext(Scene context) {
+        this.context = context;
+    }
 
+    public void onImGuiRender() {
 
         ImGui.begin("##itembar", ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoBringToFrontOnFocus);
         {

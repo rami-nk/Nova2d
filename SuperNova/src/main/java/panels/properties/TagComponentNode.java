@@ -2,9 +2,7 @@ package panels.properties;
 
 import imgui.ImGui;
 import imgui.type.ImString;
-import io.nova.ecs.component.SceneCameraComponent;
-import io.nova.ecs.component.SpriteRenderComponent;
-import io.nova.ecs.component.TagComponent;
+import io.nova.ecs.component.*;
 import io.nova.ecs.entity.Entity;
 
 public class TagComponentNode {
@@ -25,15 +23,22 @@ public class TagComponentNode {
             ImGui.popItemWidth();
 
             if (ImGui.beginPopup("AddComponent")) {
-                if (ImGui.menuItem("Camera")) {
-                    entity.addComponent(new SceneCameraComponent());
-                    entity.getRegistry().updateEntity(entity);
-                }
-                if (ImGui.menuItem("Sprite")) {
-                    entity.addComponent(new SpriteRenderComponent());
-                    entity.getRegistry().updateEntity(entity);
-                }
+                addComponentMenuItem(SceneCameraComponent.class, "Camera", entity);
+                addComponentMenuItem(SpriteRenderComponent.class, "Sprite", entity);
+                addComponentMenuItem(BoxColliderComponent.class, "BoxCollider", entity);
+                addComponentMenuItem(RigidBodyComponent.class, "RigidBody", entity);
                 ImGui.endPopup();
+            }
+        }
+    }
+
+    private static void addComponentMenuItem(Class<?> componentClass, String name, Entity entity) {
+        if (!entity.hasComponent(componentClass) && ImGui.menuItem(name)) {
+            try {
+                entity.addComponent((Component) componentClass.getConstructor().newInstance());
+                entity.getRegistry().updateEntity(entity);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
