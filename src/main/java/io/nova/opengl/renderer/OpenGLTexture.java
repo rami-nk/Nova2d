@@ -1,6 +1,7 @@
 package io.nova.opengl.renderer;
 
 import io.nova.core.renderer.texture.Texture;
+import io.nova.core.renderer.texture.TextureLibrary;
 import org.lwjgl.BufferUtils;
 
 import java.nio.ByteBuffer;
@@ -23,17 +24,8 @@ public class OpenGLTexture implements Texture {
     }
 
     public OpenGLTexture(Path path) {
-        this.filepath = path.toString();
-        rendererId = glGenTextures();
-        bind();
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-        loadAndUploadTexture(filepath);
+        this.filepath = path.toAbsolutePath().toString();
+        initTexture();
     }
 
     public OpenGLTexture(int width, int height) {
@@ -49,6 +41,19 @@ public class OpenGLTexture implements Texture {
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    }
+
+    private void initTexture() {
+        rendererId = glGenTextures();
+        bind();
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        loadAndUploadTexture(filepath);
     }
 
     @Override
@@ -133,6 +138,18 @@ public class OpenGLTexture implements Texture {
     }
 
     public void setFilepath(String filepath) {
-        this.filepath = filepath;
+        Path path = Path.of(filepath);
+        var tex = TextureLibrary.get(path.getFileName().toString());
+        if (tex != null) {
+            this.rendererId = tex.getId();
+            this.filepath = tex.getFilepath();
+            this.width = tex.getWidth();
+            this.height = tex.getHeight();
+        } else {
+            this.filepath = String.valueOf(path.toAbsolutePath());
+            if (this.width == 0 && this.height == 0) {
+                initTexture();
+            }
+        }
     }
 }

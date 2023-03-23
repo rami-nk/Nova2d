@@ -24,7 +24,10 @@ public class RigidBodyComponentNode {
                 }
                 ImGui.endCombo();
             }
-            ImGui.checkbox("Fixed Rotation", rigidBody.isFixedRotation());
+            var fixedRotation = rigidBody.isFixedRotation();
+            if (ImGui.checkbox("Fixed Rotation", fixedRotation)) {
+                rigidBody.setFixedRotation(!fixedRotation);
+            }
         });
     }
 }
