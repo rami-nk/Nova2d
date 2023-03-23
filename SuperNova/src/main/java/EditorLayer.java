@@ -2,9 +2,7 @@ import imgui.ImGui;
 import imgui.extension.imguizmo.ImGuizmo;
 import imgui.extension.imguizmo.flag.Mode;
 import imgui.extension.imguizmo.flag.Operation;
-import imgui.flag.ImGuiCond;
-import imgui.flag.ImGuiStyleVar;
-import imgui.flag.ImGuiWindowFlags;
+import imgui.flag.*;
 import io.nova.core.application.Application;
 import io.nova.core.codes.KeyCode;
 import io.nova.core.codes.MouseCode;
@@ -14,6 +12,8 @@ import io.nova.core.renderer.RendererFactory;
 import io.nova.core.renderer.camera.EditorCamera;
 import io.nova.core.renderer.camera.OrthographicCameraController;
 import io.nova.core.renderer.framebuffer.*;
+import io.nova.core.renderer.texture.Texture;
+import io.nova.core.renderer.texture.TextureLibrary;
 import io.nova.ecs.Scene;
 import io.nova.ecs.SceneState;
 import io.nova.ecs.component.SceneCameraComponent;
@@ -32,7 +32,6 @@ import org.joml.Vector2f;
 import panels.ContentBrowserPanel;
 import panels.DragAndDropDataType;
 import panels.EntityPanel;
-import panels.Toolbar;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -57,8 +56,10 @@ public class EditorLayer extends Layer {
     private Entity hoveredEntity;
     private boolean viewportHovered = false;
     private boolean viewportFocused = false;
-    private Toolbar toolbar;
     private Entity entityCopy;
+    private SceneState sceneState;
+
+    private Texture playButtonTexture, stopButtonTexture;
 
     public void onAttach() {
         cameraController = new OrthographicCameraController(16.0f / 9.0f, true);
@@ -102,9 +103,11 @@ public class EditorLayer extends Layer {
         frameBuffer = FrameBufferFactory.create(spec);
 
         entityPanel = new EntityPanel(activeScene);
-        toolbar = new Toolbar(activeScene);
         contentBrowserPanel = new ContentBrowserPanel();
         editorCamera = new EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
+        sceneState = SceneState.EDITING;
+        this.playButtonTexture = TextureLibrary.uploadAndGet(Path.of("SuperNova/src/main/resources/icons/play-button.png"));
+        this.stopButtonTexture = TextureLibrary.uploadAndGet(Path.of("SuperNova/src/main/resources/icons/stop-button.png"));
     }
 
     public void onDetach() {
@@ -134,10 +137,9 @@ public class EditorLayer extends Layer {
         frameBuffer.clearAttachment(1, -1);
 
         // Update
-        if (activeScene.getState() == SceneState.STOPPED) {
-            activeScene.onUpdateEditor(editorCamera, deltaTime);
-        } else {
-            activeScene.onUpdateRuntime(deltaTime);
+        switch (sceneState) {
+            case EDITING -> activeScene.onUpdateEditor(editorCamera, deltaTime);
+            case RUNNING -> activeScene.onUpdateRuntime(deltaTime);
         }
 
         // Mouse picking
@@ -221,7 +223,7 @@ public class EditorLayer extends Layer {
 
         entityPanel.onImGuiRender();
         contentBrowserPanel.onImGuiRender();
-        toolbar.onImGuiRender();
+        createToolbar();
 
         ImGui.begin("Renderer stats");
         {
@@ -275,7 +277,7 @@ public class EditorLayer extends Layer {
         // ImGuizmo
         {
             var selectedEntity = entityPanel.getSelectedEntity();
-            if (activeScene.getState() == SceneState.STOPPED && gizmoOperation != -1 && !Objects.isNull(selectedEntity)) {
+            if (sceneState == SceneState.EDITING && gizmoOperation != -1 && !Objects.isNull(selectedEntity)) {
                 ImGuizmo.setOrthographic(false);
                 ImGuizmo.setDrawList();
                 ImGuizmo.setRect(ImGui.getWindowPosX(), ImGui.getWindowPosY(), ImGui.getWindowWidth(), ImGui.getWindowHeight());
@@ -354,6 +356,48 @@ public class EditorLayer extends Layer {
         dispatcher.dispatch(MouseButtonPressedEvent.class, this::handleMouePicking);
     }
 
+    public void createToolbar() {
+        ImGui.begin("##itembar", ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoBringToFrontOnFocus);
+        {
+            float size = 32.0f;
+            ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 0, 1);
+            ImGui.pushStyleVar(ImGuiStyleVar.WindowBorderSize, 0);
+            ImGui.pushStyleColor(ImGuiCol.WindowBg, 0.1f, 0.1f, 0.1f, 1.0f);
+            ImGui.setWindowSize(ImGui.getWindowWidth(), size);
+            var texture = sceneState == SceneState.RUNNING ? stopButtonTexture : playButtonTexture;
+            ImGui.pushStyleColor(ImGuiCol.Button, 0, 0, 0, 0);
+            ImGui.pushStyleColor(ImGuiCol.ButtonHovered, 0.1f, 0.1f, 0.1f, 1);
+            ImGui.setCursorPosX(ImGui.getWindowWidth() / 2.0f - (size / 2.0f));
+            if (ImGui.imageButton(texture.getId(), size, size, 0, 1, 1, 0, 0)) {
+                if (sceneState == SceneState.RUNNING) {
+                    stop();
+                } else {
+                    play();
+                }
+            }
+            var itemHovered = ImGui.isItemHovered();
+            ImGui.setMouseCursor(itemHovered ? ImGuiMouseCursor.Hand : ImGuiMouseCursor.Arrow);
+            ImGui.popStyleColor(3);
+            ImGui.popStyleVar(2);
+        }
+        ImGui.end();
+    }
+
+    private void play() {
+        runtimeScene = activeScene.copy();
+        activeScene = runtimeScene;
+        activeScene.setRenderer(renderer);
+        activeScene.onRuntimeStart();
+        sceneState = SceneState.RUNNING;
+    }
+
+    private void stop() {
+        activeScene.onRuntimeStop();
+        runtimeScene = null;
+        activeScene = editorScene;
+        sceneState = SceneState.EDITING;
+    }
+
     private boolean handleShortcuts(KeyPressedEvent event) {
         if (event.isRepeat()) return false;
 
@@ -429,7 +473,6 @@ public class EditorLayer extends Layer {
                 editorScene = sceneSerializer.deserialize(path);
                 editorScene.setRenderer(renderer);
                 entityPanel.setContext(editorScene);
-                toolbar.setContext(editorScene);
                 editorScene.onViewportResize((int) viewportSize.x, (int) viewportSize.y);
                 activeScene = editorScene;
                 this.filePath = path;
@@ -442,7 +485,6 @@ public class EditorLayer extends Layer {
     private void newScene() {
         editorScene = new Scene(renderer);
         entityPanel.setContext(editorScene);
-        toolbar.setContext(editorScene);
         filePath = null;
         activeScene = editorScene;
     }
