@@ -43,7 +43,7 @@ import static imgui.extension.imguizmo.flag.Operation.*;
 
 public class EditorLayer extends Layer {
     private final Vector2f viewportSize = new Vector2f();
-    private Scene scene;
+    private Scene activeScene, editorScene, runtimeScene;
     private Renderer renderer;
     private OrthographicCameraController cameraController;
     private FrameBuffer frameBuffer;
@@ -67,29 +67,30 @@ public class EditorLayer extends Layer {
         filePath = "assets/scenes/Cube.nova";
 
         try {
-            scene = sceneSerializer.deserialize(filePath);
-            scene.setRenderer(renderer);
+            editorScene = sceneSerializer.deserialize(filePath);
+            editorScene.setRenderer(renderer);
+            activeScene = editorScene;
         } catch (IOException e) {
             System.err.println("Failed to load scene: " + e.getMessage());
             System.err.println("Created default scene instead.");
 
-            scene = new Scene(renderer);
+            activeScene = new Scene(renderer);
 
-            Entity entity = scene.createEntity("Quad");
+            Entity entity = activeScene.createEntity("Quad");
             entity.addComponent(new SpriteRenderComponent());
 
-            Entity entity2 = scene.createEntity("Quad2");
+            Entity entity2 = activeScene.createEntity("Quad2");
             entity2.addComponent(new SpriteRenderComponent());
 
-            Entity primaryCamera = scene.createEntity("Primary Camera");
+            Entity primaryCamera = activeScene.createEntity("Primary Camera");
             primaryCamera.addComponent(new SceneCameraComponent()).setPrimary(true);
 
-            Entity secondaryCamera = scene.createEntity("Secondary Camera");
+            Entity secondaryCamera = activeScene.createEntity("Secondary Camera");
             secondaryCamera.addComponent(new SceneCameraComponent());
 
             secondaryCamera.addComponent(new ScriptComponent()).bind(CameraController.class);
 
-            scene.activateEntities(entity, entity2, primaryCamera, secondaryCamera);
+            activeScene.activateEntities(entity, entity2, primaryCamera, secondaryCamera);
         }
 
         var spec = new FrameBufferSpecification(Application.getWindow().getWidth(), Application.getWindow().getHeight());
@@ -100,14 +101,14 @@ public class EditorLayer extends Layer {
         );
         frameBuffer = FrameBufferFactory.create(spec);
 
-        entityPanel = new EntityPanel(scene);
-        toolbar = new Toolbar(scene);
+        entityPanel = new EntityPanel(activeScene);
+        toolbar = new Toolbar(activeScene);
         contentBrowserPanel = new ContentBrowserPanel();
         editorCamera = new EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
     }
 
     public void onDetach() {
-        scene.dispose();
+        activeScene.dispose();
         frameBuffer.dispose();
     }
 
@@ -117,7 +118,7 @@ public class EditorLayer extends Layer {
         if (viewportSize.x > 0 && viewportSize.y > 0 &&
                 (viewportSize.x != spec.getWidth() || viewportSize.y != spec.getHeight())) {
             frameBuffer.resize((int) viewportSize.x, (int) viewportSize.y);
-            scene.onViewportResize((int) viewportSize.x, (int) viewportSize.y);
+            activeScene.onViewportResize((int) viewportSize.x, (int) viewportSize.y);
             editorCamera.setViewportSize(viewportSize.x, viewportSize.y);
         }
 
@@ -133,10 +134,10 @@ public class EditorLayer extends Layer {
         frameBuffer.clearAttachment(1, -1);
 
         // Update
-        if (scene.getState() == SceneState.STOPPED) {
-            scene.onUpdateEditor(editorCamera, deltaTime);
+        if (activeScene.getState() == SceneState.STOPPED) {
+            activeScene.onUpdateEditor(editorCamera, deltaTime);
         } else {
-            scene.onUpdateRuntime(deltaTime);
+            activeScene.onUpdateRuntime(deltaTime);
         }
 
         // Mouse picking
@@ -155,7 +156,7 @@ public class EditorLayer extends Layer {
             if (mouseX >= 0 && mouseX < vs.x && mouseY >= 0 && mouseY < vs.y) {
                 int id = frameBuffer.readPixel(1, mouseX, mouseY);
                 if (id > 0) {
-                    var entity = scene.getRegistry().getEntity(id);
+                    var entity = activeScene.getRegistry().getEntity(id);
                     if (entity != null) {
                         hoveredEntity = entity;
                     }
@@ -274,7 +275,7 @@ public class EditorLayer extends Layer {
         // ImGuizmo
         {
             var selectedEntity = entityPanel.getSelectedEntity();
-            if (gizmoOperation != -1 && !Objects.isNull(selectedEntity)) {
+            if (activeScene.getState() == SceneState.STOPPED && gizmoOperation != -1 && !Objects.isNull(selectedEntity)) {
                 ImGuizmo.setOrthographic(false);
                 ImGuizmo.setDrawList();
                 ImGuizmo.setRect(ImGui.getWindowPosX(), ImGui.getWindowPosY(), ImGui.getWindowWidth(), ImGui.getWindowHeight());
@@ -395,7 +396,7 @@ public class EditorLayer extends Layer {
                 if (cmd) {
                     var selectedEntity = entityPanel.getSelectedEntity();
                     if (!Objects.isNull(selectedEntity)) {
-                        var entity = scene.createVoidEntity();
+                        var entity = activeScene.createVoidEntity();
                         for (var component : selectedEntity.getComponents()) {
                             var componentCopy = component.copy(component.getClass());
                             entity.addComponent(componentCopy);
@@ -406,7 +407,7 @@ public class EditorLayer extends Layer {
             }
             case KEY_V -> {
                 if (cmd && !Objects.isNull(entityCopy)) {
-                    scene.activateEntities(entityCopy);
+                    activeScene.activateEntities(entityCopy);
                     entityCopy.getRegistry().updateEntity(entityCopy);
                     entityPanel.setSelectedEntity(entityCopy);
                     entityCopy = null;
@@ -425,11 +426,12 @@ public class EditorLayer extends Layer {
         Function<String, Boolean> isNovaFile = (String p) -> Path.of(p).getFileName().toString().split("\\.")[1].equals("nova");
         if (!Objects.isNull(path) && isNovaFile.apply(path)) {
             try {
-                scene = sceneSerializer.deserialize(path);
-                scene.setRenderer(renderer);
-                entityPanel.setContext(scene);
-                toolbar.setContext(scene);
-                scene.onViewportResize((int) viewportSize.x, (int) viewportSize.y);
+                editorScene = sceneSerializer.deserialize(path);
+                editorScene.setRenderer(renderer);
+                entityPanel.setContext(editorScene);
+                toolbar.setContext(editorScene);
+                editorScene.onViewportResize((int) viewportSize.x, (int) viewportSize.y);
+                activeScene = editorScene;
                 this.filePath = path;
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -438,17 +440,18 @@ public class EditorLayer extends Layer {
     }
 
     private void newScene() {
-        scene = new Scene(renderer);
-        entityPanel.setContext(scene);
-        toolbar.setContext(scene);
+        editorScene = new Scene(renderer);
+        entityPanel.setContext(editorScene);
+        toolbar.setContext(editorScene);
         filePath = null;
+        activeScene = editorScene;
     }
 
     private void saveFileAs() {
         var filePath = FileDialog.saveFileDialog("Nova files (*.nova)\0*.nova\0");
         if (!Objects.isNull(filePath)) {
             try {
-                sceneSerializer.serialize(scene, filePath);
+                sceneSerializer.serialize(activeScene, filePath);
                 this.filePath = filePath;
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -459,7 +462,7 @@ public class EditorLayer extends Layer {
     private void saveFile() {
         if (!Objects.isNull(filePath)) {
             try {
-                sceneSerializer.serialize(scene, filePath);
+                sceneSerializer.serialize(activeScene, filePath);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -467,7 +470,7 @@ public class EditorLayer extends Layer {
             var filePath = FileDialog.saveFileDialog("Nova files (*.nova)\0*.nova\0");
             if (!Objects.isNull(filePath)) {
                 try {
-                    sceneSerializer.serialize(scene, filePath);
+                    sceneSerializer.serialize(activeScene, filePath);
                     this.filePath = filePath;
                 } catch (IOException e) {
                     throw new RuntimeException(e);

@@ -152,4 +152,17 @@ public class OpenGLTexture implements Texture {
             }
         }
     }
+
+    @Override
+    public int hashCode() {
+        return rendererId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof OpenGLTexture that)) return false;
+
+        return rendererId == that.rendererId;
+    }
 }
