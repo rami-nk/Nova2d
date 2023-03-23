@@ -58,6 +58,7 @@ public class EditorLayer extends Layer {
     private boolean viewportHovered = false;
     private boolean viewportFocused = false;
     private Toolbar toolbar;
+    private Entity entityCopy;
 
     public void onAttach() {
         cameraController = new OrthographicCameraController(16.0f / 9.0f, true);
@@ -357,6 +358,7 @@ public class EditorLayer extends Layer {
 
         var control = Input.isKeyPressed(KeyCode.KEY_LEFT_CONTROL) || Input.isKeyPressed(KeyCode.KEY_RIGHT_CONTROL);
         var shift = Input.isKeyPressed(KeyCode.KEY_LEFT_SHIFT) || Input.isKeyPressed(KeyCode.KEY_RIGHT_SHIFT);
+        var cmd = Input.isKeyPressed(KeyCode.KEY_LEFT_SUPER) || Input.isKeyPressed(KeyCode.KEY_RIGHT_SUPER);
         switch (event.getKeyCode()) {
             case KEY_S -> {
                 if (control && shift) {
@@ -387,6 +389,29 @@ public class EditorLayer extends Layer {
             case KEY_W -> gizmoOperation = Operation.TRANSLATE;
             case KEY_E -> gizmoOperation = Operation.ROTATE;
             case KEY_R -> gizmoOperation = Operation.SCALE;
+
+            // Copy and paste entities
+            case KEY_C -> {
+                if (cmd) {
+                    var selectedEntity = entityPanel.getSelectedEntity();
+                    if (!Objects.isNull(selectedEntity)) {
+                        var entity = scene.createVoidEntity();
+                        for (var component : selectedEntity.getComponents()) {
+                            var componentCopy = component.copy(component.getClass());
+                            entity.addComponent(componentCopy);
+                        }
+                        entityCopy = entity;
+                    }
+                }
+            }
+            case KEY_V -> {
+                if (cmd && !Objects.isNull(entityCopy)) {
+                    scene.activateEntities(entityCopy);
+                    entityCopy.getRegistry().updateEntity(entityCopy);
+                    entityPanel.setSelectedEntity(entityCopy);
+                    entityCopy = null;
+                }
+            }
         }
         return true;
     }

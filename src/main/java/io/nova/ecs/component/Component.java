@@ -3,6 +3,7 @@ package io.nova.ecs.component;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.nova.ecs.Registry;
 import io.nova.ecs.entity.Entity;
 import io.nova.ecs.system.EcSystem;
@@ -60,5 +61,10 @@ public abstract class Component {
         }
         deactivate();
         activated = false;
+    }
+
+    public <T extends Component> Component copy(Class<T> clazz) {
+        var mapper = new ObjectMapper();
+        return mapper.convertValue(mapper.convertValue(this, clazz), clazz);
     }
 }
