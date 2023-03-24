@@ -112,6 +112,12 @@ public class Scene {
 
     public void onUpdateEditor(EditorCamera camera, float deltaTime) {
         renderer.beginScene(camera);
+        drawPrimitives();
+        renderer.endScene();
+        registry.update(deltaTime);
+    }
+
+    private void drawPrimitives() {
         {
             var group = registry.getEntities(Group.create(SpriteRendererComponent.class, TransformComponent.class));
             for (var entity : group) {
@@ -129,8 +135,6 @@ public class Scene {
                 renderer.drawCircle(transform.getTransform(), circle, entity.getId());
             }
         }
-        renderer.endScene();
-        registry.update(deltaTime);
     }
 
     public void onUpdateRuntime(float deltaTime) {
@@ -186,12 +190,8 @@ public class Scene {
 
         if (!Objects.isNull(primaryCamera)) {
             renderer.beginScene(primaryCamera, cameraTransform);
-            var group = registry.getEntities(Group.create(SpriteRendererComponent.class, TransformComponent.class));
-            for (var entity : group) {
-                var transform = entity.getComponent(TransformComponent.class);
-                var sprite = entity.getComponent(SpriteRendererComponent.class);
-                renderer.drawSprite(transform.getTransform(), sprite, entity.getId());
-            }
+            drawPrimitives();
+            renderer.endScene();
             renderer.endScene();
         }
 
