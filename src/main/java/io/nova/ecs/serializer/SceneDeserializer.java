@@ -10,7 +10,7 @@ import io.nova.core.renderer.texture.TextureLibrary;
 import io.nova.ecs.Scene;
 import io.nova.ecs.component.Component;
 import io.nova.ecs.component.ScriptComponent;
-import io.nova.ecs.component.SpriteRenderComponent;
+import io.nova.ecs.component.SpriteRendererComponent;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -52,11 +52,11 @@ class SceneDeserializer extends StdDeserializer<Scene> {
                     ((ScriptComponent) e.addComponent(component)).bind(scriptableEntityClass);
                     break;
                 }
-                if (component instanceof SpriteRenderComponent) {
-                    var texture = ((SpriteRenderComponent) component).getTexture();
+                if (component instanceof SpriteRendererComponent) {
+                    var texture = ((SpriteRendererComponent) component).getTexture();
                     if (!Objects.isNull(texture)) {
                         texture = TextureLibrary.uploadAndGet(Path.of(texture.getFilepath()));
-                        ((SpriteRenderComponent) component).setTexture(texture);
+                        ((SpriteRendererComponent) component).setTexture(texture);
                     }
                 }
                 e.addComponent(component);

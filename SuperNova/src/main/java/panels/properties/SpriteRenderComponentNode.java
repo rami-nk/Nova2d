@@ -2,7 +2,7 @@ package panels.properties;
 
 import imgui.ImGui;
 import io.nova.core.renderer.texture.TextureLibrary;
-import io.nova.ecs.component.SpriteRenderComponent;
+import io.nova.ecs.component.SpriteRendererComponent;
 import io.nova.ecs.entity.Entity;
 import panels.DragAndDropDataType;
 
@@ -11,8 +11,8 @@ import java.util.Objects;
 
 public class SpriteRenderComponentNode {
     public static void create(Entity entity) {
-        ComponentNode.create(entity, "Sprite", SpriteRenderComponent.class, () -> {
-            var sprite = entity.getComponent(SpriteRenderComponent.class);
+        ComponentNode.create(entity, "Sprite", SpriteRendererComponent.class, () -> {
+            var sprite = entity.getComponent(SpriteRendererComponent.class);
             var color = sprite.getColor();
             if (ImGui.colorEdit4("Color", color)) {
                 sprite.setColor(color);

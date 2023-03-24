@@ -14,7 +14,7 @@
         "@class" : "io.nova.ecs.component.TagComponent",
         "tag" : "Right"
       }, {
-        "@class" : "io.nova.ecs.component.SpriteRenderComponent",
+        "@class" : "io.nova.ecs.component.SpriteRendererComponent",
         "color" : [ 0.3388292, 0.73745173, 0.520441, 1.0 ],
         "texture" : {
           "@class" : "io.nova.opengl.renderer.OpenGLTexture",
@@ -42,8 +42,8 @@
             "affine" : true
           }
         },
-        "io.nova.ecs.component.SpriteRenderComponent" : {
-          "@class" : "io.nova.ecs.component.SpriteRenderComponent",
+        "io.nova.ecs.component.SpriteRendererComponent" : {
+          "@class" : "io.nova.ecs.component.SpriteRendererComponent",
           "color" : [ 0.3388292, 0.73745173, 0.520441, 1.0 ],
           "texture" : {
             "@class" : "io.nova.opengl.renderer.OpenGLTexture",
@@ -73,7 +73,7 @@
         "@class" : "io.nova.ecs.component.TagComponent",
         "tag" : "Left"
       }, {
-        "@class" : "io.nova.ecs.component.SpriteRenderComponent",
+        "@class" : "io.nova.ecs.component.SpriteRendererComponent",
         "color" : [ 0.14461623, 0.34362936, 0.18457249, 1.0 ],
         "texture" : {
           "@class" : "io.nova.opengl.renderer.OpenGLTexture",
@@ -101,8 +101,8 @@
             "affine" : true
           }
         },
-        "io.nova.ecs.component.SpriteRenderComponent" : {
-          "@class" : "io.nova.ecs.component.SpriteRenderComponent",
+        "io.nova.ecs.component.SpriteRendererComponent" : {
+          "@class" : "io.nova.ecs.component.SpriteRendererComponent",
           "color" : [ 0.14461623, 0.34362936, 0.18457249, 1.0 ],
           "texture" : {
             "@class" : "io.nova.opengl.renderer.OpenGLTexture",

@@ -18,7 +18,7 @@ import io.nova.ecs.Scene;
 import io.nova.ecs.SceneState;
 import io.nova.ecs.component.SceneCameraComponent;
 import io.nova.ecs.component.ScriptComponent;
-import io.nova.ecs.component.SpriteRenderComponent;
+import io.nova.ecs.component.SpriteRendererComponent;
 import io.nova.ecs.component.TransformComponent;
 import io.nova.ecs.entity.Entity;
 import io.nova.ecs.serializer.SceneSerializer;
@@ -78,10 +78,10 @@ public class EditorLayer extends Layer {
             activeScene = new Scene(renderer);
 
             Entity entity = activeScene.createEntity("Quad");
-            entity.addComponent(new SpriteRenderComponent());
+            entity.addComponent(new SpriteRendererComponent());
 
             Entity entity2 = activeScene.createEntity("Quad2");
-            entity2.addComponent(new SpriteRenderComponent());
+            entity2.addComponent(new SpriteRendererComponent());
 
             Entity primaryCamera = activeScene.createEntity("Primary Camera");
             primaryCamera.addComponent(new SceneCameraComponent()).setPrimary(true);
