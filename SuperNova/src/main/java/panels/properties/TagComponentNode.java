@@ -24,7 +24,7 @@ public class TagComponentNode {
 
             if (ImGui.beginPopup("AddComponent")) {
                 addComponentMenuItem(SceneCameraComponent.class, "Camera", entity);
-                addComponentMenuItem(SpriteRenderComponent.class, "Sprite", entity);
+                addComponentMenuItem(SpriteRendererComponent.class, "Sprite", entity);
                 addComponentMenuItem(BoxColliderComponent.class, "BoxCollider", entity);
                 addComponentMenuItem(RigidBodyComponent.class, "RigidBody", entity);
                 ImGui.endPopup();

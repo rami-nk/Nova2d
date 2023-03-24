@@ -10,7 +10,7 @@ import io.nova.core.renderer.shader.ShaderLibrary;
 import io.nova.core.renderer.texture.SubTexture;
 import io.nova.core.renderer.texture.Texture;
 import io.nova.core.renderer.texture.TextureFactory;
-import io.nova.ecs.component.SpriteRenderComponent;
+import io.nova.ecs.component.SpriteRendererComponent;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -199,7 +199,7 @@ public class OpenGLRenderer implements Renderer {
     }
 
     @Override
-    public void drawSprite(Matrix4f transform, SpriteRenderComponent component, int entityID) {
+    public void drawSprite(Matrix4f transform, SpriteRendererComponent component, int entityID) {
 
         if (component.getTexture() != null) {
             var textureSlot = textureSlotManager.add(component.getTexture());
