@@ -6,7 +6,7 @@ import io.nova.core.renderer.camera.OrthographicCamera;
 import io.nova.opengl.renderer.OpenGLRenderer;
 import org.joml.Matrix4f;
 
-public interface Renderer extends QuadRenderer, ComponentRenderer {
+public interface Renderer extends QuadRenderer, SpriteRenderer, CircleRenderer {
     RendererApi API = RendererApi.OpenGL;
 
     void beginScene(OrthographicCamera camera);
