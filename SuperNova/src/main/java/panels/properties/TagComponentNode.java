@@ -23,8 +23,9 @@ public class TagComponentNode {
             ImGui.popItemWidth();
 
             if (ImGui.beginPopup("AddComponent")) {
-                addComponentMenuItem(SceneCameraComponent.class, "Camera", entity);
                 addComponentMenuItem(SpriteRendererComponent.class, "Sprite", entity);
+                addComponentMenuItem(CircleRendererComponent.class, "Circle", entity);
+                addComponentMenuItem(SceneCameraComponent.class, "Camera", entity);
                 addComponentMenuItem(BoxColliderComponent.class, "BoxCollider", entity);
                 addComponentMenuItem(RigidBodyComponent.class, "RigidBody", entity);
                 ImGui.endPopup();
