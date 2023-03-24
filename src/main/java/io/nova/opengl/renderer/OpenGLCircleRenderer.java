@@ -9,6 +9,7 @@ import org.joml.Vector4f;
 
 import java.util.Arrays;
 
+import static io.nova.opengl.renderer.OpenGLRenderer.stats;
 import static org.lwjgl.opengl.GL11.*;
 
 public class OpenGLCircleRenderer {
@@ -94,6 +95,7 @@ public class OpenGLCircleRenderer {
             data[dataIndex++] = entityID;
         }
         indexCount += 6;
+        stats.quadCount++;
     }
 
     private int[] generateIndices() {
@@ -132,7 +134,7 @@ public class OpenGLCircleRenderer {
             vertexArray.bind();
             shader.bind();
             glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
-//            stats.drawCalls++;
+            stats.drawCalls++;
         }
     }
 }

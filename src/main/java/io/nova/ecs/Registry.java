@@ -106,7 +106,7 @@ public final class Registry {
 
     private void addEntityToViews(Entity e) {
         for (Group group : views.keySet()) {
-            if (group.isMember(e)) {
+            if (group.isMember(e) && !views.get(group).contains(e)) {
                 views.get(group).add(e);
             }
         }
@@ -176,7 +176,7 @@ public final class Registry {
     private void initView(Group group, List<Entity> view) {
         assert view.isEmpty();
         for (Entity e : entities) {
-            if (group.isMember(e)) {
+            if (group.isMember(e) && !view.contains(e)) {
                 view.add(e);
             }
         }

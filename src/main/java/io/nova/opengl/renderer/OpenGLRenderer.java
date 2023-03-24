@@ -17,16 +17,14 @@ import static org.lwjgl.opengl.GL40.*;
 
 public class OpenGLRenderer implements Renderer {
 
+    protected static final Statistics stats = new Statistics();
     private final OpenGLQuadRenderer quadRenderer;
     private final OpenGLCircleRenderer circleRenderer;
-    private final TextureSlotManager textureSlotManager;
-    private final Statistics stats;
 
     public OpenGLRenderer() {
-        textureSlotManager = new TextureSlotManager();
+        TextureSlotManager textureSlotManager = new TextureSlotManager();
         quadRenderer = new OpenGLQuadRenderer(textureSlotManager, this::endScene);
         circleRenderer = new OpenGLCircleRenderer(this::endScene);
-        stats = new Statistics();
     }
 
     @Deprecated
@@ -85,11 +83,6 @@ public class OpenGLRenderer implements Renderer {
     @Override
     public Statistics getStats() {
         return stats;
-    }
-
-    private void resetData() {
-        quadRenderer.resetData();
-        circleRenderer.resetData();
     }
 
     @Override
@@ -158,8 +151,8 @@ public class OpenGLRenderer implements Renderer {
     }
 
     public static class Statistics {
-        private int quadCount = 0;
-        private int drawCalls = 0;
+        protected int quadCount = 0;
+        protected int drawCalls = 0;
 
         public int getQuadCount() {
             return quadCount;
