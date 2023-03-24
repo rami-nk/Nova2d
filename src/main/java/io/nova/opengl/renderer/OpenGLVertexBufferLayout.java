@@ -11,16 +11,19 @@ public class OpenGLVertexBufferLayout implements VertexBufferLayout {
 
     private final List<VertexBufferElement> elements;
     private int stride;
+    private int count;
 
     public OpenGLVertexBufferLayout() {
         elements = new ArrayList<>();
         stride = 0;
+        count = 0;
     }
 
     @Override
     public void pushFloat(String name, int count) {
         elements.add(new VertexBufferElement(DataType.FLOAT, count, false));
         stride += count * DataType.FLOAT.getByteSize();
+        this.count += count;
     }
 
     @Override
@@ -37,5 +40,10 @@ public class OpenGLVertexBufferLayout implements VertexBufferLayout {
     @Override
     public int getStride() {
         return stride;
+    }
+
+    @Override
+    public int getCount() {
+        return count;
     }
 }
