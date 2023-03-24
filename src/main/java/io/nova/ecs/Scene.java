@@ -192,7 +192,6 @@ public class Scene {
             renderer.beginScene(primaryCamera, cameraTransform);
             drawPrimitives();
             renderer.endScene();
-            renderer.endScene();
         }
 
         registry.update(deltaTime);
