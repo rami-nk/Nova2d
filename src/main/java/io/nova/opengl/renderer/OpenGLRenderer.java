@@ -42,13 +42,15 @@ public class OpenGLRenderer implements Renderer {
 
     @Override
     public void beginScene(Camera camera, Matrix4f transform) {
-        quadRenderer.getShader().bind();
 
         var projection = new Matrix4f(camera.getProjection());
         transform = new Matrix4f(transform);
         var viewProjection = projection.mul(transform.invert());
 
+        quadRenderer.getShader().bind();
         quadRenderer.getShader().setUniformMat4f("uViewProjection", viewProjection);
+
+        circleRenderer.getShader().bind();
         circleRenderer.getShader().setUniformMat4f("uViewProjection", viewProjection);
 
         resetData();
