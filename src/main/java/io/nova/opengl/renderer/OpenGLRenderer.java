@@ -13,8 +13,6 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-import java.util.Arrays;
-
 import static org.lwjgl.opengl.GL40.*;
 
 public class OpenGLRenderer implements Renderer {
@@ -34,72 +32,38 @@ public class OpenGLRenderer implements Renderer {
     @Deprecated
     @Override
     public void beginScene(OrthographicCamera camera) {
-        quadRenderer.getShader().bind();
-        quadRenderer.getShader().setUniformMat4f("uViewProjection", camera.getViewProjectionMatrix());
-
-        resetData();
+        quadRenderer.beginScene(camera.getViewProjection());
+        circleRenderer.beginScene(camera.getViewProjection());
     }
 
     @Override
     public void beginScene(Camera camera, Matrix4f transform) {
-
         var projection = new Matrix4f(camera.getProjection());
         transform = new Matrix4f(transform);
         var viewProjection = projection.mul(transform.invert());
 
-        quadRenderer.getShader().bind();
-        quadRenderer.getShader().setUniformMat4f("uViewProjection", viewProjection);
-
-        circleRenderer.getShader().bind();
-        circleRenderer.getShader().setUniformMat4f("uViewProjection", viewProjection);
-
-        resetData();
+        quadRenderer.beginScene(viewProjection);
+        circleRenderer.beginScene(viewProjection);
     }
 
     @Override
     public void beginScene(EditorCamera camera) {
-        quadRenderer.getShader().bind();
-        quadRenderer.getShader().setUniformMat4f("uViewProjection", camera.getViewProjection());
-
-        circleRenderer.getShader().bind();
-        circleRenderer.getShader().setUniformMat4f("uViewProjection", camera.getViewProjection());
-
-        resetData();
+        quadRenderer.beginScene(camera.getViewProjection());
+        circleRenderer.beginScene(camera.getViewProjection());
     }
 
     @Override
     public void endScene() {
-        if (quadRenderer.getDataIndex() > 0) {
-            var copy = Arrays.copyOfRange(quadRenderer.getData(), 0, quadRenderer.getDataIndex());
-            quadRenderer.getVertexBuffer().reBufferData(copy);
-        }
-        if (circleRenderer.getDataIndex() > 0) {
-            var copy = Arrays.copyOfRange(circleRenderer.getData(), 0, circleRenderer.getDataIndex());
-            circleRenderer.getVertexBuffer().reBufferData(copy);
-        }
+        quadRenderer.endScene();
+        circleRenderer.endScene();
 
         flush();
     }
 
     @Override
     public void flush() {
-        if (circleRenderer.getDataIndex() > 0) {
-            circleRenderer.getVertexArray().bind();
-            circleRenderer.getShader().bind();
-            glDrawElements(GL_TRIANGLES, circleRenderer.getIndexCount(), GL_UNSIGNED_INT, 0);
-            stats.drawCalls++;
-        }
-        if (quadRenderer.getDataIndex() > 0) {
-            var textures = textureSlotManager.getTextures();
-            for (int i = 0; i < textureSlotManager.getTextures().size(); i++) {
-                textures.get(i).bind(Texture.SLOT_ZERO + i);
-            }
-
-            quadRenderer.getVertexArray().bind();
-            quadRenderer.getShader().bind();
-            glDrawElements(GL_TRIANGLES, quadRenderer.getIndexCount(), GL_UNSIGNED_INT, 0);
-            stats.drawCalls++;
-        }
+        quadRenderer.flush();
+        circleRenderer.flush();
     }
 
     @Override
