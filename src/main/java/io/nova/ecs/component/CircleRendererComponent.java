@@ -1,5 +1,7 @@
 package io.nova.ecs.component;
 
+import org.joml.Vector4f;
+
 public class CircleRendererComponent extends Component {
     private float[] color;
     private float radius;
@@ -19,6 +21,10 @@ public class CircleRendererComponent extends Component {
 
     public void setColor(float[] color) {
         this.color = color;
+    }
+
+    public Vector4f getColorAsVec() {
+        return new Vector4f(color);
     }
 
     public float getRadius() {

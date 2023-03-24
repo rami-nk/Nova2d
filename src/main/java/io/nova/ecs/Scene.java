@@ -112,11 +112,22 @@ public class Scene {
 
     public void onUpdateEditor(EditorCamera camera, float deltaTime) {
         renderer.beginScene(camera);
-        var group = registry.getEntities(Group.create(SpriteRendererComponent.class, TransformComponent.class));
-        for (var entity : group) {
-            var transform = entity.getComponent(TransformComponent.class);
-            var sprite = entity.getComponent(SpriteRendererComponent.class);
-            renderer.drawSprite(transform.getTransform(), sprite, entity.getId());
+        {
+            var group = registry.getEntities(Group.create(SpriteRendererComponent.class, TransformComponent.class));
+            for (var entity : group) {
+                var transform = entity.getComponent(TransformComponent.class);
+                var sprite = entity.getComponent(SpriteRendererComponent.class);
+                renderer.drawSprite(transform.getTransform(), sprite, entity.getId());
+            }
+        }
+
+        {
+            var group = registry.getEntities(Group.create(CircleRendererComponent.class, TransformComponent.class));
+            for (var entity : group) {
+                var transform = entity.getComponent(TransformComponent.class);
+                var circle = entity.getComponent(CircleRendererComponent.class);
+                renderer.drawCircle(transform.getTransform(), circle, entity.getId());
+            }
         }
         renderer.endScene();
         registry.update(deltaTime);
