@@ -31,6 +31,7 @@ public class OpenGLRenderer implements Renderer {
     private static final int MAX_INDICES = MAX_QUADS * 6;
     private final Shader shader;
     private final VertexBuffer vertexBuffer;
+    private final VertexArray vertexArray;
     private final Texture whiteTexture;
     private final Vector4f[] vertexPositions;
     private final Statistics stats;
@@ -40,7 +41,7 @@ public class OpenGLRenderer implements Renderer {
     private int quadDataIndex;
 
     public OpenGLRenderer() {
-        VertexArray vertexArray = VertexArrayFactory.create();
+        vertexArray = VertexArrayFactory.create();
 
         vertexBuffer = VertexBufferFactory.create(MAX_VERTICES * ELEMENTS_PER_VERTEX);
         var layout = new OpenGLVertexBufferLayout();
@@ -135,6 +136,7 @@ public class OpenGLRenderer implements Renderer {
             textures.get(i).bind(Texture.SLOT_ZERO + i);
         }
 
+        vertexArray.bind();
         glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
         stats.drawCalls++;
     }
