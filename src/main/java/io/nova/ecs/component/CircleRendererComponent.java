@@ -4,13 +4,11 @@ import org.joml.Vector4f;
 
 public class CircleRendererComponent extends Component {
     private float[] color;
-    private float radius;
     private float thickness;
     private float fade;
 
     public CircleRendererComponent() {
         this.color = new float[]{1, 1, 1, 1};
-        this.radius = 0.5f;
         this.thickness = 1.0f;
         this.fade = 0.005f;
     }
@@ -25,14 +23,6 @@ public class CircleRendererComponent extends Component {
 
     public Vector4f getColorAsVec() {
         return new Vector4f(color);
-    }
-
-    public float getRadius() {
-        return radius;
-    }
-
-    public void setRadius(float radius) {
-        this.radius = radius;
     }
 
     public float getThickness() {

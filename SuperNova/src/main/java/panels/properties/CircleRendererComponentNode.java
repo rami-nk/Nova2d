@@ -12,18 +12,14 @@ public class CircleRendererComponentNode {
             if (ImGui.colorEdit4("Color", color)) {
                 circle.setColor(color);
             }
-            var radius = new float[]{circle.getRadius()};
-            if (ImGui.dragFloat("Radius", radius, 0.1f, 0.0f, 10.0f)) {
-                circle.setRadius(radius[0]);
-            }
 
             var thickness = new float[]{circle.getThickness()};
-            if (ImGui.dragFloat("Thickness", thickness, 0.1f, 0.0f, 10.0f)) {
+            if (ImGui.dragFloat("Thickness", thickness, 0.025f, 0.0f, 1.0f)) {
                 circle.setThickness(thickness[0]);
             }
 
             var fade = new float[]{circle.getFade()};
-            if (ImGui.dragFloat("Fade", fade, 0.1f, 0.0f, 10.0f)) {
+            if (ImGui.dragFloat("Fade", fade, 0.025f, 0.0f, 10.0f)) {
                 circle.setFade(fade[0]);
             }
         });
