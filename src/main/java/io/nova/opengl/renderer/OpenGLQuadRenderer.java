@@ -14,6 +14,9 @@ import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
+
+import static org.lwjgl.opengl.GL11.*;
 
 public class OpenGLQuadRenderer {
 
@@ -29,9 +32,9 @@ public class OpenGLQuadRenderer {
     private final Vector4f[] vertexPositions;
     private final TextureSlotManager textureSlotManager;
     private final Runnable endSceneCallback;
-    private float[] quadData;
+    private float[] data;
     private int indexCount;
-    private int quadDataIndex;
+    private int dataIndex;
 
     public OpenGLQuadRenderer(TextureSlotManager textureSlotManager, Runnable endSceneCallback) {
         this.textureSlotManager = textureSlotManager;
@@ -84,34 +87,10 @@ public class OpenGLQuadRenderer {
         return whiteTextureData;
     }
 
-    public int getIndexCount() {
-        return indexCount;
-    }
-
-    public VertexArray getVertexArray() {
-        return vertexArray;
-    }
-
-    public int getDataIndex() {
-        return quadDataIndex;
-    }
-
-    public float[] getData() {
-        return quadData;
-    }
-
-    public VertexBuffer getVertexBuffer() {
-        return vertexBuffer;
-    }
-
-    public Shader getShader() {
-        return shader;
-    }
-
     void resetData() {
-        quadData = new float[MAX_QUADS * ELEMENTS_PER_VERTEX * VERTICES_PER_QUAD];
+        data = new float[MAX_QUADS * ELEMENTS_PER_VERTEX * VERTICES_PER_QUAD];
         indexCount = 0;
-        quadDataIndex = 0;
+        dataIndex = 0;
     }
 
     public void drawQuad(Vector3f position, Vector2f size, Vector4f color) {
@@ -240,37 +219,37 @@ public class OpenGLQuadRenderer {
         for (int i = 0; i < 4; i++) {
             Vector4f transformedPos = vertexPositions[i].mul(transform, new Vector4f());
 
-            quadData[quadDataIndex++] = transformedPos.x;
-            quadData[quadDataIndex++] = transformedPos.y;
-            quadData[quadDataIndex++] = transformedPos.z;
+            data[dataIndex++] = transformedPos.x;
+            data[dataIndex++] = transformedPos.y;
+            data[dataIndex++] = transformedPos.z;
 
-            quadData[quadDataIndex++] = color.x;
-            quadData[quadDataIndex++] = color.y;
-            quadData[quadDataIndex++] = color.z;
-            quadData[quadDataIndex++] = color.w;
+            data[dataIndex++] = color.x;
+            data[dataIndex++] = color.y;
+            data[dataIndex++] = color.z;
+            data[dataIndex++] = color.w;
 
             switch (i) {
                 case 0 -> {
-                    quadData[quadDataIndex++] = 0.0f;
-                    quadData[quadDataIndex++] = 0.0f;
+                    data[dataIndex++] = 0.0f;
+                    data[dataIndex++] = 0.0f;
                 }
                 case 1 -> {
-                    quadData[quadDataIndex++] = 1.0f;
-                    quadData[quadDataIndex++] = 0.0f;
+                    data[dataIndex++] = 1.0f;
+                    data[dataIndex++] = 0.0f;
                 }
                 case 2 -> {
-                    quadData[quadDataIndex++] = 1.0f;
-                    quadData[quadDataIndex++] = 1.0f;
+                    data[dataIndex++] = 1.0f;
+                    data[dataIndex++] = 1.0f;
                 }
                 case 3 -> {
-                    quadData[quadDataIndex++] = 0.0f;
-                    quadData[quadDataIndex++] = 1.0f;
+                    data[dataIndex++] = 0.0f;
+                    data[dataIndex++] = 1.0f;
                 }
             }
 
-            quadData[quadDataIndex++] = textureSlot;
-            quadData[quadDataIndex++] = tilingFactor;
-            quadData[quadDataIndex++] = entityID;
+            data[dataIndex++] = textureSlot;
+            data[dataIndex++] = tilingFactor;
+            data[dataIndex++] = entityID;
         }
         indexCount += 6;
     }
@@ -283,20 +262,20 @@ public class OpenGLQuadRenderer {
         for (int i = 0; i < 4; i++) {
             Vector4f transformedPos = vertexPositions[i].mul(transform, new Vector4f());
 
-            quadData[quadDataIndex++] = transformedPos.x;
-            quadData[quadDataIndex++] = transformedPos.y;
-            quadData[quadDataIndex++] = transformedPos.z;
+            data[dataIndex++] = transformedPos.x;
+            data[dataIndex++] = transformedPos.y;
+            data[dataIndex++] = transformedPos.z;
 
-            quadData[quadDataIndex++] = color.x;
-            quadData[quadDataIndex++] = color.y;
-            quadData[quadDataIndex++] = color.z;
-            quadData[quadDataIndex++] = color.w;
+            data[dataIndex++] = color.x;
+            data[dataIndex++] = color.y;
+            data[dataIndex++] = color.z;
+            data[dataIndex++] = color.w;
 
-            quadData[quadDataIndex++] = textureCoords[i].x;
-            quadData[quadDataIndex++] = textureCoords[i].y;
+            data[dataIndex++] = textureCoords[i].x;
+            data[dataIndex++] = textureCoords[i].y;
 
-            quadData[quadDataIndex++] = textureSlot;
-            quadData[quadDataIndex++] = tilingFactor;
+            data[dataIndex++] = textureSlot;
+            data[dataIndex++] = tilingFactor;
         }
         indexCount += 6;
     }
@@ -316,5 +295,32 @@ public class OpenGLQuadRenderer {
             offset += 4;
         }
         return indices;
+    }
+
+    public void beginScene(Matrix4f viewProjection) {
+        shader.bind();
+        shader.setUniformMat4f("uViewProjection", viewProjection);
+        resetData();
+    }
+
+    public void endScene() {
+        if (dataIndex > 0) {
+            var copy = Arrays.copyOfRange(data, 0, dataIndex);
+            vertexBuffer.reBufferData(copy);
+        }
+    }
+
+    public void flush() {
+        if (dataIndex > 0) {
+            var textures = textureSlotManager.getTextures();
+            for (int i = 0; i < textureSlotManager.getTextures().size(); i++) {
+                textures.get(i).bind(Texture.SLOT_ZERO + i);
+            }
+
+            vertexArray.bind();
+            shader.bind();
+            glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
+//            stats.drawCalls++;
+        }
     }
 }

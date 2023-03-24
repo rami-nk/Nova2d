@@ -7,6 +7,10 @@ import io.nova.ecs.component.CircleRendererComponent;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
+import java.util.Arrays;
+
+import static org.lwjgl.opengl.GL11.*;
+
 public class OpenGLCircleRenderer {
 
     private static final int MAX_CIRCLES = 1;
@@ -52,30 +56,6 @@ public class OpenGLCircleRenderer {
                 new Vector4f(0.5f, 0.5f, 0.0f, 1.0f),
                 new Vector4f(-0.5f, 0.5f, 0.0f, 1.0f)
         };
-    }
-
-    public int getIndexCount() {
-        return indexCount;
-    }
-
-    public VertexArray getVertexArray() {
-        return vertexArray;
-    }
-
-    public int getDataIndex() {
-        return dataIndex;
-    }
-
-    public float[] getData() {
-        return data;
-    }
-
-    public VertexBuffer getVertexBuffer() {
-        return vertexBuffer;
-    }
-
-    public Shader getShader() {
-        return shader;
     }
 
     public void drawCircle(Matrix4f transform, CircleRendererComponent component, int entityID) {
@@ -131,5 +111,28 @@ public class OpenGLCircleRenderer {
             offset += 4;
         }
         return indices;
+    }
+
+    public void beginScene(Matrix4f viewProjection) {
+        shader.bind();
+        shader.setUniformMat4f("uViewProjection", viewProjection);
+
+        resetData();
+    }
+
+    public void endScene() {
+        if (dataIndex > 0) {
+            var copy = Arrays.copyOfRange(data, 0, dataIndex);
+            vertexBuffer.reBufferData(copy);
+        }
+    }
+
+    public void flush() {
+        if (dataIndex > 0) {
+            vertexArray.bind();
+            shader.bind();
+            glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
+//            stats.drawCalls++;
+        }
     }
 }

@@ -49,7 +49,7 @@ public class OrthographicCamera {
         return viewMatrix;
     }
 
-    public Matrix4f getViewProjectionMatrix() {
+    public Matrix4f getViewProjection() {
         return viewProjectionMatrix;
     }
 
