@@ -10,4 +10,6 @@ public interface VertexBufferLayout {
     List<VertexBufferElement> getElements();
 
     int getStride();
+
+    int getCount();
 }

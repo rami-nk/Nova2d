@@ -9,16 +9,11 @@ import org.joml.Vector4f;
 
 import java.util.Arrays;
 
-import static io.nova.opengl.renderer.OpenGLRenderer.stats;
+import static io.nova.opengl.renderer.OpenGLRenderer.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public class OpenGLCircleRenderer {
 
-    private static final int MAX_CIRCLES = 1;
-    private static final int ELEMENTS_PER_VERTEX = 13;
-    private static final int VERTICES_PER_CIRCLE = 4;
-    private static final int MAX_VERTICES = MAX_CIRCLES * VERTICES_PER_CIRCLE;
-    private static final int MAX_INDICES = MAX_CIRCLES * 6;
     private final Shader shader;
     private final VertexBuffer vertexBuffer;
     private final VertexArray vertexArray;
@@ -27,12 +22,12 @@ public class OpenGLCircleRenderer {
     private float[] data;
     private int indexCount;
     private int dataIndex;
+    private int elementsPerVertex;
 
-    public OpenGLCircleRenderer(Runnable endSceneCallback) {
+    public OpenGLCircleRenderer(int[] indices, Runnable endSceneCallback) {
         this.endSceneCallback = endSceneCallback;
 
         vertexArray = VertexArrayFactory.create();
-        vertexBuffer = VertexBufferFactory.create(MAX_VERTICES * ELEMENTS_PER_VERTEX);
         var layout = new OpenGLVertexBufferLayout();
         layout.pushFloat("aWorldPosition", 3);
         layout.pushFloat("aLocalPosition", 3);
@@ -41,11 +36,11 @@ public class OpenGLCircleRenderer {
         layout.pushFloat("aFade", 1);
         // Editor only
         layout.pushFloat("aEntityID", 1);
+        elementsPerVertex = layout.getCount();
+        vertexBuffer = VertexBufferFactory.create(MAX_ELEMENTS * VERTICES_PER_OBJECT * elementsPerVertex);
         vertexArray.addVertexBuffer(vertexBuffer, layout);
 
-        IndexBuffer indexBuffer;
-        var indices = generateIndices();
-        indexBuffer = IndexBufferFactory.create(indices);
+        var indexBuffer = IndexBufferFactory.create(indices);
         vertexArray.setIndexBuffer(indexBuffer);
 
         shader = ShaderLibrary.getOrElseUpload("circleShader.glsl");
@@ -64,7 +59,7 @@ public class OpenGLCircleRenderer {
     }
 
     void resetData() {
-        data = new float[MAX_CIRCLES * ELEMENTS_PER_VERTEX * VERTICES_PER_CIRCLE];
+        data = new float[MAX_ELEMENTS * elementsPerVertex * VERTICES_PER_OBJECT];
         indexCount = 0;
         dataIndex = 0;
     }
@@ -96,23 +91,6 @@ public class OpenGLCircleRenderer {
         }
         indexCount += 6;
         stats.quadCount++;
-    }
-
-    private int[] generateIndices() {
-        int[] indices = new int[MAX_INDICES];
-        var offset = 0;
-        for (int i = 0; i < MAX_INDICES; i += 6) {
-            indices[i] = offset;
-            indices[i + 1] = 1 + offset;
-            indices[i + 2] = 2 + offset;
-
-            indices[i + 3] = 2 + offset;
-            indices[i + 4] = 3 + offset;
-            indices[i + 5] = offset;
-
-            offset += 4;
-        }
-        return indices;
     }
 
     public void beginScene(Matrix4f viewProjection) {

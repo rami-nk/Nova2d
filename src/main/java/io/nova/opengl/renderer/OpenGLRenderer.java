@@ -18,13 +18,35 @@ import static org.lwjgl.opengl.GL40.*;
 public class OpenGLRenderer implements Renderer {
 
     protected static final Statistics stats = new Statistics();
+    protected static final int MAX_ELEMENTS = 10000;
+    protected static final int MAX_INDICES = 6 * MAX_ELEMENTS;
+
+    protected static final int VERTICES_PER_OBJECT = 4;
     private final OpenGLQuadRenderer quadRenderer;
     private final OpenGLCircleRenderer circleRenderer;
 
     public OpenGLRenderer() {
-        TextureSlotManager textureSlotManager = new TextureSlotManager();
-        quadRenderer = new OpenGLQuadRenderer(textureSlotManager, this::endScene);
-        circleRenderer = new OpenGLCircleRenderer(this::endScene);
+        var indices = generateIndices();
+
+        quadRenderer = new OpenGLQuadRenderer(indices, this::endScene);
+        circleRenderer = new OpenGLCircleRenderer(indices, this::endScene);
+    }
+
+    private int[] generateIndices() {
+        int[] indices = new int[MAX_INDICES];
+        var offset = 0;
+        for (int i = 0; i < MAX_INDICES; i += 6) {
+            indices[i] = offset;
+            indices[i + 1] = 1 + offset;
+            indices[i + 2] = 2 + offset;
+
+            indices[i + 3] = 2 + offset;
+            indices[i + 4] = 3 + offset;
+            indices[i + 5] = offset;
+
+            offset += 4;
+        }
+        return indices;
     }
 
     @Deprecated

@@ -16,16 +16,11 @@ import org.lwjgl.BufferUtils;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-import static io.nova.opengl.renderer.OpenGLRenderer.stats;
+import static io.nova.opengl.renderer.OpenGLRenderer.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public class OpenGLQuadRenderer {
 
-    private static final int MAX_QUADS = 10_000;
-    private static final int ELEMENTS_PER_VERTEX = 12;
-    private static final int VERTICES_PER_QUAD = 4;
-    private static final int MAX_VERTICES = MAX_QUADS * VERTICES_PER_QUAD;
-    private static final int MAX_INDICES = MAX_QUADS * 6;
     private final Shader shader;
     private final VertexBuffer vertexBuffer;
     private final VertexArray vertexArray;
@@ -33,16 +28,16 @@ public class OpenGLQuadRenderer {
     private final Vector4f[] vertexPositions;
     private final TextureSlotManager textureSlotManager;
     private final Runnable endSceneCallback;
+    private final int elementsPerVertex;
     private float[] data;
     private int indexCount;
     private int dataIndex;
 
-    public OpenGLQuadRenderer(TextureSlotManager textureSlotManager, Runnable endSceneCallback) {
-        this.textureSlotManager = textureSlotManager;
+    public OpenGLQuadRenderer(int[] indices, Runnable endSceneCallback) {
+        this.textureSlotManager = new TextureSlotManager();
         this.endSceneCallback = endSceneCallback;
 
         vertexArray = VertexArrayFactory.create();
-        vertexBuffer = VertexBufferFactory.create(MAX_VERTICES * ELEMENTS_PER_VERTEX);
         var layout = new OpenGLVertexBufferLayout();
         layout.pushFloat("aPosition", 3);
         layout.pushFloat("aColor", 4);
@@ -51,11 +46,11 @@ public class OpenGLQuadRenderer {
         layout.pushFloat("aTilingFactor", 1);
         // Editor only
         layout.pushFloat("aEntityID", 1);
+        elementsPerVertex = layout.getCount();
+        vertexBuffer = VertexBufferFactory.create(MAX_ELEMENTS * VERTICES_PER_OBJECT * elementsPerVertex);
         vertexArray.addVertexBuffer(vertexBuffer, layout);
 
-        IndexBuffer indexBuffer;
-        var indices = generateIndices();
-        indexBuffer = IndexBufferFactory.create(indices);
+        var indexBuffer = IndexBufferFactory.create(indices);
         vertexArray.setIndexBuffer(indexBuffer);
 
         whiteTexture = TextureFactory.create(1, 1);
@@ -89,7 +84,7 @@ public class OpenGLQuadRenderer {
     }
 
     void resetData() {
-        data = new float[MAX_QUADS * ELEMENTS_PER_VERTEX * VERTICES_PER_QUAD];
+        data = new float[MAX_ELEMENTS * elementsPerVertex * VERTICES_PER_OBJECT];
         indexCount = 0;
         dataIndex = 0;
     }
@@ -281,23 +276,6 @@ public class OpenGLQuadRenderer {
         }
         indexCount += 6;
         stats.quadCount++;
-    }
-
-    private int[] generateIndices() {
-        int[] indices = new int[MAX_INDICES];
-        var offset = 0;
-        for (int i = 0; i < MAX_INDICES; i += 6) {
-            indices[i] = offset;
-            indices[i + 1] = 1 + offset;
-            indices[i + 2] = 2 + offset;
-
-            indices[i + 3] = 2 + offset;
-            indices[i + 4] = 3 + offset;
-            indices[i + 5] = offset;
-
-            offset += 4;
-        }
-        return indices;
     }
 
     public void beginScene(Matrix4f viewProjection) {
