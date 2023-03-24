@@ -9,7 +9,7 @@ import panels.DragAndDropDataType;
 import java.nio.file.Path;
 import java.util.Objects;
 
-public class SpriteRenderComponentNode {
+public class SpriteRendererComponentNode {
     public static void create(Entity entity) {
         ComponentNode.create(entity, "Sprite", SpriteRendererComponent.class, () -> {
             var sprite = entity.getComponent(SpriteRendererComponent.class);
