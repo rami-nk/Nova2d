@@ -45,6 +45,9 @@ void main()
     float alpha = smoothstep(0.0, fFade, distance);
     alpha *= smoothstep(fThickness + fFade, fThickness, distance);
 
+    if (alpha < 0.01)
+    discard;
+
     color = fColor;
     color.a *= alpha;
     id = int(fEntityID);
