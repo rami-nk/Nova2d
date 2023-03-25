@@ -1,5 +1,6 @@
 package io.nova.ecs;
 
+import io.nova.ecs.component.Component;
 import io.nova.ecs.entity.Entity;
 import io.nova.ecs.entity.EntityListener;
 import io.nova.ecs.entity.Group;
@@ -171,6 +172,22 @@ public final class Registry {
             initView(group, view);
         }
         return Collections.unmodifiableList(view);
+    }
+
+    public void removeComponent(Entity e, Class<? extends Component> clazz) {
+        if (updating) {
+            commands.add(() -> removeComponentInternal(e, clazz));
+        } else {
+            removeComponentInternal(e, clazz);
+        }
+    }
+
+    private void removeComponentInternal(Entity e, Class<? extends Component> clazz) {
+        for (Group group : views.keySet()) {
+            if (group.getTypes().contains(clazz)) {
+                views.get(group).remove(e);
+            }
+        }
     }
 
     private void initView(Group group, List<Entity> view) {
