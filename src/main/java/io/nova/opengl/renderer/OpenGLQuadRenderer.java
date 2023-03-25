@@ -56,7 +56,7 @@ public class OpenGLQuadRenderer {
         whiteTexture = TextureFactory.create(1, 1);
         whiteTexture.setData(generateWhitePixel());
 
-        shader = ShaderLibrary.getOrElseUpload("colorAndTexture.glsl");
+        shader = ShaderLibrary.getOrElseUpload("Nova2d_Quad_Shader.glsl");
         shader.bind();
 
         int[] samplers = new int[TextureSlotManager.MAX_TEXTURES];

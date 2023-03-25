@@ -43,7 +43,7 @@ public class OpenGLCircleRenderer {
         var indexBuffer = IndexBufferFactory.create(indices);
         vertexArray.setIndexBuffer(indexBuffer);
 
-        shader = ShaderLibrary.getOrElseUpload("circleShader.glsl");
+        shader = ShaderLibrary.getOrElseUpload("Nova2d_Circle_Shader.glsl");
         shader.bind();
 
         vertexPositions = new Vector4f[]{
