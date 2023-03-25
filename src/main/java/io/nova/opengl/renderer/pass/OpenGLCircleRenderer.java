@@ -3,7 +3,6 @@ package io.nova.opengl.renderer.pass;
 import io.nova.core.renderer.buffer.*;
 import io.nova.core.renderer.shader.Shader;
 import io.nova.core.renderer.shader.ShaderLibrary;
-import io.nova.ecs.component.CircleRendererComponent;
 import io.nova.opengl.renderer.OpenGLVertexBufferLayout;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
@@ -47,8 +46,8 @@ class OpenGLCircleRenderer {
         shader.bind();
     }
 
-    public void drawCircle(Matrix4f transform, CircleRendererComponent component, int entityID) {
-        addData(transform, component.getColorAsVec(), component.getThickness(), component.getFade(), entityID);
+    public void drawCircle(Matrix4f transform, Vector4f color, float thickness, float fade, int entityID) {
+        addData(transform, color, thickness, fade, entityID);
     }
 
     void resetData() {

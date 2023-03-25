@@ -16,11 +16,9 @@ import io.nova.core.renderer.texture.Texture;
 import io.nova.core.renderer.texture.TextureLibrary;
 import io.nova.ecs.Scene;
 import io.nova.ecs.SceneState;
-import io.nova.ecs.component.SceneCameraComponent;
-import io.nova.ecs.component.ScriptComponent;
-import io.nova.ecs.component.SpriteRendererComponent;
-import io.nova.ecs.component.TransformComponent;
+import io.nova.ecs.component.*;
 import io.nova.ecs.entity.Entity;
+import io.nova.ecs.entity.Group;
 import io.nova.ecs.serializer.SceneSerializer;
 import io.nova.event.Event;
 import io.nova.event.EventDispatcher;
@@ -28,7 +26,10 @@ import io.nova.event.key.KeyPressedEvent;
 import io.nova.event.mouse.MouseButtonPressedEvent;
 import io.nova.utils.FileDialog;
 import io.nova.window.Input;
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 import panels.ContentBrowserPanel;
 import panels.DragAndDropDataType;
 import panels.EntityPanel;
@@ -59,6 +60,7 @@ public class EditorLayer extends Layer {
     private Entity entityCopy;
     private SceneState sceneState;
     private Texture playButtonTexture, stopButtonTexture;
+    private boolean showPhysicsColliders;
 
     public void onAttach() {
         cameraController = new OrthographicCameraController(16.0f / 9.0f, true);
@@ -168,6 +170,10 @@ public class EditorLayer extends Layer {
             }
         }
 
+        if (showPhysicsColliders) {
+            drawPhysicsColliders();
+        }
+
         frameBuffer.unbind();
     }
 
@@ -232,6 +238,14 @@ public class EditorLayer extends Layer {
             ImGui.text("Quad count: " + stats.getQuadCount());
             ImGui.text("Vertex count: " + stats.getTotalVertexCount());
             ImGui.text("Index count: " + stats.getTotalIndexCount());
+        }
+        ImGui.end();
+
+        ImGui.begin("Settings");
+        {
+            if (ImGui.checkbox("Show physics colliders", showPhysicsColliders)) {
+                showPhysicsColliders = !showPhysicsColliders;
+            }
         }
         ImGui.end();
 
@@ -354,6 +368,76 @@ public class EditorLayer extends Layer {
         var dispatcher = new EventDispatcher(event);
         dispatcher.dispatch(KeyPressedEvent.class, this::handleShortcuts);
         dispatcher.dispatch(MouseButtonPressedEvent.class, this::handleMouePicking);
+    }
+
+    private void drawPhysicsColliders() {
+
+        switch (sceneState) {
+            case EDITING -> renderer.beginScene(editorCamera);
+            case RUNNING -> {
+                var camera = activeScene.getPrimaryCameraEntity();
+                var cameraComponent = camera.getComponent(SceneCameraComponent.class);
+                var transform = camera.getComponent(TransformComponent.class);
+                renderer.beginScene(cameraComponent.getCamera(), transform.getTransform());
+            }
+        }
+
+        var colliderColor = new Vector4f(0.0f, 1.0f, 0.0f, 1.0f);
+        var registry = activeScene.getRegistry();
+        {
+            var view = registry.getEntities(Group.create(BoxColliderComponent.class));
+            for (var entity : view) {
+                var collider = entity.getComponent(BoxColliderComponent.class);
+                var transform = entity.getComponent(TransformComponent.class);
+
+                var translation = transform.getTranslation();
+                var position = new float[3];
+                position[0] = translation[0] + collider.getOffset()[0];
+                position[1] = translation[1] + collider.getOffset()[1];
+                position[2] = 0.001f;
+
+                var rotation = transform.getRotation()[2];
+
+                var scale = transform.getScale();
+                var size = new float[3];
+                size[0] = scale[0] * collider.getSize()[0] * 2.0f;
+                size[1] = scale[1] * collider.getSize()[1] * 2.0f;
+                size[2] = 1.0f;
+
+                var colliderTransform = new Matrix4f()
+                        .translate(new Vector3f(position))
+                        .rotate(rotation, new Vector3f(0.0f, 0.0f, 1.0f))
+                        .scale(new Vector3f(size));
+
+                renderer.drawRect(colliderTransform, colliderColor);
+            }
+        }
+        {
+            var view = registry.getEntities(Group.create(CircleColliderComponent.class));
+            for (var entity : view) {
+                var collider = entity.getComponent(CircleColliderComponent.class);
+                var transform = entity.getComponent(TransformComponent.class);
+
+                var position = new float[3];
+                var translation = transform.getTranslation();
+                position[0] = translation[0] + collider.getOffset()[0];
+                position[1] = translation[1] + collider.getOffset()[1];
+                position[2] = 0.001f;
+
+                var scale = transform.getScale();
+                var size = new float[3];
+                size[0] = scale[0] * collider.getRadius() * 2.0f;
+                size[1] = scale[1] * collider.getRadius() * 2.0f;
+                size[2] = 1.0f;
+
+                var colliderTransform = new Matrix4f()
+                        .translate(new Vector3f(position))
+                        .scale(new Vector3f(size));
+
+                renderer.drawCircle(colliderTransform, colliderColor, 0.05f, 0.0f, -1);
+            }
+        }
+        renderer.endScene();
     }
 
     public void createToolbar() {
