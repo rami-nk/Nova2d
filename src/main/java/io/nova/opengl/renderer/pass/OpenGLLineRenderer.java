@@ -1,4 +1,4 @@
-package io.nova.opengl.renderer;
+package io.nova.opengl.renderer.pass;
 
 import io.nova.core.renderer.buffer.VertexArray;
 import io.nova.core.renderer.buffer.VertexArrayFactory;
@@ -6,16 +6,17 @@ import io.nova.core.renderer.buffer.VertexBuffer;
 import io.nova.core.renderer.buffer.VertexBufferFactory;
 import io.nova.core.renderer.shader.Shader;
 import io.nova.core.renderer.shader.ShaderLibrary;
+import io.nova.opengl.renderer.OpenGLVertexBufferLayout;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import java.util.Arrays;
 
-import static io.nova.opengl.renderer.OpenGLRenderer.*;
+import static io.nova.opengl.renderer.pass.OpenGLRenderer.*;
 import static org.lwjgl.opengl.GL11.*;
 
-public class OpenGLLineRenderer {
+class OpenGLLineRenderer {
 
     private final Shader shader;
     private final VertexBuffer vertexBuffer;
@@ -27,7 +28,7 @@ public class OpenGLLineRenderer {
     private int dataIndex;
     private float lineWidth;
 
-    public OpenGLLineRenderer(Runnable endSceneCallback) {
+    protected OpenGLLineRenderer(Runnable endSceneCallback) {
         this.endSceneCallback = endSceneCallback;
 
         vertexArray = VertexArrayFactory.create();

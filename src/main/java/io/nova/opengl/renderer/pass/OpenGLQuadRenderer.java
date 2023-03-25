@@ -1,4 +1,4 @@
-package io.nova.opengl.renderer;
+package io.nova.opengl.renderer.pass;
 
 import io.nova.core.renderer.buffer.*;
 import io.nova.core.renderer.shader.Shader;
@@ -7,6 +7,8 @@ import io.nova.core.renderer.texture.SubTexture;
 import io.nova.core.renderer.texture.Texture;
 import io.nova.core.renderer.texture.TextureFactory;
 import io.nova.ecs.component.SpriteRendererComponent;
+import io.nova.opengl.renderer.OpenGLVertexBufferLayout;
+import io.nova.opengl.renderer.TextureSlotManager;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -16,16 +18,15 @@ import org.lwjgl.BufferUtils;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-import static io.nova.opengl.renderer.OpenGLRenderer.*;
+import static io.nova.opengl.renderer.pass.OpenGLRenderer.*;
 import static org.lwjgl.opengl.GL11.*;
 
-public class OpenGLQuadRenderer {
+class OpenGLQuadRenderer {
 
     private final Shader shader;
     private final VertexBuffer vertexBuffer;
     private final VertexArray vertexArray;
     private final Texture whiteTexture;
-    private final Vector4f[] vertexPositions;
     private final TextureSlotManager textureSlotManager;
     private final Runnable endSceneCallback;
     private final int elementsPerVertex;
@@ -33,7 +34,7 @@ public class OpenGLQuadRenderer {
     private int indexCount;
     private int dataIndex;
 
-    public OpenGLQuadRenderer(int[] indices, Runnable endSceneCallback) {
+    protected OpenGLQuadRenderer(int[] indices, Runnable endSceneCallback) {
         this.textureSlotManager = new TextureSlotManager();
         this.endSceneCallback = endSceneCallback;
 
@@ -66,13 +67,6 @@ public class OpenGLQuadRenderer {
         shader.setUniformTextureArray("uTextures", samplers);
 
         textureSlotManager.add(whiteTexture);
-
-        vertexPositions = new Vector4f[]{
-                new Vector4f(-0.5f, -0.5f, 0.0f, 1.0f),
-                new Vector4f(0.5f, -0.5f, 0.0f, 1.0f),
-                new Vector4f(0.5f, 0.5f, 0.0f, 1.0f),
-                new Vector4f(-0.5f, 0.5f, 0.0f, 1.0f)
-        };
     }
 
     private static ByteBuffer generateWhitePixel() {

@@ -1,4 +1,4 @@
-package io.nova.opengl.renderer;
+package io.nova.opengl.renderer.pass;
 
 import io.nova.core.renderer.Renderer;
 import io.nova.core.renderer.camera.Camera;
@@ -20,13 +20,19 @@ public class OpenGLRenderer implements Renderer {
     protected static final Statistics stats = new Statistics();
     protected static final int MAX_ELEMENTS = 10000;
     protected static final int MAX_INDICES = 6 * MAX_ELEMENTS;
-
     protected static final int VERTICES_PER_OBJECT = 4;
+    protected static Vector4f[] vertexPositions;
     private final OpenGLQuadRenderer quadRenderer;
     private final OpenGLCircleRenderer circleRenderer;
     private final OpenGLLineRenderer lineRenderer;
 
     public OpenGLRenderer() {
+        vertexPositions = new Vector4f[]{
+                new Vector4f(-0.5f, -0.5f, 0.0f, 1.0f),
+                new Vector4f(0.5f, -0.5f, 0.0f, 1.0f),
+                new Vector4f(0.5f, 0.5f, 0.0f, 1.0f),
+                new Vector4f(-0.5f, 0.5f, 0.0f, 1.0f)
+        };
         var indices = generateIndices();
 
         quadRenderer = new OpenGLQuadRenderer(indices, this::endScene);

@@ -3,7 +3,7 @@ package io.nova.core.renderer;
 import io.nova.core.renderer.camera.Camera;
 import io.nova.core.renderer.camera.EditorCamera;
 import io.nova.core.renderer.camera.OrthographicCamera;
-import io.nova.opengl.renderer.OpenGLRenderer;
+import io.nova.opengl.renderer.pass.OpenGLRenderer;
 import org.joml.Matrix4f;
 
 public interface Renderer extends
