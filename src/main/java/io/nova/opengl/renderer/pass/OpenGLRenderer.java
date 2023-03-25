@@ -6,7 +6,6 @@ import io.nova.core.renderer.camera.EditorCamera;
 import io.nova.core.renderer.camera.OrthographicCamera;
 import io.nova.core.renderer.texture.SubTexture;
 import io.nova.core.renderer.texture.Texture;
-import io.nova.ecs.component.CircleRendererComponent;
 import io.nova.ecs.component.SpriteRendererComponent;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -181,8 +180,8 @@ public class OpenGLRenderer implements Renderer {
     }
 
     @Override
-    public void drawCircle(Matrix4f transform, CircleRendererComponent component, int entityID) {
-        circleRenderer.drawCircle(transform, component, entityID);
+    public void drawCircle(Matrix4f transform, Vector4f color, float thickness, float fade, int entityID) {
+        circleRenderer.drawCircle(transform, color, thickness, fade, entityID);
     }
 
     @Override

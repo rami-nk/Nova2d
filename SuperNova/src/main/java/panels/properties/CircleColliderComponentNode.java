@@ -15,7 +15,7 @@ public class CircleColliderComponentNode {
             }
 
             var radius = new float[]{circleCollider.getRadius()};
-            if (ImGui.dragFloat("Radius", radius, 0.1f)) {
+            if (ImGui.dragFloat("Radius", radius, 0.01f, 0.0f, 100.0f)) {
                 circleCollider.setRadius(radius[0]);
             }
 

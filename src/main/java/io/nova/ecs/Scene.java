@@ -17,7 +17,6 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
 import org.joml.Matrix4f;
-import org.joml.Vector4f;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -69,8 +68,8 @@ public class Scene {
             if (entity.hasComponent(BoxColliderComponent.class)) {
                 var boxCollider = entity.getComponent(BoxColliderComponent.class);
                 var shape = new PolygonShape();
-
                 shape.setAsBox(boxCollider.getSize()[0] * transform.getScale()[0], boxCollider.getSize()[1] * transform.getScale()[1]);
+
                 var fixtureDef = new FixtureDef();
                 fixtureDef.setShape(shape);
                 fixtureDef.setDensity(boxCollider.getDensity());
@@ -143,7 +142,6 @@ public class Scene {
                 var transform = entity.getComponent(TransformComponent.class);
                 var sprite = entity.getComponent(SpriteRendererComponent.class);
                 renderer.drawSprite(transform.getTransform(), sprite, entity.getId());
-                renderer.drawRect(transform.getTransform(), new Vector4f(1, 0, 1, 1));
             }
         }
 
