@@ -58,13 +58,12 @@ public class EditorLayer extends Layer {
     private boolean viewportFocused = false;
     private Entity entityCopy;
     private SceneState sceneState;
-
     private Texture playButtonTexture, stopButtonTexture;
 
     public void onAttach() {
         cameraController = new OrthographicCameraController(16.0f / 9.0f, true);
         renderer = RendererFactory.create();
-        sceneSerializer = new SceneSerializer();
+        sceneSerializer = Scene.serializer;
         filePath = "assets/scenes/Cube.nova";
 
         try {
@@ -113,6 +112,7 @@ public class EditorLayer extends Layer {
     public void onDetach() {
         activeScene.dispose();
         frameBuffer.dispose();
+        activeScene.dispose();
     }
 
     public void onUpdate(float deltaTime) {
