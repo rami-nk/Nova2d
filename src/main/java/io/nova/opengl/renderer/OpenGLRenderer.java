@@ -24,12 +24,14 @@ public class OpenGLRenderer implements Renderer {
     protected static final int VERTICES_PER_OBJECT = 4;
     private final OpenGLQuadRenderer quadRenderer;
     private final OpenGLCircleRenderer circleRenderer;
+    private final OpenGLLineRenderer lineRenderer;
 
     public OpenGLRenderer() {
         var indices = generateIndices();
 
         quadRenderer = new OpenGLQuadRenderer(indices, this::endScene);
         circleRenderer = new OpenGLCircleRenderer(indices, this::endScene);
+        lineRenderer = new OpenGLLineRenderer(this::endScene);
     }
 
     private int[] generateIndices() {
@@ -54,6 +56,7 @@ public class OpenGLRenderer implements Renderer {
     public void beginScene(OrthographicCamera camera) {
         quadRenderer.beginScene(camera.getViewProjection());
         circleRenderer.beginScene(camera.getViewProjection());
+        lineRenderer.beginScene(camera.getViewProjection());
     }
 
     @Override
@@ -64,18 +67,21 @@ public class OpenGLRenderer implements Renderer {
 
         quadRenderer.beginScene(viewProjection);
         circleRenderer.beginScene(viewProjection);
+        lineRenderer.beginScene(viewProjection);
     }
 
     @Override
     public void beginScene(EditorCamera camera) {
         quadRenderer.beginScene(camera.getViewProjection());
         circleRenderer.beginScene(camera.getViewProjection());
+        lineRenderer.beginScene(camera.getViewProjection());
     }
 
     @Override
     public void endScene() {
         quadRenderer.endScene();
         circleRenderer.endScene();
+        lineRenderer.endScene();
 
         flush();
     }
@@ -84,6 +90,7 @@ public class OpenGLRenderer implements Renderer {
     public void flush() {
         quadRenderer.flush();
         circleRenderer.flush();
+        lineRenderer.flush();
     }
 
     @Override
@@ -170,6 +177,11 @@ public class OpenGLRenderer implements Renderer {
     @Override
     public void drawCircle(Matrix4f transform, CircleRendererComponent component, int entityID) {
         circleRenderer.drawCircle(transform, component, entityID);
+    }
+
+    @Override
+    public void drawLine(Vector3f p1, Vector3f p2, Vector4f color) {
+        lineRenderer.drawLine(p1, p2, color);
     }
 
     public static class Statistics {

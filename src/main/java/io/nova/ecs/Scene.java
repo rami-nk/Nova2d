@@ -16,6 +16,7 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 
 import java.util.Objects;
 
@@ -124,6 +125,7 @@ public class Scene {
                 var transform = entity.getComponent(TransformComponent.class);
                 var sprite = entity.getComponent(SpriteRendererComponent.class);
                 renderer.drawSprite(transform.getTransform(), sprite, entity.getId());
+                renderer.drawRect(transform.getTransform(), new Vector4f(1, 0, 1, 1));
             }
         }
 
@@ -133,6 +135,7 @@ public class Scene {
                 var transform = entity.getComponent(TransformComponent.class);
                 var circle = entity.getComponent(CircleRendererComponent.class);
                 renderer.drawCircle(transform.getTransform(), circle, entity.getId());
+
             }
         }
     }
