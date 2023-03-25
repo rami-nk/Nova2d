@@ -10,7 +10,7 @@ public interface Renderer extends
         QuadRenderer,
         SpriteRenderer,
         CircleRenderer,
-        LineRenderer {
+        DebugRenderer {
     RendererApi API = RendererApi.OpenGL;
 
     void beginScene(OrthographicCamera camera);

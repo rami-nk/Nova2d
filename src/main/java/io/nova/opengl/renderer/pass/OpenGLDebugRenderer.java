@@ -16,7 +16,7 @@ import java.util.Arrays;
 import static io.nova.opengl.renderer.pass.OpenGLRenderer.*;
 import static org.lwjgl.opengl.GL11.*;
 
-class OpenGLLineRenderer {
+class OpenGLDebugRenderer {
 
     private final Shader shader;
     private final VertexBuffer vertexBuffer;
@@ -28,7 +28,7 @@ class OpenGLLineRenderer {
     private int dataIndex;
     private float lineWidth;
 
-    protected OpenGLLineRenderer(Runnable endSceneCallback) {
+    protected OpenGLDebugRenderer(Runnable endSceneCallback) {
         this.endSceneCallback = endSceneCallback;
 
         vertexArray = VertexArrayFactory.create();
@@ -45,7 +45,16 @@ class OpenGLLineRenderer {
     }
 
     public void drawLine(Vector3f p1, Vector3f p2, Vector4f color) {
-        addData(p1, p2, color);
+        addLineData(p1, p2, color);
+    }
+
+    public void drawRect(Vector3f position, Vector3f size, Vector4f color) {
+        var transform = new Matrix4f().translate(position).scale(size);
+        addRectData(transform, color);
+    }
+
+    public void drawRect(Matrix4f transform, Vector4f color) {
+        addRectData(transform, color);
     }
 
     void resetData() {
@@ -54,7 +63,33 @@ class OpenGLLineRenderer {
         dataIndex = 0;
     }
 
-    private void addData(Vector3f p1, Vector3f p2, Vector4f color) {
+    private void addRectData(Matrix4f transform, Vector4f color) {
+        if (vertexCount >= MAX_INDICES) {
+            endSceneCallback.run();
+            resetData();
+        }
+
+        var lineVertices = new Vector3f[]{
+                new Vector3f(),
+                new Vector3f(),
+                new Vector3f(),
+                new Vector3f()
+        };
+
+        for (int i = 0; i < 4; i++) {
+            Vector4f transformedPos = vertexPositions[i].mul(transform, new Vector4f());
+            lineVertices[i].x = transformedPos.x;
+            lineVertices[i].y = transformedPos.y;
+            lineVertices[i].z = transformedPos.z;
+        }
+
+        addLineData(lineVertices[0], lineVertices[1], color);
+        addLineData(lineVertices[1], lineVertices[2], color);
+        addLineData(lineVertices[2], lineVertices[3], color);
+        addLineData(lineVertices[3], lineVertices[0], color);
+    }
+
+    private void addLineData(Vector3f p1, Vector3f p2, Vector4f color) {
         if (vertexCount >= MAX_INDICES) {
             endSceneCallback.run();
             resetData();

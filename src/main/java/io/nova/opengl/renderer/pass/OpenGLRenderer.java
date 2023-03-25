@@ -24,7 +24,7 @@ public class OpenGLRenderer implements Renderer {
     protected static Vector4f[] vertexPositions;
     private final OpenGLQuadRenderer quadRenderer;
     private final OpenGLCircleRenderer circleRenderer;
-    private final OpenGLLineRenderer lineRenderer;
+    private final OpenGLDebugRenderer lineRenderer;
 
     public OpenGLRenderer() {
         vertexPositions = new Vector4f[]{
@@ -37,7 +37,7 @@ public class OpenGLRenderer implements Renderer {
 
         quadRenderer = new OpenGLQuadRenderer(indices, this::endScene);
         circleRenderer = new OpenGLCircleRenderer(indices, this::endScene);
-        lineRenderer = new OpenGLLineRenderer(this::endScene);
+        lineRenderer = new OpenGLDebugRenderer(this::endScene);
     }
 
     private int[] generateIndices() {
@@ -194,6 +194,16 @@ public class OpenGLRenderer implements Renderer {
     public void drawLine(Vector3f p1, Vector3f p2, float lineWidth, Vector4f color) {
         lineRenderer.setLineWidth(lineWidth);
         lineRenderer.drawLine(p1, p2, color);
+    }
+
+    @Override
+    public void drawRect(Vector3f pos, Vector3f size, Vector4f color) {
+        lineRenderer.drawRect(pos, size, color);
+    }
+
+    @Override
+    public void drawRect(Matrix4f transform, Vector4f color) {
+        lineRenderer.drawRect(transform, color);
     }
 
     public static class Statistics {
