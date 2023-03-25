@@ -135,7 +135,6 @@ public class Scene {
                 var transform = entity.getComponent(TransformComponent.class);
                 var circle = entity.getComponent(CircleRendererComponent.class);
                 renderer.drawCircle(transform.getTransform(), circle, entity.getId());
-
             }
         }
     }

@@ -184,6 +184,12 @@ public class OpenGLRenderer implements Renderer {
         lineRenderer.drawLine(p1, p2, color);
     }
 
+    @Override
+    public void drawLine(Vector3f p1, Vector3f p2, float lineWidth, Vector4f color) {
+        lineRenderer.setLineWidth(lineWidth);
+        lineRenderer.drawLine(p1, p2, color);
+    }
+
     public static class Statistics {
         protected int quadCount = 0;
         protected int drawCalls = 0;

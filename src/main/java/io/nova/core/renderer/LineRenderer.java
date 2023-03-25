@@ -8,6 +8,8 @@ public interface LineRenderer {
 
     void drawLine(Vector3f p1, Vector3f p2, Vector4f color);
 
+    void drawLine(Vector3f p1, Vector3f p2, float lineWidth, Vector4f color);
+
     default void drawRect(Vector3f pos, Vector3f size, Vector4f color) {
         var p1 = new Vector3f(pos.x - 0.5f * size.x, pos.y - 0.5f * size.y, pos.z);
         var p2 = new Vector3f(pos.x + 0.5f * size.x, pos.y - 0.5f * size.y, pos.z);
