@@ -17,6 +17,10 @@ public class Group {
         return family;
     }
 
+    public Set<Class<?>> getTypes() {
+        return types;
+    }
+
     public boolean isMember(Entity e) {
         for (Class<?> type : types) {
             if (!e.hasComponent(type)) {

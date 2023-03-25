@@ -103,6 +103,7 @@ public final class Entity {
         }
         components.remove(c);
         cache.remove(c.getClass());
+        registry.removeComponent(this, c.getClass());
         c.setEntity(null);
     }
 
