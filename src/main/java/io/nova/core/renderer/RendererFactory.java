@@ -1,6 +1,6 @@
 package io.nova.core.renderer;
 
-import io.nova.opengl.renderer.OpenGLRenderer;
+import io.nova.opengl.renderer.pass.OpenGLRenderer;
 
 public class RendererFactory {
 

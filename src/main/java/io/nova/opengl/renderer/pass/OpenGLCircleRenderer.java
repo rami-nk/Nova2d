@@ -1,30 +1,30 @@
-package io.nova.opengl.renderer;
+package io.nova.opengl.renderer.pass;
 
 import io.nova.core.renderer.buffer.*;
 import io.nova.core.renderer.shader.Shader;
 import io.nova.core.renderer.shader.ShaderLibrary;
 import io.nova.ecs.component.CircleRendererComponent;
+import io.nova.opengl.renderer.OpenGLVertexBufferLayout;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
 import java.util.Arrays;
 
-import static io.nova.opengl.renderer.OpenGLRenderer.*;
+import static io.nova.opengl.renderer.pass.OpenGLRenderer.*;
 import static org.lwjgl.opengl.GL11.*;
 
-public class OpenGLCircleRenderer {
+class OpenGLCircleRenderer {
 
     private final Shader shader;
     private final VertexBuffer vertexBuffer;
     private final VertexArray vertexArray;
-    private final Vector4f[] vertexPositions;
     private final Runnable endSceneCallback;
+    private final int elementsPerVertex;
     private float[] data;
     private int indexCount;
     private int dataIndex;
-    private int elementsPerVertex;
 
-    public OpenGLCircleRenderer(int[] indices, Runnable endSceneCallback) {
+    protected OpenGLCircleRenderer(int[] indices, Runnable endSceneCallback) {
         this.endSceneCallback = endSceneCallback;
 
         vertexArray = VertexArrayFactory.create();
@@ -45,13 +45,6 @@ public class OpenGLCircleRenderer {
 
         shader = ShaderLibrary.getOrElseUpload("Nova2d_Circle_Shader.glsl");
         shader.bind();
-
-        vertexPositions = new Vector4f[]{
-                new Vector4f(-0.5f, -0.5f, 0.0f, 1.0f),
-                new Vector4f(0.5f, -0.5f, 0.0f, 1.0f),
-                new Vector4f(0.5f, 0.5f, 0.0f, 1.0f),
-                new Vector4f(-0.5f, 0.5f, 0.0f, 1.0f)
-        };
     }
 
     public void drawCircle(Matrix4f transform, CircleRendererComponent component, int entityID) {
