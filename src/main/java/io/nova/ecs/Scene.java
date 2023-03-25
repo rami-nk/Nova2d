@@ -1,7 +1,6 @@
 package io.nova.ecs;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.nova.core.renderer.Renderer;
 import io.nova.core.renderer.camera.Camera;
 import io.nova.core.renderer.camera.EditorCamera;
@@ -9,6 +8,7 @@ import io.nova.ecs.component.*;
 import io.nova.ecs.entity.Entity;
 import io.nova.ecs.entity.EntityListener;
 import io.nova.ecs.entity.Group;
+import io.nova.ecs.serializer.SceneSerializer;
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
@@ -19,10 +19,12 @@ import org.jbox2d.dynamics.World;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
+import java.io.IOException;
 import java.util.Objects;
 
 public class Scene {
 
+    public static final SceneSerializer serializer = new SceneSerializer();
     private final Registry registry;
     @JsonIgnore
     private Renderer renderer;
@@ -270,8 +272,11 @@ public class Scene {
     }
 
     public Scene copy() {
-        var mapper = new ObjectMapper();
-        return mapper.convertValue(mapper.convertValue(this, Object.class), this.getClass());
+        try {
+            return serializer.deserializeFromString(serializer.serializeToString(this));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private class CameraComponentAddEventListener implements EntityListener {
