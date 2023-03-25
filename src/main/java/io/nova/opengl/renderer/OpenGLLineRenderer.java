@@ -13,8 +13,7 @@ import org.joml.Vector4f;
 import java.util.Arrays;
 
 import static io.nova.opengl.renderer.OpenGLRenderer.*;
-import static org.lwjgl.opengl.GL11.GL_LINES;
-import static org.lwjgl.opengl.GL11.glDrawArrays;
+import static org.lwjgl.opengl.GL11.*;
 
 public class OpenGLLineRenderer {
 
@@ -26,6 +25,7 @@ public class OpenGLLineRenderer {
     private float[] data;
     private int vertexCount;
     private int dataIndex;
+    private float lineWidth;
 
     public OpenGLLineRenderer(Runnable endSceneCallback) {
         this.endSceneCallback = endSceneCallback;
@@ -40,6 +40,7 @@ public class OpenGLLineRenderer {
 
         shader = ShaderLibrary.getOrElseUpload("Nova2d_Line_Shader.glsl");
         shader.bind();
+        lineWidth = 1.0f;
     }
 
     public void drawLine(Vector3f p1, Vector3f p2, Vector4f color) {
@@ -92,8 +93,14 @@ public class OpenGLLineRenderer {
         if (dataIndex > 0) {
             vertexArray.bind();
             shader.bind();
+            glLineWidth(lineWidth);
             glDrawArrays(GL_LINES, 0, vertexCount);
             stats.drawCalls++;
         }
+    }
+
+
+    public void setLineWidth(float lineWidth) {
+        this.lineWidth = lineWidth;
     }
 }
