@@ -61,6 +61,8 @@ public class EditorLayer extends Layer {
     private SceneState sceneState;
     private Texture playButtonTexture, stopButtonTexture;
     private boolean showPhysicsColliders;
+    private Vector4f colliderColor = new Vector4f(0.0f, 1.0f, 0.0f, 1.0f);
+    private Vector4f backgroundColor = new Vector4f(0.1f, 0.1f, 0.1f, 1.0f);
 
     public void onAttach() {
         cameraController = new OrthographicCameraController(16.0f / 9.0f, true);
@@ -133,7 +135,7 @@ public class EditorLayer extends Layer {
         // Render
         frameBuffer.bind();
         renderer.resetStats();
-        renderer.setClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        renderer.setClearColor(backgroundColor.x, backgroundColor.y, backgroundColor.z, backgroundColor.w);
         renderer.clear();
 
         frameBuffer.clearAttachment(1, -1);
@@ -245,6 +247,14 @@ public class EditorLayer extends Layer {
         {
             if (ImGui.checkbox("Show physics colliders", showPhysicsColliders)) {
                 showPhysicsColliders = !showPhysicsColliders;
+            }
+            var cc = new float[]{colliderColor.x, colliderColor.y, colliderColor.z, colliderColor.w};
+            if (ImGui.colorEdit4("Collider color", cc)) {
+                colliderColor = new Vector4f(cc[0], cc[1], cc[2], cc[3]);
+            }
+            var bg = new float[]{backgroundColor.x, backgroundColor.y, backgroundColor.z, backgroundColor.w};
+            if (ImGui.colorEdit4("Background color", bg)) {
+                backgroundColor = new Vector4f(bg[0], bg[1], bg[2], bg[3]);
             }
         }
         ImGui.end();
@@ -382,7 +392,6 @@ public class EditorLayer extends Layer {
             }
         }
 
-        var colliderColor = new Vector4f(0.0f, 1.0f, 0.0f, 1.0f);
         var registry = activeScene.getRegistry();
         {
             var view = registry.getEntities(Group.create(BoxColliderComponent.class));
