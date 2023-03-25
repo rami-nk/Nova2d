@@ -27,6 +27,7 @@ public class TagComponentNode {
                 addComponentMenuItem(CircleRendererComponent.class, "Circle", entity);
                 addComponentMenuItem(SceneCameraComponent.class, "Camera", entity);
                 addComponentMenuItem(BoxColliderComponent.class, "BoxCollider", entity);
+                addComponentMenuItem(CircleColliderComponent.class, "CircleCollider", entity);
                 addComponentMenuItem(RigidBodyComponent.class, "RigidBody", entity);
                 ImGui.endPopup();
             }
