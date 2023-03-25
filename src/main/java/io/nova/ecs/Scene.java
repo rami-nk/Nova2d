@@ -9,6 +9,7 @@ import io.nova.ecs.component.*;
 import io.nova.ecs.entity.Entity;
 import io.nova.ecs.entity.EntityListener;
 import io.nova.ecs.entity.Group;
+import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyDef;
@@ -75,6 +76,21 @@ public class Scene {
                 fixtureDef.setRestitution(boxCollider.getRestitution());
                 var fixture = body.createFixture(fixtureDef);
                 boxCollider.setRuntimeFixture(fixture);
+            }
+
+            if (entity.hasComponent(CircleColliderComponent.class)) {
+                var circleCollider = entity.getComponent(CircleColliderComponent.class);
+                var shape = new CircleShape();
+                shape.setRadius(circleCollider.getRadius() * transform.getScale()[0]);
+                shape.m_p.set(circleCollider.getOffset()[0], circleCollider.getOffset()[1]);
+
+                var fixtureDef = new FixtureDef();
+                fixtureDef.setShape(shape);
+                fixtureDef.setDensity(circleCollider.getDensity());
+                fixtureDef.setFriction(circleCollider.getFriction());
+                fixtureDef.setRestitution(circleCollider.getRestitution());
+                var fixture = body.createFixture(fixtureDef);
+                circleCollider.setRuntimeFixture(fixture);
             }
         }
     }

@@ -11,6 +11,7 @@ public class EntityPropertiesPanel {
         SpriteRendererComponentNode.create(entity);
         SceneCameraComponentNode.create(entity);
         BoxColliderComponentNode.create(entity);
+        CircleColliderComponentNode.create(entity);
         RigidBodyComponentNode.create(entity);
     }
 }
