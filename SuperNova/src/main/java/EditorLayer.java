@@ -30,9 +30,9 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import panels.ContentBrowserPanel;
 import panels.DragAndDropDataType;
 import panels.EntityPanel;
+import panels.contentbrowser.ContentBrowserPanel;
 
 import java.io.IOException;
 import java.nio.file.Path;

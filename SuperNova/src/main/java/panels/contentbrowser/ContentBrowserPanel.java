@@ -1,4 +1,4 @@
-package panels;
+package panels.contentbrowser;
 
 import imgui.ImGui;
 import imgui.ImVec2;
@@ -6,8 +6,11 @@ import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiMouseButton;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
+import imgui.type.ImBoolean;
+import imgui.type.ImInt;
 import io.nova.core.renderer.texture.Texture;
 import io.nova.core.renderer.texture.TextureLibrary;
+import panels.DragAndDropDataType;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +31,9 @@ public class ContentBrowserPanel {
     private float padding = 16.0f;
     private float iconSize = 64.0f;
     private float cellSize = iconSize + padding;
+    private boolean showImageViewer = false;
+    private ImageAsset selectedImageAsset;
+    private boolean showSpriteEditor = false;
 
     public ContentBrowserPanel() {
         var userDir = System.getProperty("user.dir");
@@ -83,8 +89,91 @@ public class ContentBrowserPanel {
         }
         validCacheTimeout--;
 
+        if (showImageViewer) {
+            createImageViewer();
+        }
+
         ImGui.end();
         ImGui.popStyleVar();
+    }
+
+    private void createImageViewer() {
+        ImGui.begin("Image viewer", new ImBoolean(true), ImGuiWindowFlags.NoScrollbar);
+        ImGui.text(selectedImageAsset.getName());
+
+        if (ImGui.beginCombo("Sprite Mode", selectedImageAsset.getSpriteMode().getDisplayName())) {
+            for (var spriteMode : SpriteMode.values()) {
+                var isSelected = spriteMode == selectedImageAsset.getSpriteMode();
+                if (ImGui.selectable(spriteMode.getDisplayName(), isSelected)) {
+                    selectedImageAsset.setSpriteMode(spriteMode);
+                }
+                if (isSelected) {
+                    ImGui.setItemDefaultFocus();
+                }
+            }
+            ImGui.endCombo();
+        }
+        if (ImGui.button("Sprite Editor")) {
+            showSpriteEditor = true;
+        }
+        if (showSpriteEditor) {
+            createSpriteEditor();
+        }
+        if (selectedImageAsset.isSpriteSheet()) {
+            for (var subTexture : selectedImageAsset.getSubImages()) {
+                ImGui.imageButton(subTexture.getTextureId(), subTexture.getWidth(), subTexture.getHeight(), subTexture.getLeftTop().x, subTexture.getLeftTop().y, subTexture.getRightBottom().x, subTexture.getRightBottom().y);
+                ImGui.sameLine();
+                ImGui.text(subTexture.getName());
+            }
+        }
+
+        var imageWidth = ImGui.getContentRegionAvailX();
+        var imageHeight = ImGui.getContentRegionAvailY();
+        var aspectRatio = selectedImageAsset.getAspectRatio();
+        if (imageWidth > imageHeight) {
+            imageWidth = imageHeight * aspectRatio;
+        } else {
+            imageHeight = imageWidth / aspectRatio;
+        }
+        ImGui.spacing();
+        ImGui.spacing();
+        ImGui.image(selectedImageAsset.getTextureId(), imageWidth, imageHeight, 0, 1, 1, 0);
+
+        ImGui.end();
+    }
+
+    private void createSpriteEditor() {
+        var flags = ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar;
+        ImGui.begin("Sprite Editor", new ImBoolean(true), flags);
+        ImGui.text(selectedImageAsset.getName());
+
+        var rows = new ImInt(selectedImageAsset.getSpriteRows());
+        if (ImGui.inputInt("Sprite Rows", rows)) {
+            selectedImageAsset.setSpriteRows(rows.get());
+        }
+
+        var columns = new ImInt(selectedImageAsset.getSpriteColumns());
+        if (ImGui.inputInt("Sprite Columns", columns)) {
+            selectedImageAsset.setSpriteColumns(columns.get());
+        }
+
+        var imageWidth = ImGui.getContentRegionAvailX();
+        var imageHeight = ImGui.getContentRegionAvailY();
+        var aspectRatio = selectedImageAsset.getAspectRatio();
+        if (imageWidth > imageHeight) {
+            imageWidth = imageHeight * aspectRatio;
+        } else {
+            imageHeight = imageWidth / aspectRatio;
+        }
+        ImGui.spacing();
+        ImGui.spacing();
+        ImGui.image(selectedImageAsset.getTextureId(), imageWidth, imageHeight, 0, 1, 1, 0);
+
+        if (ImGui.button("Apply")) {
+            showSpriteEditor = false;
+            selectedImageAsset.createSubTextures();
+        }
+        ImGui.end();
     }
 
     private void createDirectoryContent(File[] files) {
@@ -112,8 +201,10 @@ public class ContentBrowserPanel {
                     ImGui.pushID(file.getName());
 
                     if (isImage(file)) {
-                        var texture = TextureLibrary.uploadAndGet(file.toPath());
-                        if (ImGui.imageButton(texture.getId(), iconSize, iconSize, 0, 1, 1, 0)) {
+                        var imageAsset = AssetManager.getImageAsset(file);
+                        if (ImGui.imageButton(imageAsset.getTextureId(), iconSize, iconSize, 0, 1, 1, 0)) {
+                            showImageViewer = true;
+                            selectedImageAsset = imageAsset;
                         }
                     } else {
                         ImGui.imageButton(documentIconTexture.getId(), iconSize, iconSize, 0, 1, 1, 0);
