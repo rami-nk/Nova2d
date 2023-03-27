@@ -12,7 +12,7 @@ public class SpriteRendererComponent extends Component {
     private float tilingFactor;
 
     public SpriteRendererComponent() {
-        this.color = new float[]{1.0f, 0.0f, 0.0f, 1.0f};
+        this.color = new float[]{0.9f, 0.9f, 0.9f, 1.0f};
         this.tilingFactor = 1.0f;
     }
 
@@ -21,7 +21,6 @@ public class SpriteRendererComponent extends Component {
     }
 
     public void setSubTexture(SubTexture subTexture) {
-        this.texture = null;
         this.subTexture = subTexture;
     }
 

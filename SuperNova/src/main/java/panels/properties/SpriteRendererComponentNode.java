@@ -39,6 +39,7 @@ public class SpriteRendererComponentNode {
                 if (subTexturePayload != null) {
                     var subTexture = (SubTexture) subTexturePayload;
                     sprite.setSubTexture(subTexture);
+                    sprite.setTexture(null);
                 }
                 if (payload != null) {
                     var texturePath = ImGui.getDragDropPayload().toString();

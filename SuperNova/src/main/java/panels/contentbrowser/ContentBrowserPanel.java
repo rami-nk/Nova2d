@@ -160,6 +160,11 @@ public class ContentBrowserPanel {
             selectedImageAsset.setSpriteColumns(columns.get());
         }
 
+        var offset = new ImInt(selectedImageAsset.getSpriteOffset());
+        if (ImGui.inputInt("Offset", offset)) {
+            selectedImageAsset.setSpriteOffset(offset.get());
+        }
+
         var imageWidth = ImGui.getContentRegionAvailX();
         var imageHeight = ImGui.getContentRegionAvailY();
         var aspectRatio = selectedImageAsset.getAspectRatio();
