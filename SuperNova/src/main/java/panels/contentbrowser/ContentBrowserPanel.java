@@ -2,10 +2,7 @@ package panels.contentbrowser;
 
 import imgui.ImGui;
 import imgui.ImVec2;
-import imgui.flag.ImGuiCol;
-import imgui.flag.ImGuiMouseButton;
-import imgui.flag.ImGuiStyleVar;
-import imgui.flag.ImGuiWindowFlags;
+import imgui.flag.*;
 import imgui.type.ImBoolean;
 import imgui.type.ImInt;
 import io.nova.core.renderer.texture.Texture;
@@ -100,7 +97,6 @@ public class ContentBrowserPanel {
     private void createImageViewer() {
         ImGui.begin("Image viewer", new ImBoolean(true), ImGuiWindowFlags.NoScrollbar);
         ImGui.text(selectedImageAsset.getName());
-
         if (ImGui.beginCombo("Sprite Mode", selectedImageAsset.getSpriteMode().getDisplayName())) {
             for (var spriteMode : SpriteMode.values()) {
                 var isSelected = spriteMode == selectedImageAsset.getSpriteMode();
@@ -113,7 +109,7 @@ public class ContentBrowserPanel {
             }
             ImGui.endCombo();
         }
-        if (ImGui.button("Sprite Editor")) {
+        if (selectedImageAsset.isSpriteSheetModeMultiple() && ImGui.button("Sprite Editor")) {
             showSpriteEditor = true;
         }
         if (showSpriteEditor) {
@@ -121,9 +117,16 @@ public class ContentBrowserPanel {
         }
         if (selectedImageAsset.isSpriteSheet()) {
             for (var subTexture : selectedImageAsset.getSubImages()) {
+                ImGui.pushID(subTexture.getName());
                 ImGui.imageButton(subTexture.getTextureId(), subTexture.getWidth(), subTexture.getHeight(), subTexture.getLeftTop().x, subTexture.getLeftTop().y, subTexture.getRightBottom().x, subTexture.getRightBottom().y);
+                if (ImGui.beginDragDropSource(ImGuiDragDropFlags.SourceAllowNullID)) {
+                    ImGui.setDragDropPayload(DragAndDropDataType.IMAGE_VIEWER_SUB_TEXTURE, subTexture.getSubTexture());
+                    ImGui.image(subTexture.getTextureId(), subTexture.getWidth(), subTexture.getHeight(), subTexture.getLeftTop().x, subTexture.getLeftTop().y, subTexture.getRightBottom().x, subTexture.getRightBottom().y);
+                    ImGui.endDragDropSource();
+                }
                 ImGui.sameLine();
                 ImGui.text(subTexture.getName());
+                ImGui.popID();
             }
         }
 

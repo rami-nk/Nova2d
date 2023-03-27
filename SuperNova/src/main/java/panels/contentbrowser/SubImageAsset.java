@@ -16,10 +16,10 @@ public class SubImageAsset {
     public SubImageAsset(String name, Texture texture, int x, int y, float width, float height) {
         this.name = name;
         this.subTexture = new SubTexture(texture, new Vector2f(x, y), new Vector2f(width, height));
-        this.leftTop = subTexture.getTextureCoordinates()[3];
-        this.rightBottom = subTexture.getTextureCoordinates()[1];
         this.width = width;
         this.height = height;
+        this.leftTop = new Vector2f(subTexture.getLeftTop()[0], subTexture.getLeftTop()[1]);
+        this.rightBottom = new Vector2f(subTexture.getRightBottom()[0], subTexture.getRightBottom()[1]);
     }
 
     public float getWidth() {

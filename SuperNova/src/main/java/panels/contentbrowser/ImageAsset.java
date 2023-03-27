@@ -34,6 +34,10 @@ public class ImageAsset {
         return spriteMode == SpriteMode.MULTIPLE && subImages != null;
     }
 
+    public boolean isSpriteSheetModeMultiple() {
+        return spriteMode == SpriteMode.MULTIPLE;
+    }
+
     public int getWidth() {
         return width;
     }

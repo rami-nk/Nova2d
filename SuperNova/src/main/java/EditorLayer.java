@@ -286,9 +286,10 @@ public class EditorLayer extends Layer {
             ImGui.image(textureId, viewportSize.x, viewportSize.y, 0, 1, 1, 0);
 
             if (ImGui.beginDragDropTarget()) {
-                var payload = ImGui.acceptDragDropPayload(DragAndDropDataType.CONTENT_BROWSER_ITEM);
-                if (payload != null) {
-                    var path = payload.toString();
+                var texturePayload = ImGui.acceptDragDropPayload(DragAndDropDataType.CONTENT_BROWSER_ITEM);
+
+                if (texturePayload != null) {
+                    var path = texturePayload.toString();
                     openScene(path);
                 }
                 ImGui.endDragDropTarget();
