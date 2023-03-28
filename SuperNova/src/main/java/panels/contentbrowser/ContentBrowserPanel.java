@@ -4,7 +4,6 @@ import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.*;
 import imgui.type.ImBoolean;
-import imgui.type.ImInt;
 import io.nova.core.renderer.texture.Texture;
 import io.nova.core.renderer.texture.TextureLibrary;
 import panels.DragAndDropDataType;
@@ -109,11 +108,15 @@ public class ContentBrowserPanel {
             }
             ImGui.endCombo();
         }
-        if (selectedImageAsset.isSpriteSheetModeMultiple() && ImGui.button("Sprite Editor")) {
-            showSpriteEditor = true;
+        ImGui.dummy(0, 5);
+        if (selectedImageAsset.isSpriteSheetModeMultiple()) {
+            if (ImGui.button("Sprite Editor")) {
+                showSpriteEditor = true;
+            }
+            ImGui.dummy(0, 5);
         }
         if (showSpriteEditor) {
-            createSpriteEditor();
+            SpriteEditor.create(selectedImageAsset, () -> showSpriteEditor = false);
         }
         if (selectedImageAsset.isSpriteSheet()) {
             for (var subTexture : selectedImageAsset.getSubImages()) {
@@ -128,59 +131,12 @@ public class ContentBrowserPanel {
                 ImGui.text(subTexture.getName());
                 ImGui.popID();
             }
-        }
-
-        var imageWidth = ImGui.getContentRegionAvailX();
-        var imageHeight = ImGui.getContentRegionAvailY();
-        var aspectRatio = selectedImageAsset.getAspectRatio();
-        if (imageWidth > imageHeight) {
-            imageWidth = imageHeight * aspectRatio;
         } else {
-            imageHeight = imageWidth / aspectRatio;
-        }
-        ImGui.spacing();
-        ImGui.spacing();
-        ImGui.image(selectedImageAsset.getTextureId(), imageWidth, imageHeight, 0, 1, 1, 0);
-
-        ImGui.end();
-    }
-
-    private void createSpriteEditor() {
-        var flags = ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar;
-        ImGui.begin("Sprite Editor", new ImBoolean(true), flags);
-        ImGui.text(selectedImageAsset.getName());
-
-        var rows = new ImInt(selectedImageAsset.getSpriteRows());
-        if (ImGui.inputInt("Sprite Rows", rows)) {
-            selectedImageAsset.setSpriteRows(rows.get());
+            var imageWidth = ImGui.getContentRegionAvailX();
+            var imageHeight = (1.0f / selectedImageAsset.getAspectRatio()) * imageWidth;
+            ImGui.image(selectedImageAsset.getTextureId(), imageWidth, imageHeight, 0, 1, 1, 0);
         }
 
-        var columns = new ImInt(selectedImageAsset.getSpriteColumns());
-        if (ImGui.inputInt("Sprite Columns", columns)) {
-            selectedImageAsset.setSpriteColumns(columns.get());
-        }
-
-        var offset = new ImInt(selectedImageAsset.getSpriteOffset());
-        if (ImGui.inputInt("Offset", offset)) {
-            selectedImageAsset.setSpriteOffset(offset.get());
-        }
-
-        var imageWidth = ImGui.getContentRegionAvailX();
-        var imageHeight = ImGui.getContentRegionAvailY();
-        var aspectRatio = selectedImageAsset.getAspectRatio();
-        if (imageWidth > imageHeight) {
-            imageWidth = imageHeight * aspectRatio;
-        } else {
-            imageHeight = imageWidth / aspectRatio;
-        }
-        ImGui.spacing();
-        ImGui.spacing();
-        ImGui.image(selectedImageAsset.getTextureId(), imageWidth, imageHeight, 0, 1, 1, 0);
-
-        if (ImGui.button("Apply")) {
-            showSpriteEditor = false;
-            selectedImageAsset.createSubTextures();
-        }
         ImGui.end();
     }
 

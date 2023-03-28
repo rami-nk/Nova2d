@@ -15,7 +15,7 @@ public class ImageAsset {
     private SpriteMode spriteMode;
     private SubImageAsset[] subImages;
     private int spriteRows, spriteColumns;
-    private int spriteOffset;
+    private int spritePadding;
 
     public ImageAsset(File file) {
         this.file = file;
@@ -105,7 +105,7 @@ public class ImageAsset {
         for (int y = 0; y < spriteRows; y++) {
             for (int x = 0; x < spriteColumns; x++) {
                 var name = file.getName().split("\\.")[0] + "-" + index;
-                subImages[index++] = new SubImageAsset(name, texture, x + spriteOffset, y + spriteOffset, width, height);
+                subImages[index++] = new SubImageAsset(name, texture, x + spritePadding, y + spritePadding, width, height);
             }
         }
     }
@@ -115,11 +115,11 @@ public class ImageAsset {
     }
 
 
-    public int getSpriteOffset() {
-        return spriteOffset;
+    public int getSpritePadding() {
+        return spritePadding;
     }
 
-    public void setSpriteOffset(int offset) {
-        this.spriteOffset = offset;
+    public void setSpritePadding(int padding) {
+        this.spritePadding = padding;
     }
 }
