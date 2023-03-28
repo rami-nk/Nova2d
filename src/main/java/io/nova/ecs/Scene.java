@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.nova.core.renderer.Renderer;
 import io.nova.core.renderer.camera.Camera;
 import io.nova.core.renderer.camera.EditorCamera;
+import io.nova.core.renderer.camera.SceneCamera;
 import io.nova.ecs.component.*;
 import io.nova.ecs.entity.Entity;
 import io.nova.ecs.entity.EntityListener;
@@ -275,6 +276,12 @@ public class Scene {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void getCameraView(SceneCamera camera, Matrix4f view) {
+        renderer.beginScene(camera, view);
+        drawPrimitives();
+        renderer.endScene();
     }
 
     private class CameraComponentAddEventListener implements EntityListener {
