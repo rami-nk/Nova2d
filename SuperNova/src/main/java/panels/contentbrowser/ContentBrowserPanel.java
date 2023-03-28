@@ -94,7 +94,8 @@ public class ContentBrowserPanel {
     }
 
     private void createImageViewer() {
-        ImGui.begin("Image viewer", new ImBoolean(true), ImGuiWindowFlags.NoScrollbar);
+        var openFlag = new ImBoolean(true);
+        ImGui.begin("Image viewer", openFlag, ImGuiWindowFlags.NoScrollbar);
         ImGui.text(selectedImageAsset.getName());
         if (ImGui.beginCombo("Sprite Mode", selectedImageAsset.getSpriteMode().getDisplayName())) {
             for (var spriteMode : SpriteMode.values()) {
@@ -138,6 +139,9 @@ public class ContentBrowserPanel {
         }
 
         ImGui.end();
+        if (!openFlag.get()) {
+            showImageViewer = false;
+        }
     }
 
     private void createDirectoryContent(File[] files) {
