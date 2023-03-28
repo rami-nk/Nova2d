@@ -1,21 +1,22 @@
 package io.nova.event.mouse;
 
+import io.nova.core.codes.MouseCode;
 import io.nova.event.Event;
 import io.nova.event.EventCategory;
 import io.nova.event.EventType;
 
 public abstract class MouseButtonEvent extends Event {
 
-    private int mouseCode;
+    private MouseCode mouseCode;
 
-    public MouseButtonEvent() { }
+    public MouseButtonEvent() {}
 
-    public MouseButtonEvent(int mouseCode, EventType eventType) {
+    public MouseButtonEvent(MouseCode mouseCode, EventType eventType) {
         this.mouseCode = mouseCode;
         this.eventType = eventType;
     }
 
-    public int getMouseCode() {
+    public MouseCode getMouseCode() {
         return mouseCode;
     }
 

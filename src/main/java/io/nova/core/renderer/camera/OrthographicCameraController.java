@@ -1,13 +1,12 @@
 package io.nova.core.renderer.camera;
 
+import io.nova.core.codes.KeyCode;
 import io.nova.event.Event;
 import io.nova.event.EventDispatcher;
 import io.nova.event.mouse.MouseScrolledEvent;
 import io.nova.event.window.WindowResizeEvent;
 import io.nova.window.Input;
 import org.joml.Vector3f;
-
-import static io.nova.core.codes.KeyCodes.*;
 
 public class OrthographicCameraController {
 
@@ -36,23 +35,23 @@ public class OrthographicCameraController {
     }
 
     public void onUpdate(float deltaTime) {
-        if (Input.isKeyPressed(NV_KEY_A)) {
+        if (Input.isKeyPressed(KeyCode.KEY_A)) {
             position.x -= cameraTranslationSpeed * deltaTime;
-        } else if (Input.isKeyPressed(NV_KEY_D)) {
+        } else if (Input.isKeyPressed(KeyCode.KEY_D)) {
             position.x += cameraTranslationSpeed * deltaTime;
         }
 
-        if (Input.isKeyPressed(NV_KEY_W)) {
+        if (Input.isKeyPressed(KeyCode.KEY_W)) {
             position.y += cameraTranslationSpeed * deltaTime;
-        } else if (Input.isKeyPressed(NV_KEY_S)) {
+        } else if (Input.isKeyPressed(KeyCode.KEY_S)) {
             position.y -= cameraTranslationSpeed * deltaTime;
         }
 
         if (enableRotation) {
-            if (Input.isKeyPressed(NV_KEY_Q)) {
+            if (Input.isKeyPressed(KeyCode.KEY_Q)) {
                 rotation += cameraRotationSpeed * deltaTime;
             }
-            if (Input.isKeyPressed(NV_KEY_E)) {
+            if (Input.isKeyPressed(KeyCode.KEY_E)) {
                 rotation -= cameraRotationSpeed * deltaTime;
             }
             camera.setRotation(rotation);

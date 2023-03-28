@@ -1,6 +1,8 @@
 package io.nova.window;
 
 import io.nova.core.application.Application;
+import io.nova.core.codes.KeyCode;
+import io.nova.core.codes.MouseCode;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 
@@ -8,15 +10,15 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class Input {
 
-    public static boolean isKeyPressed(int keycode) {
+    public static boolean isKeyPressed(KeyCode keycode) {
         var window = Application.getWindow().getNativeWindow();
-        var state = glfwGetKey(window, keycode);
+        var state = glfwGetKey(window, keycode.getCode());
         return state == GLFW_PRESS;
     }
 
-    public static boolean isMouseButtonPressed(int mouseButton) {
+    public static boolean isMouseButtonPressed(MouseCode mouseCode) {
         var window = Application.getWindow().getNativeWindow();
-        var state = glfwGetMouseButton(window, mouseButton);
+        var state = glfwGetMouseButton(window, mouseCode.getCode());
         return state == GLFW_PRESS;
     }
 

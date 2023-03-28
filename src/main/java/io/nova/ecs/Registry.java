@@ -1,5 +1,6 @@
 package io.nova.ecs;
 
+import io.nova.ecs.component.Component;
 import io.nova.ecs.entity.Entity;
 import io.nova.ecs.entity.EntityListener;
 import io.nova.ecs.entity.Group;
@@ -11,6 +12,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public final class Registry {
 
     private final List<Entity> entities = new ArrayList<>();
+    private final Map<Integer, Entity> entitiesById = new HashMap<>();
     private final Map<Group, List<Entity>> views = new HashMap<>();
     private final List<Command> commands = new ArrayList<>();
     private final List<EcSystem> systems = new ArrayList<>();
@@ -77,6 +79,7 @@ public final class Registry {
         assert !entities.contains(e);
 
         entities.add(e);
+        entitiesById.put(e.getId(), e);
         e.setRegistry(this);
         e.activate();
 
@@ -104,7 +107,7 @@ public final class Registry {
 
     private void addEntityToViews(Entity e) {
         for (Group group : views.keySet()) {
-            if (group.isMember(e)) {
+            if (group.isMember(e) && !views.get(group).contains(e)) {
                 views.get(group).add(e);
             }
         }
@@ -120,6 +123,7 @@ public final class Registry {
         e.deactivate();
         e.setRegistry(null);
         entities.remove(e);
+        entitiesById.remove(e.hashCode());
 
         removeEntityFromViews(e);
     }
@@ -128,6 +132,10 @@ public final class Registry {
         while (!entities.isEmpty()) {
             removeEntityInternal(entities.get(0));
         }
+    }
+
+    public Entity getEntity(int id) {
+        return entitiesById.get(id);
     }
 
     private void removeEntityFromViews(Entity e) {
@@ -166,10 +174,26 @@ public final class Registry {
         return Collections.unmodifiableList(view);
     }
 
+    public void removeComponent(Entity e, Class<? extends Component> clazz) {
+        if (updating) {
+            commands.add(() -> removeComponentInternal(e, clazz));
+        } else {
+            removeComponentInternal(e, clazz);
+        }
+    }
+
+    private void removeComponentInternal(Entity e, Class<? extends Component> clazz) {
+        for (Group group : views.keySet()) {
+            if (group.getTypes().contains(clazz)) {
+                views.get(group).remove(e);
+            }
+        }
+    }
+
     private void initView(Group group, List<Entity> view) {
         assert view.isEmpty();
         for (Entity e : entities) {
-            if (group.isMember(e)) {
+            if (group.isMember(e) && !view.contains(e)) {
                 view.add(e);
             }
         }
@@ -214,6 +238,7 @@ public final class Registry {
             }
         }
         entities.clear();
+        entitiesById.clear();
         views.clear();
 
         // dispose systems

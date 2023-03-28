@@ -5,7 +5,10 @@ import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiTreeNodeFlags;
 import io.nova.ecs.component.Component;
 import io.nova.ecs.component.SceneCameraComponent;
+import io.nova.ecs.component.TransformComponent;
 import io.nova.ecs.entity.Entity;
+
+import java.util.Objects;
 
 public class ComponentNode {
 
@@ -19,11 +22,24 @@ public class ComponentNode {
             var open = ImGui.treeNodeEx(name, ImGuiTreeNodeFlags.DefaultOpen | ImGuiTreeNodeFlags.Framed | ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.AllowItemOverlap);
             ImGui.popStyleVar();
 
+
+            var isPrimaryCamera = Objects.equals(clazz, SceneCameraComponent.class)
+                    && entity.getComponent(SceneCameraComponent.class).isPrimary();
+            var isTransform = Objects.equals(clazz, TransformComponent.class);
+            if (isTransform || isPrimaryCamera) {
+                // Do not display the remove button for the primary camera or any transform component
+                // TODO: Find a better way to handle this case
+                if (open) {
+                    content.run();
+                    ImGui.treePop();
+                }
+                return;
+            }
+
             ImGui.sameLine(contentRegionAvail.x - lineHeight * 0.5f);
             if (ImGui.button("...", lineHeight, lineHeight)) {
                 ImGui.openPopup("ComponentSettings");
             }
-
             boolean removeComponent = false;
             if (ImGui.beginPopup("ComponentSettings")) {
                 if (ImGui.menuItem("Remove component")) {
@@ -38,12 +54,6 @@ public class ComponentNode {
             }
 
             if (removeComponent) {
-                if (entity.hasComponent(SceneCameraComponent.class)) {
-                    if (entity.getComponent(SceneCameraComponent.class).isPrimary()) {
-                        // TODO: Find a better way to handle this case
-                        return;
-                    }
-                }
                 var component = entity.getComponent(clazz);
                 entity.removeComponent(component);
             }

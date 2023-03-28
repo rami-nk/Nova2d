@@ -3,20 +3,33 @@ package io.nova.ecs;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.nova.core.renderer.Renderer;
 import io.nova.core.renderer.camera.Camera;
+import io.nova.core.renderer.camera.EditorCamera;
 import io.nova.ecs.component.*;
 import io.nova.ecs.entity.Entity;
 import io.nova.ecs.entity.EntityListener;
 import io.nova.ecs.entity.Group;
+import io.nova.ecs.serializer.SceneSerializer;
+import org.jbox2d.collision.shapes.CircleShape;
+import org.jbox2d.collision.shapes.PolygonShape;
+import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.BodyDef;
+import org.jbox2d.dynamics.BodyType;
+import org.jbox2d.dynamics.FixtureDef;
+import org.jbox2d.dynamics.World;
 import org.joml.Matrix4f;
 
+import java.io.IOException;
 import java.util.Objects;
 
 public class Scene {
 
+    public static final SceneSerializer serializer = new SceneSerializer();
     private final Registry registry;
     @JsonIgnore
     private Renderer renderer;
     private int viewPortWidth, viewPortHeight;
+    @JsonIgnore
+    private World physicsWorld;
 
     public Scene(Renderer renderer) {
         this.renderer = renderer;
@@ -26,6 +39,65 @@ public class Scene {
 
     public Scene() {
         this(null);
+    }
+
+    private static BodyType nova2dBodyTypeToBox2DBodyType(RigidBodyComponent.BodyType type) {
+        return switch (type) {
+            case DYNAMIC -> BodyType.DYNAMIC;
+            case STATIC -> BodyType.STATIC;
+            case KINEMATIC -> BodyType.KINEMATIC;
+        };
+    }
+
+    public void onRuntimeStart() {
+        physicsWorld = new World(new Vec2(0, -9.81f));
+        var group = registry.getEntities(Group.create(RigidBodyComponent.class));
+        for (var entity : group) {
+            var transform = entity.getComponent(TransformComponent.class);
+            var rigidBody = entity.getComponent(RigidBodyComponent.class);
+
+            var bodyDef = new BodyDef();
+            bodyDef.setType(nova2dBodyTypeToBox2DBodyType(rigidBody.getBodyType()));
+            bodyDef.setPosition(new Vec2(transform.getTranslation()[0], transform.getTranslation()[1]));
+            bodyDef.setAngle(transform.getRotation()[2]);
+
+            var body = physicsWorld.createBody(bodyDef);
+            body.setFixedRotation(rigidBody.isFixedRotation());
+            rigidBody.setRuntimeBody(body);
+
+            if (entity.hasComponent(BoxColliderComponent.class)) {
+                var boxCollider = entity.getComponent(BoxColliderComponent.class);
+                var shape = new PolygonShape();
+                shape.setAsBox(boxCollider.getSize()[0] * transform.getScale()[0], boxCollider.getSize()[1] * transform.getScale()[1]);
+
+                var fixtureDef = new FixtureDef();
+                fixtureDef.setShape(shape);
+                fixtureDef.setDensity(boxCollider.getDensity());
+                fixtureDef.setFriction(boxCollider.getFriction());
+                fixtureDef.setRestitution(boxCollider.getRestitution());
+                var fixture = body.createFixture(fixtureDef);
+                boxCollider.setRuntimeFixture(fixture);
+            }
+
+            if (entity.hasComponent(CircleColliderComponent.class)) {
+                var circleCollider = entity.getComponent(CircleColliderComponent.class);
+                var shape = new CircleShape();
+                shape.setRadius(circleCollider.getRadius() * transform.getScale()[0]);
+                shape.m_p.set(circleCollider.getOffset()[0], circleCollider.getOffset()[1]);
+
+                var fixtureDef = new FixtureDef();
+                fixtureDef.setShape(shape);
+                fixtureDef.setDensity(circleCollider.getDensity());
+                fixtureDef.setFriction(circleCollider.getFriction());
+                fixtureDef.setRestitution(circleCollider.getRestitution());
+                var fixture = body.createFixture(fixtureDef);
+                circleCollider.setRuntimeFixture(fixture);
+            }
+        }
+    }
+
+    public void onRuntimeStop() {
+        physicsWorld = null;
     }
 
     public Renderer getRenderer() {
@@ -56,7 +128,34 @@ public class Scene {
         return registry;
     }
 
-    public void onUpdate(float deltaTime) {
+    public void onUpdateEditor(EditorCamera camera, float deltaTime) {
+        renderer.beginScene(camera);
+        drawPrimitives();
+        renderer.endScene();
+        registry.update(deltaTime);
+    }
+
+    private void drawPrimitives() {
+        {
+            var group = registry.getEntities(Group.create(SpriteRendererComponent.class, TransformComponent.class));
+            for (var entity : group) {
+                var transform = entity.getComponent(TransformComponent.class);
+                var sprite = entity.getComponent(SpriteRendererComponent.class);
+                renderer.drawSprite(transform.getTransform(), sprite, entity.getId());
+            }
+        }
+
+        {
+            var group = registry.getEntities(Group.create(CircleRendererComponent.class, TransformComponent.class));
+            for (var entity : group) {
+                var transform = entity.getComponent(TransformComponent.class);
+                var circle = entity.getComponent(CircleRendererComponent.class);
+                renderer.drawCircle(transform.getTransform(), circle, entity.getId());
+            }
+        }
+    }
+
+    public void onUpdateRuntime(float deltaTime) {
         // Update scripts
         {
             var group = registry.getEntities(Group.create(ScriptComponent.class));
@@ -78,6 +177,20 @@ public class Scene {
             }
         }
 
+        // Update physics
+        {
+            physicsWorld.step(deltaTime, 6, 2);
+            var group = registry.getEntities(Group.create(RigidBodyComponent.class));
+            for (var entity : group) {
+                var transform = entity.getComponent(TransformComponent.class);
+                var rigidBody = entity.getComponent(RigidBodyComponent.class);
+                var body = rigidBody.getRuntimeBody();
+                var position = body.getPosition();
+                transform.setTranslation(new float[]{position.x, position.y, 0});
+                transform.setRotation(new float[]{0, 0, body.getAngle()});
+            }
+        }
+
         Camera primaryCamera = null;
         Matrix4f cameraTransform = null;
         {
@@ -95,12 +208,7 @@ public class Scene {
 
         if (!Objects.isNull(primaryCamera)) {
             renderer.beginScene(primaryCamera, cameraTransform);
-            var group = registry.getEntities(Group.create(SpriteRenderComponent.class, TransformComponent.class));
-            for (var entity : group) {
-                var transform = entity.getComponent(TransformComponent.class);
-                var sprite = entity.getComponent(SpriteRenderComponent.class);
-                renderer.drawQuad(transform.getTransform(), sprite.getColorAsVec());
-            }
+            drawPrimitives();
             renderer.endScene();
         }
 
@@ -147,6 +255,26 @@ public class Scene {
 
     public Entity createVoidEntity() {
         return new Entity();
+    }
+
+    @JsonIgnore
+    public Entity getPrimaryCameraEntity() {
+        var cameraEntity = registry.getEntities(Group.create(SceneCameraComponent.class));
+        for (var entity : cameraEntity) {
+            var camera = entity.getComponent(SceneCameraComponent.class);
+            if (camera.isPrimary()) {
+                return entity;
+            }
+        }
+        return null;
+    }
+
+    public Scene copy() {
+        try {
+            return serializer.deserializeFromString(serializer.serializeToString(this));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private class CameraComponentAddEventListener implements EntityListener {

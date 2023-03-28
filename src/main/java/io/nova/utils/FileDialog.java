@@ -1,4 +1,4 @@
-package io.nova;
+package io.nova.utils;
 
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
 

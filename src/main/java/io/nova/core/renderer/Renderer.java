@@ -1,16 +1,23 @@
 package io.nova.core.renderer;
 
 import io.nova.core.renderer.camera.Camera;
+import io.nova.core.renderer.camera.EditorCamera;
 import io.nova.core.renderer.camera.OrthographicCamera;
-import io.nova.opengl.renderer.OpenGLRenderer;
+import io.nova.opengl.renderer.pass.OpenGLRenderer;
 import org.joml.Matrix4f;
 
-public interface Renderer extends QuadRenderer {
+public interface Renderer extends
+        QuadRenderer,
+        SpriteRenderer,
+        CircleRenderer,
+        DebugRenderer {
     RendererApi API = RendererApi.OpenGL;
 
     void beginScene(OrthographicCamera camera);
 
     void beginScene(Camera camera, Matrix4f transform);
+
+    void beginScene(EditorCamera camera);
 
     void endScene();
 

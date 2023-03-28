@@ -1,5 +1,7 @@
 package io.nova.window;
 
+import io.nova.core.codes.KeyCode;
+import io.nova.core.codes.MouseCode;
 import io.nova.core.renderer.GraphicsContext;
 import io.nova.core.window.EventCallback;
 import io.nova.core.window.Window;
@@ -22,6 +24,7 @@ import java.util.Objects;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.GL_MULTISAMPLE;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Nova2dWindow implements Window {
@@ -55,9 +58,10 @@ public class Nova2dWindow implements Window {
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+        glfwWindowHint(GLFW_SAMPLES, 4);
 
         // Create the window
         var glfwWindow = glfwCreateWindow(windowData.getWidth(), windowData.getHeight(), windowData.getTitle(), NULL, NULL);
@@ -91,11 +95,12 @@ public class Nova2dWindow implements Window {
             var windowDataPointer = glfwGetWindowUserPointer(glfwWindowPointer);
             var data = (WindowData) MemoryUtil.memGlobalRefToObject(windowDataPointer);
 
+            var novaKey = KeyCode.getKeyCode(key);
             Event event = null;
             switch (action) {
-                case GLFW_PRESS -> event = new KeyPressedEvent(key);
-                case GLFW_RELEASE -> event = new KeyReleasedEvent(key);
-                case GLFW_REPEAT -> event = new KeyPressedEvent(key, true);
+                case GLFW_PRESS -> event = new KeyPressedEvent(novaKey);
+                case GLFW_RELEASE -> event = new KeyReleasedEvent(novaKey);
+                case GLFW_REPEAT -> event = new KeyPressedEvent(novaKey, true);
             }
             data.getEventCallback().dispatch(event);
         });
@@ -104,10 +109,12 @@ public class Nova2dWindow implements Window {
             var windowDataPointer = glfwGetWindowUserPointer(glfwWindowPointer);
             var data = (WindowData) MemoryUtil.memGlobalRefToObject(windowDataPointer);
 
+            var novaButton = MouseCode.getMouseCode(button);
+
             Event event = null;
             switch (action) {
-                case GLFW_PRESS -> event = new MouseButtonPressedEvent(button);
-                case GLFW_RELEASE -> event = new MouseButtonReleasedEvent(button);
+                case GLFW_PRESS -> event = new MouseButtonPressedEvent(novaButton);
+                case GLFW_RELEASE -> event = new MouseButtonReleasedEvent(novaButton);
             }
             data.getEventCallback().dispatch(event);
         });
@@ -138,8 +145,15 @@ public class Nova2dWindow implements Window {
 
         context.init(glfwWindow);
 
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
+
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        glEnable(GL_LINE_SMOOTH);
+
+        glEnable(GL_MULTISAMPLE);
     }
 
     @Override

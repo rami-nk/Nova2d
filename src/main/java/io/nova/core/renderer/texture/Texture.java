@@ -1,10 +1,13 @@
 package io.nova.core.renderer.texture;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import java.nio.ByteBuffer;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
 public interface Texture {
 
-    int RESERVED_TEXTURE_SLOT_ID = -1;
     int SLOT_ZERO = 33984;
 
     void loadAndUploadTexture(String filepath);
@@ -25,5 +28,8 @@ public interface Texture {
 
     int getHeight();
 
+    @JsonIgnore
     int getId();
+
+    String getFilepath();
 }

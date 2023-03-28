@@ -1,20 +1,21 @@
 package io.nova.event.key;
 
+import io.nova.core.codes.KeyCode;
 import io.nova.event.Event;
 import io.nova.event.EventType;
 
 public abstract class KeyEvent extends Event {
 
-    private int keyCode;
+    private KeyCode keyCode;
 
-    public KeyEvent() { }
+    public KeyEvent() {}
 
-    public KeyEvent(int keyCode, EventType eventType) {
+    public KeyEvent(KeyCode keyCode, EventType eventType) {
         this.keyCode = keyCode;
         this.eventType = eventType;
     }
 
-    public int getKeyCode() {
+    public KeyCode getKeyCode() {
         return keyCode;
     }
 

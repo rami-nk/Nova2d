@@ -34,10 +34,18 @@ public class SceneSerializer {
         return mapper.readValue(content, Scene.class);
     }
 
+    public Scene deserializeFromString(String json) throws IOException {
+        return mapper.readValue(json, Scene.class);
+    }
+
     public void serialize(Scene context, String path) throws IOException {
         var file = new File(path);
         var ensureParentDirectoriesExist = file.getParentFile().mkdirs();
         var fileCreated = file.createNewFile();
         mapper.writerWithDefaultPrettyPrinter().writeValue(file, context);
+    }
+
+    public String serializeToString(Scene context) throws IOException {
+        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(context);
     }
 }

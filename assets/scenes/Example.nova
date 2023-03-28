@@ -14,15 +14,15 @@
         "@class" : "io.nova.ecs.component.TagComponent",
         "tag" : "Quad"
       }, {
-        "@class" : "io.nova.ecs.component.SpriteRenderComponent",
+        "@class" : "io.nova.ecs.component.SpriteRendererComponent",
         "color" : [ 0.0, 0.45890784, 0.8030888, 0.9882353 ],
         "colorAsVec" : {
           "finite" : true
         }
       } ],
       "cache" : {
-        "io.nova.ecs.component.SpriteRenderComponent" : {
-          "@class" : "io.nova.ecs.component.SpriteRenderComponent",
+        "io.nova.ecs.component.SpriteRendererComponent" : {
+          "@class" : "io.nova.ecs.component.SpriteRendererComponent",
           "color" : [ 0.0, 0.45890784, 0.8030888, 0.9882353 ],
           "colorAsVec" : {
             "finite" : true
@@ -58,15 +58,15 @@
         "@class" : "io.nova.ecs.component.TagComponent",
         "tag" : "Quad2"
       }, {
-        "@class" : "io.nova.ecs.component.SpriteRenderComponent",
+        "@class" : "io.nova.ecs.component.SpriteRendererComponent",
         "color" : [ 1.0, 0.0, 0.9490196, 0.6666667 ],
         "colorAsVec" : {
           "finite" : true
         }
       } ],
       "cache" : {
-        "io.nova.ecs.component.SpriteRenderComponent" : {
-          "@class" : "io.nova.ecs.component.SpriteRenderComponent",
+        "io.nova.ecs.component.SpriteRendererComponent" : {
+          "@class" : "io.nova.ecs.component.SpriteRendererComponent",
           "color" : [ 1.0, 0.0, 0.9490196, 0.6666667 ],
           "colorAsVec" : {
             "finite" : true

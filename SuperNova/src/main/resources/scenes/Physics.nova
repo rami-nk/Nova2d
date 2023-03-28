@@ -1,0 +1,1151 @@
+{
+  "registry" : {
+    "entities" : [ {
+      "components" : [ {
+        "@class" : "io.nova.ecs.component.TransformComponent",
+        "translation" : [ -3.5084162, 8.298882, 0.0 ],
+        "rotation" : [ 0.0, 0.0, -0.64059436 ],
+        "scale" : [ 1.0, 1.0, 1.0 ],
+        "transform" : {
+          "finite" : true,
+          "affine" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.TagComponent",
+        "tag" : "Entity"
+      }, {
+        "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+        "color" : [ 1.0, 1.0, 1.0, 1.0 ],
+        "texture" : {
+          "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+          "filepath" : "SuperNova/src/main/resources/icons/document.png",
+          "width" : 64,
+          "height" : 64
+        },
+        "tilingFactor" : 1.0,
+        "colorAsVec" : {
+          "finite" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.BoxColliderComponent",
+        "offset" : [ 0.0, 0.0 ],
+        "size" : [ 0.5, 0.5 ],
+        "density" : 1.0,
+        "friction" : 0.3,
+        "restitution" : 0.5
+      }, {
+        "@class" : "io.nova.ecs.component.RigidBodyComponent",
+        "bodyType" : "DYNAMIC",
+        "fixedRotation" : false
+      } ],
+      "cache" : {
+        "io.nova.ecs.component.TransformComponent" : {
+          "@class" : "io.nova.ecs.component.TransformComponent",
+          "translation" : [ -3.5084162, 8.298882, 0.0 ],
+          "rotation" : [ 0.0, 0.0, -0.64059436 ],
+          "scale" : [ 1.0, 1.0, 1.0 ],
+          "transform" : {
+            "finite" : true,
+            "affine" : true
+          }
+        },
+        "io.nova.ecs.component.TagComponent" : {
+          "@class" : "io.nova.ecs.component.TagComponent",
+          "tag" : "Entity"
+        },
+        "io.nova.ecs.component.SpriteRendererComponent" : {
+          "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+          "color" : [ 1.0, 1.0, 1.0, 1.0 ],
+          "texture" : {
+            "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+            "filepath" : "SuperNova/src/main/resources/icons/document.png",
+            "width" : 64,
+            "height" : 64
+          },
+          "tilingFactor" : 1.0,
+          "colorAsVec" : {
+            "finite" : true
+          }
+        }
+      },
+      "id" : 4,
+      "activated" : true
+    }, {
+      "components" : [ {
+        "@class" : "io.nova.ecs.component.TransformComponent",
+        "translation" : [ -10.846323, -4.3401756, -1.8189894E-12 ],
+        "rotation" : [ -3.6530764E-6, 4.6214164E-15, -0.77296335 ],
+        "scale" : [ 12.3, 0.6, 1.0 ],
+        "transform" : {
+          "finite" : true,
+          "affine" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.TagComponent",
+        "tag" : "Ground"
+      }, {
+        "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+        "color" : [ 0.44787645, 0.44787645, 0.44787645, 1.0 ],
+        "texture" : null,
+        "tilingFactor" : 1.0,
+        "colorAsVec" : {
+          "finite" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.BoxColliderComponent",
+        "offset" : [ 0.0, 0.0 ],
+        "size" : [ 0.5, 0.5 ],
+        "density" : 1.0,
+        "friction" : 0.3,
+        "restitution" : 0.0
+      }, {
+        "@class" : "io.nova.ecs.component.RigidBodyComponent",
+        "bodyType" : "STATIC",
+        "fixedRotation" : false
+      } ],
+      "cache" : {
+        "io.nova.ecs.component.TransformComponent" : {
+          "@class" : "io.nova.ecs.component.TransformComponent",
+          "translation" : [ -10.846323, -4.3401756, -1.8189894E-12 ],
+          "rotation" : [ -3.6530764E-6, 4.6214164E-15, -0.77296335 ],
+          "scale" : [ 12.3, 0.6, 1.0 ],
+          "transform" : {
+            "finite" : true,
+            "affine" : true
+          }
+        },
+        "io.nova.ecs.component.TagComponent" : {
+          "@class" : "io.nova.ecs.component.TagComponent",
+          "tag" : "Ground"
+        },
+        "io.nova.ecs.component.SpriteRendererComponent" : {
+          "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+          "color" : [ 0.44787645, 0.44787645, 0.44787645, 1.0 ],
+          "texture" : null,
+          "tilingFactor" : 1.0,
+          "colorAsVec" : {
+            "finite" : true
+          }
+        }
+      },
+      "id" : 5,
+      "activated" : true
+    }, {
+      "components" : [ {
+        "@class" : "io.nova.ecs.component.TransformComponent",
+        "translation" : [ -3.3938055, -3.4720573, 33.0 ],
+        "rotation" : [ 0.0, 0.0, 0.0 ],
+        "scale" : [ 1.0, 1.0, 1.0 ],
+        "transform" : {
+          "finite" : true,
+          "affine" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.TagComponent",
+        "tag" : "Camera"
+      }, {
+        "@class" : "io.nova.ecs.component.SceneCameraComponent",
+        "camera" : {
+          "projectionType" : "PERSPECTIVE",
+          "aspectRatio" : 1.6414047,
+          "orthographicNearPlane" : -1.0,
+          "orthographicFarPlane" : 1.0,
+          "orthographicSize" : 10.0,
+          "fov" : 0.7853982,
+          "perspectiveNearPlane" : 0.1,
+          "perspectiveFarPlane" : 1000.0
+        },
+        "primary" : true,
+        "fixedAspectRatio" : false
+      } ],
+      "cache" : {
+        "io.nova.ecs.component.TagComponent" : {
+          "@class" : "io.nova.ecs.component.TagComponent",
+          "tag" : "Camera"
+        },
+        "io.nova.ecs.component.SceneCameraComponent" : {
+          "@class" : "io.nova.ecs.component.SceneCameraComponent",
+          "camera" : {
+            "projectionType" : "PERSPECTIVE",
+            "aspectRatio" : 1.6414047,
+            "orthographicNearPlane" : -1.0,
+            "orthographicFarPlane" : 1.0,
+            "orthographicSize" : 10.0,
+            "fov" : 0.7853982,
+            "perspectiveNearPlane" : 0.1,
+            "perspectiveFarPlane" : 1000.0
+          },
+          "primary" : true,
+          "fixedAspectRatio" : false
+        }
+      },
+      "id" : 6,
+      "activated" : true
+    }, {
+      "components" : [ {
+        "@class" : "io.nova.ecs.component.TransformComponent",
+        "translation" : [ 0.64027834, 9.725162, 0.0 ],
+        "rotation" : [ 0.0, 0.0, -2.3374124 ],
+        "scale" : [ 1.0, 1.0, 1.0 ],
+        "transform" : {
+          "finite" : true,
+          "affine" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.TagComponent",
+        "tag" : "Entity"
+      }, {
+        "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+        "color" : [ 1.0, 1.0, 1.0, 1.0 ],
+        "texture" : {
+          "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+          "filepath" : "SuperNova/src/main/resources/textures/tilemap_packed.png",
+          "width" : 192,
+          "height" : 176
+        },
+        "tilingFactor" : 1.0,
+        "colorAsVec" : {
+          "finite" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.BoxColliderComponent",
+        "offset" : [ 0.0, 0.0 ],
+        "size" : [ 0.5, 0.5 ],
+        "density" : 1.0,
+        "friction" : 0.3,
+        "restitution" : 0.5
+      }, {
+        "@class" : "io.nova.ecs.component.RigidBodyComponent",
+        "bodyType" : "DYNAMIC",
+        "fixedRotation" : false
+      } ],
+      "cache" : {
+        "io.nova.ecs.component.TransformComponent" : {
+          "@class" : "io.nova.ecs.component.TransformComponent",
+          "translation" : [ 0.64027834, 9.725162, 0.0 ],
+          "rotation" : [ 0.0, 0.0, -2.3374124 ],
+          "scale" : [ 1.0, 1.0, 1.0 ],
+          "transform" : {
+            "finite" : true,
+            "affine" : true
+          }
+        },
+        "io.nova.ecs.component.TagComponent" : {
+          "@class" : "io.nova.ecs.component.TagComponent",
+          "tag" : "Entity"
+        },
+        "io.nova.ecs.component.SpriteRendererComponent" : {
+          "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+          "color" : [ 1.0, 1.0, 1.0, 1.0 ],
+          "texture" : {
+            "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+            "filepath" : "SuperNova/src/main/resources/textures/tilemap_packed.png",
+            "width" : 192,
+            "height" : 176
+          },
+          "tilingFactor" : 1.0,
+          "colorAsVec" : {
+            "finite" : true
+          }
+        }
+      },
+      "id" : 7,
+      "activated" : true
+    }, {
+      "components" : [ {
+        "@class" : "io.nova.ecs.component.TransformComponent",
+        "translation" : [ 0.23618525, 0.69484377, 0.0 ],
+        "rotation" : [ 0.0, -0.0, 0.6640003 ],
+        "scale" : [ 12.3, 0.6, 1.0 ],
+        "transform" : {
+          "finite" : true,
+          "affine" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.TagComponent",
+        "tag" : "Ground"
+      }, {
+        "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+        "color" : [ 0.44787645, 0.44787645, 0.44787645, 1.0 ],
+        "texture" : null,
+        "tilingFactor" : 1.0,
+        "colorAsVec" : {
+          "finite" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.BoxColliderComponent",
+        "offset" : [ 0.0, 0.0 ],
+        "size" : [ 0.5, 0.5 ],
+        "density" : 1.0,
+        "friction" : 0.3,
+        "restitution" : 0.0
+      }, {
+        "@class" : "io.nova.ecs.component.RigidBodyComponent",
+        "bodyType" : "STATIC",
+        "fixedRotation" : false
+      } ],
+      "cache" : {
+        "io.nova.ecs.component.TransformComponent" : {
+          "@class" : "io.nova.ecs.component.TransformComponent",
+          "translation" : [ 0.23618525, 0.69484377, 0.0 ],
+          "rotation" : [ 0.0, -0.0, 0.6640003 ],
+          "scale" : [ 12.3, 0.6, 1.0 ],
+          "transform" : {
+            "finite" : true,
+            "affine" : true
+          }
+        },
+        "io.nova.ecs.component.TagComponent" : {
+          "@class" : "io.nova.ecs.component.TagComponent",
+          "tag" : "Ground"
+        },
+        "io.nova.ecs.component.SpriteRendererComponent" : {
+          "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+          "color" : [ 0.44787645, 0.44787645, 0.44787645, 1.0 ],
+          "texture" : null,
+          "tilingFactor" : 1.0,
+          "colorAsVec" : {
+            "finite" : true
+          }
+        }
+      },
+      "id" : 8,
+      "activated" : true
+    }, {
+      "components" : [ {
+        "@class" : "io.nova.ecs.component.TransformComponent",
+        "translation" : [ -1.1310354, 8.589709, 0.0 ],
+        "rotation" : [ 0.0, 0.0, -2.3374124 ],
+        "scale" : [ 1.7, 1.0, 1.0 ],
+        "transform" : {
+          "finite" : true,
+          "affine" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.TagComponent",
+        "tag" : "Entity"
+      }, {
+        "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+        "color" : [ 1.0, 1.0, 1.0, 1.0 ],
+        "texture" : {
+          "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+          "filepath" : "SuperNova/src/main/resources/textures/openGlLogo.png",
+          "width" : 1280,
+          "height" : 530
+        },
+        "tilingFactor" : 1.0,
+        "colorAsVec" : {
+          "finite" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.BoxColliderComponent",
+        "offset" : [ 0.0, 0.0 ],
+        "size" : [ 0.5, 0.5 ],
+        "density" : 1.0,
+        "friction" : 0.3,
+        "restitution" : 0.5
+      }, {
+        "@class" : "io.nova.ecs.component.RigidBodyComponent",
+        "bodyType" : "DYNAMIC",
+        "fixedRotation" : false
+      } ],
+      "cache" : {
+        "io.nova.ecs.component.TransformComponent" : {
+          "@class" : "io.nova.ecs.component.TransformComponent",
+          "translation" : [ -1.1310354, 8.589709, 0.0 ],
+          "rotation" : [ 0.0, 0.0, -2.3374124 ],
+          "scale" : [ 1.7, 1.0, 1.0 ],
+          "transform" : {
+            "finite" : true,
+            "affine" : true
+          }
+        },
+        "io.nova.ecs.component.TagComponent" : {
+          "@class" : "io.nova.ecs.component.TagComponent",
+          "tag" : "Entity"
+        },
+        "io.nova.ecs.component.SpriteRendererComponent" : {
+          "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+          "color" : [ 1.0, 1.0, 1.0, 1.0 ],
+          "texture" : {
+            "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+            "filepath" : "SuperNova/src/main/resources/textures/openGlLogo.png",
+            "width" : 1280,
+            "height" : 530
+          },
+          "tilingFactor" : 1.0,
+          "colorAsVec" : {
+            "finite" : true
+          }
+        }
+      },
+      "id" : 9,
+      "activated" : true
+    }, {
+      "components" : [ {
+        "@class" : "io.nova.ecs.component.TransformComponent",
+        "translation" : [ -5.899966, 8.226352, 0.0 ],
+        "rotation" : [ 0.0, 0.0, -2.3374124 ],
+        "scale" : [ 1.4, 1.1, 1.0 ],
+        "transform" : {
+          "finite" : true,
+          "affine" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.TagComponent",
+        "tag" : "Entity"
+      }, {
+        "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+        "color" : [ 1.0, 1.0, 1.0, 1.0 ],
+        "texture" : {
+          "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+          "filepath" : "SuperNova/src/main/resources/textures/Nova2d-logo-white.png",
+          "width" : 411,
+          "height" : 321
+        },
+        "tilingFactor" : 1.0,
+        "colorAsVec" : {
+          "finite" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.BoxColliderComponent",
+        "offset" : [ 0.0, 0.0 ],
+        "size" : [ 0.5, 0.5 ],
+        "density" : 1.0,
+        "friction" : 0.3,
+        "restitution" : 0.5
+      }, {
+        "@class" : "io.nova.ecs.component.RigidBodyComponent",
+        "bodyType" : "DYNAMIC",
+        "fixedRotation" : false
+      } ],
+      "cache" : {
+        "io.nova.ecs.component.TransformComponent" : {
+          "@class" : "io.nova.ecs.component.TransformComponent",
+          "translation" : [ -5.899966, 8.226352, 0.0 ],
+          "rotation" : [ 0.0, 0.0, -2.3374124 ],
+          "scale" : [ 1.4, 1.1, 1.0 ],
+          "transform" : {
+            "finite" : true,
+            "affine" : true
+          }
+        },
+        "io.nova.ecs.component.TagComponent" : {
+          "@class" : "io.nova.ecs.component.TagComponent",
+          "tag" : "Entity"
+        },
+        "io.nova.ecs.component.SpriteRendererComponent" : {
+          "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+          "color" : [ 1.0, 1.0, 1.0, 1.0 ],
+          "texture" : {
+            "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+            "filepath" : "SuperNova/src/main/resources/textures/Nova2d-logo-white.png",
+            "width" : 411,
+            "height" : 321
+          },
+          "tilingFactor" : 1.0,
+          "colorAsVec" : {
+            "finite" : true
+          }
+        }
+      },
+      "id" : 10,
+      "activated" : true
+    }, {
+      "components" : [ {
+        "@class" : "io.nova.ecs.component.TransformComponent",
+        "translation" : [ -4.531138, 7.045474, 0.0 ],
+        "rotation" : [ 0.0, 0.0, -2.3374124 ],
+        "scale" : [ 1.0, 1.0, 1.0 ],
+        "transform" : {
+          "finite" : true,
+          "affine" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.TagComponent",
+        "tag" : "Entity"
+      }, {
+        "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+        "color" : [ 1.0, 1.0, 1.0, 1.0 ],
+        "texture" : {
+          "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+          "filepath" : "SuperNova/src/main/resources/icons/directory.png",
+          "width" : 96,
+          "height" : 96
+        },
+        "tilingFactor" : 1.0,
+        "colorAsVec" : {
+          "finite" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.BoxColliderComponent",
+        "offset" : [ 0.0, 0.0 ],
+        "size" : [ 0.5, 0.5 ],
+        "density" : 1.0,
+        "friction" : 0.3,
+        "restitution" : 0.5
+      }, {
+        "@class" : "io.nova.ecs.component.RigidBodyComponent",
+        "bodyType" : "DYNAMIC",
+        "fixedRotation" : false
+      } ],
+      "cache" : {
+        "io.nova.ecs.component.TransformComponent" : {
+          "@class" : "io.nova.ecs.component.TransformComponent",
+          "translation" : [ -4.531138, 7.045474, 0.0 ],
+          "rotation" : [ 0.0, 0.0, -2.3374124 ],
+          "scale" : [ 1.0, 1.0, 1.0 ],
+          "transform" : {
+            "finite" : true,
+            "affine" : true
+          }
+        },
+        "io.nova.ecs.component.TagComponent" : {
+          "@class" : "io.nova.ecs.component.TagComponent",
+          "tag" : "Entity"
+        },
+        "io.nova.ecs.component.SpriteRendererComponent" : {
+          "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+          "color" : [ 1.0, 1.0, 1.0, 1.0 ],
+          "texture" : {
+            "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+            "filepath" : "SuperNova/src/main/resources/icons/directory.png",
+            "width" : 96,
+            "height" : 96
+          },
+          "tilingFactor" : 1.0,
+          "colorAsVec" : {
+            "finite" : true
+          }
+        }
+      },
+      "id" : 11,
+      "activated" : true
+    }, {
+      "components" : [ {
+        "@class" : "io.nova.ecs.component.TransformComponent",
+        "translation" : [ -0.48970366, 11.171252, 0.0 ],
+        "rotation" : [ 0.0, 0.0, -2.3374124 ],
+        "scale" : [ 1.0, 1.0, 1.0 ],
+        "transform" : {
+          "finite" : true,
+          "affine" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.TagComponent",
+        "tag" : "Entity"
+      }, {
+        "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+        "color" : [ 1.0, 1.0, 1.0, 1.0 ],
+        "texture" : {
+          "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+          "filepath" : "SuperNova/src/main/resources/icons/back-arrow.png",
+          "width" : 64,
+          "height" : 64
+        },
+        "tilingFactor" : 1.0,
+        "colorAsVec" : {
+          "finite" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.BoxColliderComponent",
+        "offset" : [ 0.0, 0.0 ],
+        "size" : [ 0.5, 0.5 ],
+        "density" : 1.0,
+        "friction" : 0.3,
+        "restitution" : 0.5
+      }, {
+        "@class" : "io.nova.ecs.component.RigidBodyComponent",
+        "bodyType" : "DYNAMIC",
+        "fixedRotation" : false
+      } ],
+      "cache" : {
+        "io.nova.ecs.component.TransformComponent" : {
+          "@class" : "io.nova.ecs.component.TransformComponent",
+          "translation" : [ -0.48970366, 11.171252, 0.0 ],
+          "rotation" : [ 0.0, 0.0, -2.3374124 ],
+          "scale" : [ 1.0, 1.0, 1.0 ],
+          "transform" : {
+            "finite" : true,
+            "affine" : true
+          }
+        },
+        "io.nova.ecs.component.TagComponent" : {
+          "@class" : "io.nova.ecs.component.TagComponent",
+          "tag" : "Entity"
+        },
+        "io.nova.ecs.component.SpriteRendererComponent" : {
+          "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+          "color" : [ 1.0, 1.0, 1.0, 1.0 ],
+          "texture" : {
+            "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+            "filepath" : "SuperNova/src/main/resources/icons/back-arrow.png",
+            "width" : 64,
+            "height" : 64
+          },
+          "tilingFactor" : 1.0,
+          "colorAsVec" : {
+            "finite" : true
+          }
+        }
+      },
+      "id" : 12,
+      "activated" : true
+    }, {
+      "components" : [ {
+        "@class" : "io.nova.ecs.component.TransformComponent",
+        "translation" : [ 0.50402594, 7.3179812, 0.0 ],
+        "rotation" : [ 0.0, 0.0, -2.3374124 ],
+        "scale" : [ 3.3, 1.0, 1.0 ],
+        "transform" : {
+          "finite" : true,
+          "affine" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.TagComponent",
+        "tag" : "Entity"
+      }, {
+        "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+        "color" : [ 1.0, 1.0, 1.0, 1.0 ],
+        "texture" : {
+          "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+          "filepath" : "SuperNova/src/main/resources/textures/spritesheet.png",
+          "width" : 512,
+          "height" : 128
+        },
+        "tilingFactor" : 1.0,
+        "colorAsVec" : {
+          "finite" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.BoxColliderComponent",
+        "offset" : [ 0.0, 0.0 ],
+        "size" : [ 0.5, 0.5 ],
+        "density" : 1.0,
+        "friction" : 0.3,
+        "restitution" : 0.5
+      }, {
+        "@class" : "io.nova.ecs.component.RigidBodyComponent",
+        "bodyType" : "DYNAMIC",
+        "fixedRotation" : false
+      } ],
+      "cache" : {
+        "io.nova.ecs.component.TransformComponent" : {
+          "@class" : "io.nova.ecs.component.TransformComponent",
+          "translation" : [ 0.50402594, 7.3179812, 0.0 ],
+          "rotation" : [ 0.0, 0.0, -2.3374124 ],
+          "scale" : [ 3.3, 1.0, 1.0 ],
+          "transform" : {
+            "finite" : true,
+            "affine" : true
+          }
+        },
+        "io.nova.ecs.component.TagComponent" : {
+          "@class" : "io.nova.ecs.component.TagComponent",
+          "tag" : "Entity"
+        },
+        "io.nova.ecs.component.SpriteRendererComponent" : {
+          "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+          "color" : [ 1.0, 1.0, 1.0, 1.0 ],
+          "texture" : {
+            "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+            "filepath" : "SuperNova/src/main/resources/textures/spritesheet.png",
+            "width" : 512,
+            "height" : 128
+          },
+          "tilingFactor" : 1.0,
+          "colorAsVec" : {
+            "finite" : true
+          }
+        }
+      },
+      "id" : 13,
+      "activated" : true
+    }, {
+      "components" : [ {
+        "@class" : "io.nova.ecs.component.TransformComponent",
+        "translation" : [ -3.9015489, 10.133914, 0.0 ],
+        "rotation" : [ 0.0, 0.0, -2.3374124 ],
+        "scale" : [ 1.0, 1.0, 1.0 ],
+        "transform" : {
+          "finite" : true,
+          "affine" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.TagComponent",
+        "tag" : "Entity"
+      }, {
+        "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+        "color" : [ 1.0, 1.0, 1.0, 1.0 ],
+        "texture" : {
+          "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+          "filepath" : "SuperNova/src/main/resources/icons/play-button.png",
+          "width" : 48,
+          "height" : 48
+        },
+        "tilingFactor" : 1.0,
+        "colorAsVec" : {
+          "finite" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.BoxColliderComponent",
+        "offset" : [ 0.0, 0.0 ],
+        "size" : [ 0.5, 0.5 ],
+        "density" : 1.0,
+        "friction" : 0.3,
+        "restitution" : 0.5
+      }, {
+        "@class" : "io.nova.ecs.component.RigidBodyComponent",
+        "bodyType" : "DYNAMIC",
+        "fixedRotation" : false
+      } ],
+      "cache" : {
+        "io.nova.ecs.component.TransformComponent" : {
+          "@class" : "io.nova.ecs.component.TransformComponent",
+          "translation" : [ -3.9015489, 10.133914, 0.0 ],
+          "rotation" : [ 0.0, 0.0, -2.3374124 ],
+          "scale" : [ 1.0, 1.0, 1.0 ],
+          "transform" : {
+            "finite" : true,
+            "affine" : true
+          }
+        },
+        "io.nova.ecs.component.TagComponent" : {
+          "@class" : "io.nova.ecs.component.TagComponent",
+          "tag" : "Entity"
+        },
+        "io.nova.ecs.component.SpriteRendererComponent" : {
+          "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+          "color" : [ 1.0, 1.0, 1.0, 1.0 ],
+          "texture" : {
+            "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+            "filepath" : "SuperNova/src/main/resources/icons/play-button.png",
+            "width" : 48,
+            "height" : 48
+          },
+          "tilingFactor" : 1.0,
+          "colorAsVec" : {
+            "finite" : true
+          }
+        }
+      },
+      "id" : 14,
+      "activated" : true
+    }, {
+      "components" : [ {
+        "@class" : "io.nova.ecs.component.TransformComponent",
+        "translation" : [ -5.9453797, 10.179355, 0.0 ],
+        "rotation" : [ 0.0, 0.0, -2.3374124 ],
+        "scale" : [ 1.0, 1.0, 1.0 ],
+        "transform" : {
+          "finite" : true,
+          "affine" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.TagComponent",
+        "tag" : "Entity"
+      }, {
+        "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+        "color" : [ 1.0, 1.0, 1.0, 1.0 ],
+        "texture" : {
+          "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+          "filepath" : "SuperNova/src/main/resources/icons/checkerboard.png",
+          "width" : 64,
+          "height" : 64
+        },
+        "tilingFactor" : 1.0,
+        "colorAsVec" : {
+          "finite" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.BoxColliderComponent",
+        "offset" : [ 0.0, 0.0 ],
+        "size" : [ 0.5, 0.5 ],
+        "density" : 1.0,
+        "friction" : 0.3,
+        "restitution" : 0.5
+      }, {
+        "@class" : "io.nova.ecs.component.RigidBodyComponent",
+        "bodyType" : "DYNAMIC",
+        "fixedRotation" : false
+      } ],
+      "cache" : {
+        "io.nova.ecs.component.TransformComponent" : {
+          "@class" : "io.nova.ecs.component.TransformComponent",
+          "translation" : [ -5.9453797, 10.179355, 0.0 ],
+          "rotation" : [ 0.0, 0.0, -2.3374124 ],
+          "scale" : [ 1.0, 1.0, 1.0 ],
+          "transform" : {
+            "finite" : true,
+            "affine" : true
+          }
+        },
+        "io.nova.ecs.component.TagComponent" : {
+          "@class" : "io.nova.ecs.component.TagComponent",
+          "tag" : "Entity"
+        },
+        "io.nova.ecs.component.SpriteRendererComponent" : {
+          "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+          "color" : [ 1.0, 1.0, 1.0, 1.0 ],
+          "texture" : {
+            "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+            "filepath" : "SuperNova/src/main/resources/icons/checkerboard.png",
+            "width" : 64,
+            "height" : 64
+          },
+          "tilingFactor" : 1.0,
+          "colorAsVec" : {
+            "finite" : true
+          }
+        }
+      },
+      "id" : 15,
+      "activated" : true
+    }, {
+      "components" : [ {
+        "@class" : "io.nova.ecs.component.TransformComponent",
+        "translation" : [ -6.710905, 12.170627, 0.0 ],
+        "rotation" : [ 0.0, 0.0, -2.3374124 ],
+        "scale" : [ 1.0, 1.0, 1.0 ],
+        "transform" : {
+          "finite" : true,
+          "affine" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.TagComponent",
+        "tag" : "Entity"
+      }, {
+        "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+        "color" : [ 1.0, 1.0, 1.0, 1.0 ],
+        "texture" : {
+          "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+          "filepath" : "SuperNova/src/main/resources/textures/beton-block.png",
+          "width" : 16,
+          "height" : 16
+        },
+        "tilingFactor" : 1.0,
+        "colorAsVec" : {
+          "finite" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.BoxColliderComponent",
+        "offset" : [ 0.0, 0.0 ],
+        "size" : [ 0.5, 0.5 ],
+        "density" : 1.0,
+        "friction" : 0.3,
+        "restitution" : 0.5
+      }, {
+        "@class" : "io.nova.ecs.component.RigidBodyComponent",
+        "bodyType" : "DYNAMIC",
+        "fixedRotation" : false
+      } ],
+      "cache" : {
+        "io.nova.ecs.component.TransformComponent" : {
+          "@class" : "io.nova.ecs.component.TransformComponent",
+          "translation" : [ -6.710905, 12.170627, 0.0 ],
+          "rotation" : [ 0.0, 0.0, -2.3374124 ],
+          "scale" : [ 1.0, 1.0, 1.0 ],
+          "transform" : {
+            "finite" : true,
+            "affine" : true
+          }
+        },
+        "io.nova.ecs.component.TagComponent" : {
+          "@class" : "io.nova.ecs.component.TagComponent",
+          "tag" : "Entity"
+        },
+        "io.nova.ecs.component.SpriteRendererComponent" : {
+          "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+          "color" : [ 1.0, 1.0, 1.0, 1.0 ],
+          "texture" : {
+            "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+            "filepath" : "SuperNova/src/main/resources/textures/beton-block.png",
+            "width" : 16,
+            "height" : 16
+          },
+          "tilingFactor" : 1.0,
+          "colorAsVec" : {
+            "finite" : true
+          }
+        }
+      },
+      "id" : 16,
+      "activated" : true
+    }, {
+      "components" : [ {
+        "@class" : "io.nova.ecs.component.TransformComponent",
+        "translation" : [ -2.1849046, 11.087543, 0.0 ],
+        "rotation" : [ 0.0, 0.0, -2.3374124 ],
+        "scale" : [ 1.0, 1.0, 1.0 ],
+        "transform" : {
+          "finite" : true,
+          "affine" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.TagComponent",
+        "tag" : "Entity"
+      }, {
+        "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+        "color" : [ 1.0, 1.0, 1.0, 1.0 ],
+        "texture" : {
+          "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+          "filepath" : "SuperNova/src/main/resources/icons/stop-button.png",
+          "width" : 50,
+          "height" : 50
+        },
+        "tilingFactor" : 1.0,
+        "colorAsVec" : {
+          "finite" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.BoxColliderComponent",
+        "offset" : [ 0.0, 0.0 ],
+        "size" : [ 0.5, 0.5 ],
+        "density" : 1.0,
+        "friction" : 0.3,
+        "restitution" : 0.5
+      }, {
+        "@class" : "io.nova.ecs.component.RigidBodyComponent",
+        "bodyType" : "DYNAMIC",
+        "fixedRotation" : false
+      } ],
+      "cache" : {
+        "io.nova.ecs.component.TransformComponent" : {
+          "@class" : "io.nova.ecs.component.TransformComponent",
+          "translation" : [ -2.1849046, 11.087543, 0.0 ],
+          "rotation" : [ 0.0, 0.0, -2.3374124 ],
+          "scale" : [ 1.0, 1.0, 1.0 ],
+          "transform" : {
+            "finite" : true,
+            "affine" : true
+          }
+        },
+        "io.nova.ecs.component.TagComponent" : {
+          "@class" : "io.nova.ecs.component.TagComponent",
+          "tag" : "Entity"
+        },
+        "io.nova.ecs.component.SpriteRendererComponent" : {
+          "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+          "color" : [ 1.0, 1.0, 1.0, 1.0 ],
+          "texture" : {
+            "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+            "filepath" : "SuperNova/src/main/resources/icons/stop-button.png",
+            "width" : 50,
+            "height" : 50
+          },
+          "tilingFactor" : 1.0,
+          "colorAsVec" : {
+            "finite" : true
+          }
+        }
+      },
+      "id" : 17,
+      "activated" : true
+    }, {
+      "components" : [ {
+        "@class" : "io.nova.ecs.component.TransformComponent",
+        "translation" : [ -3.964354, 11.822528, 0.0 ],
+        "rotation" : [ 0.0, -0.0, -2.3374124 ],
+        "scale" : [ 1.0, 1.0, 1.0 ],
+        "transform" : {
+          "finite" : true,
+          "affine" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.TagComponent",
+        "tag" : "Entity"
+      }, {
+        "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+        "color" : [ 0.00772202, 1.0, 0.7126608, 1.0 ],
+        "texture" : {
+          "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+          "filepath" : "SuperNova/src/main/resources/textures/beton-block.png",
+          "width" : 16,
+          "height" : 16
+        },
+        "tilingFactor" : 1.0,
+        "colorAsVec" : {
+          "finite" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.BoxColliderComponent",
+        "offset" : [ 0.0, 0.0 ],
+        "size" : [ 0.5, 0.5 ],
+        "density" : 1.0,
+        "friction" : 0.3,
+        "restitution" : 0.5
+      }, {
+        "@class" : "io.nova.ecs.component.RigidBodyComponent",
+        "bodyType" : "DYNAMIC",
+        "fixedRotation" : false
+      } ],
+      "cache" : {
+        "io.nova.ecs.component.TransformComponent" : {
+          "@class" : "io.nova.ecs.component.TransformComponent",
+          "translation" : [ -3.964354, 11.822528, 0.0 ],
+          "rotation" : [ 0.0, -0.0, -2.3374124 ],
+          "scale" : [ 1.0, 1.0, 1.0 ],
+          "transform" : {
+            "finite" : true,
+            "affine" : true
+          }
+        },
+        "io.nova.ecs.component.TagComponent" : {
+          "@class" : "io.nova.ecs.component.TagComponent",
+          "tag" : "Entity"
+        },
+        "io.nova.ecs.component.SpriteRendererComponent" : {
+          "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+          "color" : [ 0.00772202, 1.0, 0.7126608, 1.0 ],
+          "texture" : {
+            "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+            "filepath" : "SuperNova/src/main/resources/textures/beton-block.png",
+            "width" : 16,
+            "height" : 16
+          },
+          "tilingFactor" : 1.0,
+          "colorAsVec" : {
+            "finite" : true
+          }
+        }
+      },
+      "id" : 18,
+      "activated" : true
+    }, {
+      "components" : [ {
+        "@class" : "io.nova.ecs.component.TransformComponent",
+        "translation" : [ -2.8670006, -12.876339, 0.0 ],
+        "rotation" : [ -3.653049E-6, 9.242828E-14, 0.002007649 ],
+        "scale" : [ 33.2, 0.6, 1.0 ],
+        "transform" : {
+          "finite" : true,
+          "affine" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.TagComponent",
+        "tag" : "Ground"
+      }, {
+        "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+        "color" : [ 0.44787645, 0.44787645, 0.44787645, 1.0 ],
+        "texture" : null,
+        "tilingFactor" : 1.0,
+        "colorAsVec" : {
+          "finite" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.BoxColliderComponent",
+        "offset" : [ 0.0, 0.0 ],
+        "size" : [ 0.5, 0.5 ],
+        "density" : 1.0,
+        "friction" : 0.3,
+        "restitution" : 0.0
+      }, {
+        "@class" : "io.nova.ecs.component.RigidBodyComponent",
+        "bodyType" : "STATIC",
+        "fixedRotation" : false
+      } ],
+      "cache" : {
+        "io.nova.ecs.component.TransformComponent" : {
+          "@class" : "io.nova.ecs.component.TransformComponent",
+          "translation" : [ -2.8670006, -12.876339, 0.0 ],
+          "rotation" : [ -3.653049E-6, 9.242828E-14, 0.002007649 ],
+          "scale" : [ 33.2, 0.6, 1.0 ],
+          "transform" : {
+            "finite" : true,
+            "affine" : true
+          }
+        },
+        "io.nova.ecs.component.TagComponent" : {
+          "@class" : "io.nova.ecs.component.TagComponent",
+          "tag" : "Ground"
+        },
+        "io.nova.ecs.component.SpriteRendererComponent" : {
+          "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+          "color" : [ 0.44787645, 0.44787645, 0.44787645, 1.0 ],
+          "texture" : null,
+          "tilingFactor" : 1.0,
+          "colorAsVec" : {
+            "finite" : true
+          }
+        }
+      },
+      "id" : 19,
+      "activated" : true
+    }, {
+      "components" : [ {
+        "@class" : "io.nova.ecs.component.TransformComponent",
+        "translation" : [ -8.582039, 0.87360907, 0.0 ],
+        "rotation" : [ 0.0, 0.0, 0.0 ],
+        "scale" : [ 1.0, 1.0, 1.0 ],
+        "transform" : {
+          "finite" : true,
+          "affine" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.TagComponent",
+        "tag" : "Unnamed Entity"
+      }, {
+        "@class" : "io.nova.ecs.component.CircleRendererComponent",
+        "color" : [ 1.0, 1.0, 1.0, 1.0 ],
+        "thickness" : 1.0,
+        "fade" : 0.005,
+        "colorAsVec" : {
+          "finite" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.CircleColliderComponent",
+        "offset" : [ 0.0, 0.0 ],
+        "radius" : 0.5,
+        "density" : 1.0,
+        "friction" : 0.3,
+        "restitution" : 0.0
+      }, {
+        "@class" : "io.nova.ecs.component.RigidBodyComponent",
+        "bodyType" : "DYNAMIC",
+        "fixedRotation" : false
+      } ],
+      "cache" : {
+        "io.nova.ecs.component.TransformComponent" : {
+          "@class" : "io.nova.ecs.component.TransformComponent",
+          "translation" : [ -8.582039, 0.87360907, 0.0 ],
+          "rotation" : [ 0.0, 0.0, 0.0 ],
+          "scale" : [ 1.0, 1.0, 1.0 ],
+          "transform" : {
+            "finite" : true,
+            "affine" : true
+          }
+        },
+        "io.nova.ecs.component.TagComponent" : {
+          "@class" : "io.nova.ecs.component.TagComponent",
+          "tag" : "Unnamed Entity"
+        },
+        "io.nova.ecs.component.CircleRendererComponent" : {
+          "@class" : "io.nova.ecs.component.CircleRendererComponent",
+          "color" : [ 1.0, 1.0, 1.0, 1.0 ],
+          "thickness" : 1.0,
+          "fade" : 0.005,
+          "colorAsVec" : {
+            "finite" : true
+          }
+        },
+        "io.nova.ecs.component.CircleColliderComponent" : {
+          "@class" : "io.nova.ecs.component.CircleColliderComponent",
+          "offset" : [ 0.0, 0.0 ],
+          "radius" : 0.5,
+          "density" : 1.0,
+          "friction" : 0.3,
+          "restitution" : 0.0
+        },
+        "io.nova.ecs.component.RigidBodyComponent" : {
+          "@class" : "io.nova.ecs.component.RigidBodyComponent",
+          "bodyType" : "DYNAMIC",
+          "fixedRotation" : false
+        }
+      },
+      "id" : 20,
+      "activated" : true
+    } ]
+  },
+  "viewPortWidth" : 888,
+  "viewPortHeight" : 541
+}

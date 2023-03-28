@@ -1,9 +1,11 @@
 package io.nova.opengl.renderer;
 
 import io.nova.core.renderer.texture.Texture;
+import io.nova.core.renderer.texture.TextureLibrary;
 import org.lwjgl.BufferUtils;
 
 import java.nio.ByteBuffer;
+import java.nio.file.Path;
 import java.util.Objects;
 
 import static org.lwjgl.opengl.GL30.*;
@@ -11,24 +13,19 @@ import static org.lwjgl.stb.STBImage.*;
 
 public class OpenGLTexture implements Texture {
 
-    private final int rendererId;
+    private int rendererId;
     private String filepath;
     private int width;
     private int height;
     private int internalFormat;
 
-    public OpenGLTexture(String filepath) {
-        this.filepath = filepath;
-        rendererId = glGenTextures();
-        bind();
+    private OpenGLTexture() {
+        // For deserialization purposes
+    }
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-        loadAndUploadTexture(filepath);
+    public OpenGLTexture(Path path) {
+        this.filepath = path.toAbsolutePath().toString();
+        initTexture();
     }
 
     public OpenGLTexture(int width, int height) {
@@ -44,6 +41,19 @@ public class OpenGLTexture implements Texture {
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    }
+
+    private void initTexture() {
+        rendererId = glGenTextures();
+        bind();
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        loadAndUploadTexture(filepath);
     }
 
     @Override
@@ -102,13 +112,57 @@ public class OpenGLTexture implements Texture {
         return width;
     }
 
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
     @Override
     public int getHeight() {
         return height;
     }
 
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
     @Override
     public int getId() {
         return rendererId;
+    }
+
+    @Override
+    public String getFilepath() {
+        var absolutePath = Path.of(filepath).toAbsolutePath();
+        var userDirPath = Path.of(System.getProperty("user.dir"));
+        return userDirPath.relativize(absolutePath).toString();
+    }
+
+    public void setFilepath(String filepath) {
+        Path path = Path.of(filepath);
+        var tex = TextureLibrary.get(path.getFileName().toString());
+        if (tex != null) {
+            this.rendererId = tex.getId();
+            this.filepath = tex.getFilepath();
+            this.width = tex.getWidth();
+            this.height = tex.getHeight();
+        } else {
+            this.filepath = String.valueOf(path.toAbsolutePath());
+            if (this.width == 0 && this.height == 0) {
+                initTexture();
+            }
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return rendererId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof OpenGLTexture that)) return false;
+
+        return rendererId == that.rendererId;
     }
 }

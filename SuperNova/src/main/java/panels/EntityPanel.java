@@ -12,12 +12,16 @@ import java.util.Objects;
 
 public class EntityPanel {
 
-    private final Scene scene;
+    private Scene scene;
     private Entity selectedEntity;
     private boolean removeEntityClicked = false;
     private Entity entityToRemove;
 
     public EntityPanel(Scene scene) {
+        this.scene = scene;
+    }
+
+    public void setContext(Scene scene) {
         this.scene = scene;
     }
 
@@ -27,7 +31,6 @@ public class EntityPanel {
             for (var entity : scene.getRegistry().getEntities()) {
                 createEntityNode(entity);
             }
-
             if (ImGui.isMouseDown(0) && ImGui.isWindowHovered()) {
                 selectedEntity = null;
             }
@@ -93,5 +96,13 @@ public class EntityPanel {
             }
             ImGui.endPopup();
         }
+    }
+
+    public Entity getSelectedEntity() {
+        return selectedEntity;
+    }
+
+    public void setSelectedEntity(Entity entity) {
+        selectedEntity = entity;
     }
 }
