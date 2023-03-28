@@ -6,11 +6,10 @@ import imgui.flag.*;
 import imgui.type.ImBoolean;
 import io.nova.core.renderer.texture.Texture;
 import io.nova.core.renderer.texture.TextureLibrary;
+import io.nova.utils.FileUtils;
 import panels.DragAndDropDataType;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -168,7 +167,7 @@ public class ContentBrowserPanel {
                     ImGui.pushStyleColor(ImGuiCol.Button, 0, 0, 0, 0);
                     ImGui.pushID(file.getName());
 
-                    if (isImage(file)) {
+                    if (FileUtils.isImage(file)) {
                         var imageAsset = AssetManager.getImageAsset(file);
                         if (ImGui.imageButton(imageAsset.getTextureId(), iconSize, iconSize, 0, 1, 1, 0)) {
                             showImageViewer = true;
@@ -192,15 +191,5 @@ public class ContentBrowserPanel {
             }
             ImGui.columns();
         }
-    }
-
-    private boolean isImage(File file) {
-        try {
-            var contentType = Files.probeContentType(file.toPath());
-            return contentType != null && contentType.startsWith("image");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
     }
 }

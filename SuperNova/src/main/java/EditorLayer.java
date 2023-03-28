@@ -25,6 +25,7 @@ import io.nova.event.EventDispatcher;
 import io.nova.event.key.KeyPressedEvent;
 import io.nova.event.mouse.MouseButtonPressedEvent;
 import io.nova.utils.FileDialog;
+import io.nova.utils.FileUtils;
 import io.nova.window.Input;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -34,10 +35,10 @@ import panels.DragAndDropDataType;
 import panels.EntityPanel;
 import panels.contentbrowser.ContentBrowserPanel;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Objects;
-import java.util.function.Function;
 
 import static imgui.extension.imguizmo.flag.Operation.*;
 
@@ -286,11 +287,24 @@ public class EditorLayer extends Layer {
             ImGui.image(textureId, viewportSize.x, viewportSize.y, 0, 1, 1, 0);
 
             if (ImGui.beginDragDropTarget()) {
-                var texturePayload = ImGui.acceptDragDropPayload(DragAndDropDataType.CONTENT_BROWSER_ITEM);
+                var contentBrowserPayload = ImGui.acceptDragDropPayload(DragAndDropDataType.CONTENT_BROWSER_ITEM);
 
-                if (texturePayload != null) {
-                    var path = texturePayload.toString();
-                    openScene(path);
+                if (contentBrowserPayload != null) {
+                    var path = contentBrowserPayload.toString();
+                    if (FileUtils.isNovaProjectFile(contentBrowserPayload.toString())) {
+                        openScene(path);
+                    }
+                    if (FileUtils.isImage(new File(path))) {
+                        var texture = TextureLibrary.uploadTexture(Path.of(path));
+                        sceneState = SceneState.EDITING;
+                        var entity = activeScene.createEntity();
+                        var component = new SpriteRendererComponent();
+                        editorCamera.getPosition();
+                        component.setTexture(texture);
+                        entity.addComponent(component);
+                        activeScene.activateEntities(entity);
+                        entityPanel.setSelectedEntity(entity);
+                    }
                 }
                 ImGui.endDragDropTarget();
             }
@@ -566,8 +580,7 @@ public class EditorLayer extends Layer {
         if (sceneState == SceneState.RUNNING) {
             stop();
         }
-        Function<String, Boolean> isNovaFile = (String p) -> Path.of(p).getFileName().toString().split("\\.")[1].equals("nova");
-        if (!Objects.isNull(path) && isNovaFile.apply(path)) {
+        if (!Objects.isNull(path) && FileUtils.isNovaProjectFile(path)) {
             try {
                 editorScene = sceneSerializer.deserialize(path);
                 editorScene.setRenderer(renderer);

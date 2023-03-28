@@ -50,8 +50,8 @@ public class EntityPanel {
             for (var entity : scene.getRegistry().getEntities()) {
                 createEntityNode(entity);
             }
-            if (ImGui.isMouseDown(0) && ImGui.isWindowHovered()) {
-//                selectedEntity = null;
+            if (!ImGui.isAnyItemHovered() && ImGui.isMouseDown(0) && ImGui.isWindowHovered()) {
+                selectedEntity = null;
             }
             createEntityPopupMenu();
         }
@@ -66,7 +66,8 @@ public class EntityPanel {
             }
         }
 
-        if (Objects.nonNull(selectedEntity) && showCameraPreview) {
+        var isCamera = Objects.nonNull(selectedEntity) && selectedEntity.hasComponent(SceneCameraComponent.class);
+        if (isCamera && showCameraPreview) {
             var openFlag = new ImBoolean(true);
             ImGui.begin("Camera Preview", openFlag, ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoScrollWithMouse);
             {
