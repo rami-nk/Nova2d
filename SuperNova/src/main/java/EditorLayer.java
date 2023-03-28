@@ -30,9 +30,9 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import panels.ContentBrowserPanel;
 import panels.DragAndDropDataType;
 import panels.EntityPanel;
+import panels.contentbrowser.ContentBrowserPanel;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -286,9 +286,10 @@ public class EditorLayer extends Layer {
             ImGui.image(textureId, viewportSize.x, viewportSize.y, 0, 1, 1, 0);
 
             if (ImGui.beginDragDropTarget()) {
-                var payload = ImGui.acceptDragDropPayload(DragAndDropDataType.CONTENT_BROWSER_ITEM);
-                if (payload != null) {
-                    var path = payload.toString();
+                var texturePayload = ImGui.acceptDragDropPayload(DragAndDropDataType.CONTENT_BROWSER_ITEM);
+
+                if (texturePayload != null) {
+                    var path = texturePayload.toString();
                     openScene(path);
                 }
                 ImGui.endDragDropTarget();

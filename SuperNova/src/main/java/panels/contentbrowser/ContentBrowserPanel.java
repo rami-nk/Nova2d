@@ -1,15 +1,16 @@
-package panels;
+package panels.contentbrowser;
 
 import imgui.ImGui;
 import imgui.ImVec2;
-import imgui.flag.ImGuiCol;
-import imgui.flag.ImGuiMouseButton;
-import imgui.flag.ImGuiStyleVar;
-import imgui.flag.ImGuiWindowFlags;
+import imgui.flag.*;
+import imgui.type.ImBoolean;
 import io.nova.core.renderer.texture.Texture;
 import io.nova.core.renderer.texture.TextureLibrary;
+import panels.DragAndDropDataType;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -26,6 +27,9 @@ public class ContentBrowserPanel {
     private float padding = 16.0f;
     private float iconSize = 64.0f;
     private float cellSize = iconSize + padding;
+    private boolean showImageViewer = false;
+    private ImageAsset selectedImageAsset;
+    private boolean showSpriteEditor = false;
 
     public ContentBrowserPanel() {
         var userDir = System.getProperty("user.dir");
@@ -81,8 +85,63 @@ public class ContentBrowserPanel {
         }
         validCacheTimeout--;
 
+        if (showImageViewer) {
+            createImageViewer();
+        }
+
         ImGui.end();
         ImGui.popStyleVar();
+    }
+
+    private void createImageViewer() {
+        var openFlag = new ImBoolean(true);
+        ImGui.begin("Image viewer", openFlag, ImGuiWindowFlags.NoScrollbar);
+        ImGui.text(selectedImageAsset.getName());
+        if (ImGui.beginCombo("Sprite Mode", selectedImageAsset.getSpriteMode().getDisplayName())) {
+            for (var spriteMode : SpriteMode.values()) {
+                var isSelected = spriteMode == selectedImageAsset.getSpriteMode();
+                if (ImGui.selectable(spriteMode.getDisplayName(), isSelected)) {
+                    selectedImageAsset.setSpriteMode(spriteMode);
+                }
+                if (isSelected) {
+                    ImGui.setItemDefaultFocus();
+                }
+            }
+            ImGui.endCombo();
+        }
+        ImGui.dummy(0, 5);
+        if (selectedImageAsset.isSpriteSheetModeMultiple()) {
+            if (ImGui.button("Sprite Editor")) {
+                showSpriteEditor = true;
+            }
+            ImGui.dummy(0, 5);
+        }
+        if (showSpriteEditor) {
+            SpriteEditor.create(selectedImageAsset, () -> showSpriteEditor = false);
+        }
+        if (selectedImageAsset.isSpriteSheet()) {
+            for (var subTexture : selectedImageAsset.getSubImages()) {
+                ImGui.pushID(subTexture.getName());
+                ImGui.imageButton(subTexture.getTextureId(), subTexture.getWidth(), subTexture.getHeight(), subTexture.getLeftTop().x, subTexture.getLeftTop().y, subTexture.getRightBottom().x, subTexture.getRightBottom().y);
+                if (ImGui.beginDragDropSource(ImGuiDragDropFlags.SourceAllowNullID)) {
+                    ImGui.setDragDropPayload(DragAndDropDataType.IMAGE_VIEWER_SUB_TEXTURE, subTexture.getSubTexture());
+                    ImGui.image(subTexture.getTextureId(), subTexture.getWidth(), subTexture.getHeight(), subTexture.getLeftTop().x, subTexture.getLeftTop().y, subTexture.getRightBottom().x, subTexture.getRightBottom().y);
+                    ImGui.endDragDropSource();
+                }
+                ImGui.sameLine();
+                ImGui.text(subTexture.getName());
+                ImGui.popID();
+            }
+        } else {
+            var imageWidth = ImGui.getContentRegionAvailX();
+            var imageHeight = (1.0f / selectedImageAsset.getAspectRatio()) * imageWidth;
+            ImGui.image(selectedImageAsset.getTextureId(), imageWidth, imageHeight, 0, 1, 1, 0);
+        }
+
+        ImGui.end();
+        if (!openFlag.get()) {
+            showImageViewer = false;
+        }
     }
 
     private void createDirectoryContent(File[] files) {
@@ -109,9 +168,12 @@ public class ContentBrowserPanel {
                     ImGui.pushStyleColor(ImGuiCol.Button, 0, 0, 0, 0);
                     ImGui.pushID(file.getName());
 
-                    if (file.getName().endsWith(".png") || file.getName().endsWith(".jpg")) {
-                        var texture = TextureLibrary.uploadAndGet(file.toPath());
-                        ImGui.imageButton(texture.getId(), iconSize, iconSize, 0, 1, 1, 0);
+                    if (isImage(file)) {
+                        var imageAsset = AssetManager.getImageAsset(file);
+                        if (ImGui.imageButton(imageAsset.getTextureId(), iconSize, iconSize, 0, 1, 1, 0)) {
+                            showImageViewer = true;
+                            selectedImageAsset = imageAsset;
+                        }
                     } else {
                         ImGui.imageButton(documentIconTexture.getId(), iconSize, iconSize, 0, 1, 1, 0);
                     }
@@ -130,5 +192,15 @@ public class ContentBrowserPanel {
             }
             ImGui.columns();
         }
+    }
+
+    private boolean isImage(File file) {
+        try {
+            var contentType = Files.probeContentType(file.toPath());
+            return contentType != null && contentType.startsWith("image");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

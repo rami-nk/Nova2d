@@ -1,5 +1,6 @@
 package io.nova.ecs.component;
 
+import io.nova.core.renderer.texture.SubTexture;
 import io.nova.core.renderer.texture.Texture;
 import org.joml.Vector4f;
 
@@ -7,11 +8,20 @@ public class SpriteRendererComponent extends Component {
 
     private float[] color;
     private Texture texture;
+    private SubTexture subTexture;
     private float tilingFactor;
 
     public SpriteRendererComponent() {
-        this.color = new float[]{1.0f, 0.0f, 0.0f, 1.0f};
+        this.color = new float[]{0.9f, 0.9f, 0.9f, 1.0f};
         this.tilingFactor = 1.0f;
+    }
+
+    public SubTexture getSubTexture() {
+        return subTexture;
+    }
+
+    public void setSubTexture(SubTexture subTexture) {
+        this.subTexture = subTexture;
     }
 
     public float getTilingFactor() {
