@@ -10,7 +10,6 @@ import io.nova.core.layer.Layer;
 import io.nova.core.renderer.Renderer;
 import io.nova.core.renderer.RendererFactory;
 import io.nova.core.renderer.camera.EditorCamera;
-import io.nova.core.renderer.camera.OrthographicCameraController;
 import io.nova.core.renderer.framebuffer.*;
 import io.nova.core.renderer.texture.Texture;
 import io.nova.core.renderer.texture.TextureLibrary;
@@ -47,7 +46,6 @@ public class EditorLayer extends Layer {
     private final Vector2f viewportSize = new Vector2f();
     private Scene activeScene, editorScene, runtimeScene;
     private Renderer renderer;
-    private OrthographicCameraController cameraController;
     private FrameBuffer frameBuffer;
     private EntityPanel entityPanel;
     private ContentBrowserPanel contentBrowserPanel;
@@ -67,7 +65,6 @@ public class EditorLayer extends Layer {
     private Vector4f backgroundColor = new Vector4f(0.1f, 0.1f, 0.1f, 1.0f);
 
     public void onAttach() {
-        cameraController = new OrthographicCameraController(16.0f / 9.0f, true);
         renderer = RendererFactory.create();
         sceneSerializer = Scene.serializer;
         filePath = "assets/scenes/Cube.nova";
@@ -100,11 +97,7 @@ public class EditorLayer extends Layer {
         }
 
         var spec = new FrameBufferSpecification(Application.getWindow().getWidth(), Application.getWindow().getHeight());
-        spec.setAttachments(
-                new FrameBufferTextureSpecification(FrameBufferTextureFormat.RGBA8),
-                new FrameBufferTextureSpecification(FrameBufferTextureFormat.RED_INTEGER),
-                new FrameBufferTextureSpecification(FrameBufferTextureFormat.DEPTH24STENCIL8)
-        );
+        spec.setAttachments(new FrameBufferTextureSpecification(FrameBufferTextureFormat.RGBA8), new FrameBufferTextureSpecification(FrameBufferTextureFormat.RED_INTEGER), new FrameBufferTextureSpecification(FrameBufferTextureFormat.DEPTH24STENCIL8));
         frameBuffer = FrameBufferFactory.create(spec);
 
         entityPanel = new EntityPanel(activeScene);
@@ -124,8 +117,7 @@ public class EditorLayer extends Layer {
     public void onUpdate(float deltaTime) {
         // Resize
         FrameBufferSpecification spec = frameBuffer.getSpecification();
-        if (viewportSize.x > 0 && viewportSize.y > 0 &&
-                (viewportSize.x != spec.getWidth() || viewportSize.y != spec.getHeight())) {
+        if (viewportSize.x > 0 && viewportSize.y > 0 && (viewportSize.x != spec.getWidth() || viewportSize.y != spec.getHeight())) {
             frameBuffer.resize((int) viewportSize.x, (int) viewportSize.y);
             activeScene.onViewportResize((int) viewportSize.x, (int) viewportSize.y);
             editorCamera.setViewportSize(viewportSize.x, viewportSize.y);
@@ -182,7 +174,30 @@ public class EditorLayer extends Layer {
     }
 
     public void onImGuiRender() {
+        dockSpace(() -> {
+            drawMenuBar();
+            entityPanel.onImGuiRender();
+            contentBrowserPanel.onImGuiRender();
+            drawStatsWindow();
+            drawSettingsWindow();
+            drawViewport();
+        });
+    }
 
+    public void onEvent(Event event) {
+        // TODO: Make application block event function
+        // Example: application.blockEvent(event, condition)
+        if (viewportFocused && viewportHovered) {
+            editorCamera.onEvent(event);
+        }
+
+        var dispatcher = new EventDispatcher(event);
+        dispatcher.dispatch(KeyPressedEvent.class, this::handleShortcuts);
+        dispatcher.dispatch(MouseButtonPressedEvent.class, this::handleMouePicking);
+        dispatcher.dispatch(FilesDropEvent.class, contentBrowserPanel::onFilesDropEvent);
+    }
+
+    private void dockSpace(Runnable content) {
         // We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
         // because it would be confusing to have two docking targets within each others.
         var window_flags = ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoDocking;
@@ -209,58 +224,12 @@ public class EditorLayer extends Layer {
         ImGui.dockSpace(ImGui.getID("Dockspace"));
         style.setWindowMinSize(minWindowSize.x, minWindowSize.y);
 
-        // Menubar
-        ImGui.beginMenuBar();
-        if (ImGui.beginMenu("File")) {
-            if (ImGui.menuItem("New", "Ctrl+N")) {
-                newScene();
-            }
-            if (ImGui.menuItem("Open...", "Ctrl+O")) {
-                openScene();
-            }
-            if (ImGui.menuItem("Save", "Ctrl+S")) {
-                saveFile();
-            }
-            if (ImGui.menuItem("Save as...", "Ctrl+Shift+S")) {
-                saveFileAs();
-            }
-            if (ImGui.menuItem("Exit", "Ctrl+Q")) {
-                closeApplication();
-            }
-            ImGui.endMenu();
-        }
-        ImGui.endMenuBar();
+        content.run();
 
-        entityPanel.onImGuiRender();
-        contentBrowserPanel.onImGuiRender();
-        createToolbar();
-
-        ImGui.begin("Renderer stats");
-        {
-            var stats = renderer.getStats();
-            ImGui.text("Draw calls: " + stats.getDrawCalls());
-            ImGui.text("Quad count: " + stats.getQuadCount());
-            ImGui.text("Vertex count: " + stats.getTotalVertexCount());
-            ImGui.text("Index count: " + stats.getTotalIndexCount());
-        }
         ImGui.end();
+    }
 
-        ImGui.begin("Settings");
-        {
-            if (ImGui.checkbox("Show physics colliders", showPhysicsColliders)) {
-                showPhysicsColliders = !showPhysicsColliders;
-            }
-            var cc = new float[]{colliderColor.x, colliderColor.y, colliderColor.z, colliderColor.w};
-            if (ImGui.colorEdit4("Collider color", cc)) {
-                colliderColor = new Vector4f(cc[0], cc[1], cc[2], cc[3]);
-            }
-            var bg = new float[]{backgroundColor.x, backgroundColor.y, backgroundColor.z, backgroundColor.w};
-            if (ImGui.colorEdit4("Background color", bg)) {
-                backgroundColor = new Vector4f(bg[0], bg[1], bg[2], bg[3]);
-            }
-        }
-        ImGui.end();
-
+    private void drawViewport() {
         ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 0, 0);
         ImGui.begin("Viewport");
         {
@@ -284,8 +253,7 @@ public class EditorLayer extends Layer {
             viewportBounds[0] = new Vector2f(minBound.x, minBound.y);
             viewportBounds[1] = maxBound;
 
-            var textureId = frameBuffer.getColorAttachmentRendererId();
-            ImGui.image(textureId, viewportSize.x, viewportSize.y, 0, 1, 1, 0);
+            ImGui.image(frameBuffer.getColorAttachmentRendererId(), viewportSize.x, viewportSize.y, 0, 1, 1, 0);
 
             if (ImGui.beginDragDropTarget()) {
                 var contentBrowserPayload = ImGui.acceptDragDropPayload(DragAndDropDataType.CONTENT_BROWSER_ITEM);
@@ -310,91 +278,141 @@ public class EditorLayer extends Layer {
                 ImGui.endDragDropTarget();
             }
 
-            // We set the viewPortSize of the cameraController here to make sure the aspect ratio is correct after resizing the window
-            cameraController.setViewportSize((int) viewportSize.x, (int) viewportSize.y);
+            drawViewportOverlayToolbar();
         }
 
-        // ImGuizmo
-        {
-            var selectedEntity = entityPanel.getSelectedEntity();
-            if (sceneState == SceneState.EDITING && gizmoOperation != -1 && !Objects.isNull(selectedEntity)) {
-                ImGuizmo.setOrthographic(false);
-                ImGuizmo.setDrawList();
-                ImGuizmo.setRect(ImGui.getWindowPosX(), ImGui.getWindowPosY(), ImGui.getWindowWidth(), ImGui.getWindowHeight());
+        drawGizmos();
+        ImGui.end();
+        ImGui.popStyleVar();
+    }
 
-                // Runtime code, we will need it later
+    private void drawViewportOverlayToolbar() {
+        float size = 32.0f;
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 0, 1);
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowBorderSize, 0);
+        ImGui.pushStyleColor(ImGuiCol.WindowBg, 0.1f, 0.1f, 0.1f, 1.0f);
+        ImGui.setWindowSize(ImGui.getWindowWidth(), size);
+        var texture = sceneState == SceneState.RUNNING ? stopButtonTexture : playButtonTexture;
+        ImGui.pushStyleColor(ImGuiCol.Button, 0, 0, 0, 0);
+        ImGui.pushStyleColor(ImGuiCol.ButtonHovered, 0.1f, 0.1f, 0.1f, 1);
+        ImGui.setCursorPosX(ImGui.getWindowWidth() / 2.0f - (size / 2.0f));
+        ImGui.setCursorPosY(20);
+        if (ImGui.imageButton(texture.getId(), size, size, 0, 1, 1, 0)) {
+            if (sceneState == SceneState.RUNNING) {
+                stop();
+            } else {
+                play();
+            }
+        }
+        var itemHovered = ImGui.isItemHovered();
+        ImGui.setMouseCursor(itemHovered ? ImGuiMouseCursor.Hand : ImGuiMouseCursor.Arrow);
+        ImGui.popStyleColor(3);
+        ImGui.popStyleVar(2);
+    }
+
+    private void drawGizmos() {
+        var selectedEntity = entityPanel.getSelectedEntity();
+        if (sceneState == SceneState.EDITING && gizmoOperation != -1 && !Objects.isNull(selectedEntity)) {
+            ImGuizmo.setOrthographic(false);
+            ImGuizmo.setDrawList();
+            ImGuizmo.setRect(ImGui.getWindowPosX(), ImGui.getWindowPosY(), ImGui.getWindowWidth(), ImGui.getWindowHeight());
+
+            // Runtime code, we will need it later
 //                var camera = cameraEntity.getComponent(SceneCameraComponent.class).getCamera();
 //                var transform = cameraEntity.getComponent(TransformComponent.class).getTransform();
 //                var cameraProjection = camera.getProjection();
 //                var cameraView = transform.invert(new Matrix4f());
 
-                var cameraProjection = editorCamera.getProjection();
-                var cameraView = editorCamera.getViewMatrix();
+            var cameraProjection = editorCamera.getProjection();
+            var cameraView = editorCamera.getViewMatrix();
 
-                var selectedEntityTransformComponent = selectedEntity.getComponent(TransformComponent.class);
+            var selectedEntityTransformComponent = selectedEntity.getComponent(TransformComponent.class);
 
-                var model = new float[16];
-                var radRot = selectedEntityTransformComponent.getRotation();
-                var degRot = new float[3];
-                for (int i = 0; i < radRot.length; i++) {
-                    degRot[i] = (float) Math.toDegrees(radRot[i]);
+            var model = new float[16];
+            var radRot = selectedEntityTransformComponent.getRotation();
+            var degRot = new float[3];
+            for (int i = 0; i < radRot.length; i++) {
+                degRot[i] = (float) Math.toDegrees(radRot[i]);
+            }
+
+            ImGuizmo.recomposeMatrixFromComponents(model, selectedEntityTransformComponent.getTranslation(), degRot, selectedEntityTransformComponent.getScale());
+
+            var canSnap = Input.isKeyPressed(KeyCode.KEY_LEFT_CONTROL);
+            var snapValue = gizmoOperation == ROTATE ? 45.0f : 0.5f;
+            var snapValues = new float[]{snapValue, snapValue, snapValue};
+            ImGuizmo.manipulate(cameraView.get(new float[16]), cameraProjection.get(new float[16]), model, gizmoOperation, Mode.LOCAL, canSnap ? snapValues : new float[3]);
+
+            if (ImGuizmo.isUsing()) {
+                var translation = new float[3];
+                var rotation = new float[3];
+                var scale = new float[3];
+
+                ImGuizmo.decomposeMatrixToComponents(model, translation, rotation, scale);
+
+                for (int i = 0; i < rotation.length; i++) {
+                    rotation[i] = (float) Math.toRadians(rotation[i]);
                 }
 
-                ImGuizmo.recomposeMatrixFromComponents(
-                        model,
-                        selectedEntityTransformComponent.getTranslation(),
-                        degRot,
-                        selectedEntityTransformComponent.getScale());
-
-                var canSnap = Input.isKeyPressed(KeyCode.KEY_LEFT_CONTROL);
-                var snapValue = gizmoOperation == ROTATE ? 45.0f : 0.5f;
-                var snapValues = new float[]{snapValue, snapValue, snapValue};
-                ImGuizmo.manipulate(
-                        cameraView.get(new float[16]),
-                        cameraProjection.get(new float[16]),
-                        model,
-                        gizmoOperation,
-                        Mode.LOCAL,
-                        canSnap ? snapValues : new float[3]
-                );
-
-                if (ImGuizmo.isUsing()) {
-                    var translation = new float[3];
-                    var rotation = new float[3];
-                    var scale = new float[3];
-
-                    ImGuizmo.decomposeMatrixToComponents(model, translation, rotation, scale);
-
-                    for (int i = 0; i < rotation.length; i++) {
-                        rotation[i] = (float) Math.toRadians(rotation[i]);
-                    }
-
-                    switch (gizmoOperation) {
-                        case TRANSLATE -> selectedEntityTransformComponent.setTranslation(translation);
-                        case SCALE -> selectedEntityTransformComponent.setScale(scale);
-                        case ROTATE -> selectedEntityTransformComponent.setRotation(rotation);
-                    }
+                switch (gizmoOperation) {
+                    case TRANSLATE -> selectedEntityTransformComponent.setTranslation(translation);
+                    case SCALE -> selectedEntityTransformComponent.setScale(scale);
+                    case ROTATE -> selectedEntityTransformComponent.setRotation(rotation);
                 }
             }
         }
-        ImGui.end();
-        ImGui.popStyleVar();
+    }
 
+    private void drawMenuBar() {
+        ImGui.beginMenuBar();
+        if (ImGui.beginMenu("File")) {
+            if (ImGui.menuItem("New", "Ctrl+N")) {
+                newScene();
+            }
+            if (ImGui.menuItem("Open...", "Ctrl+O")) {
+                openScene();
+            }
+            if (ImGui.menuItem("Save", "Ctrl+S")) {
+                saveFile();
+            }
+            if (ImGui.menuItem("Save as...", "Ctrl+Shift+S")) {
+                saveFileAs();
+            }
+            if (ImGui.menuItem("Exit", "Ctrl+Q")) {
+                closeApplication();
+            }
+            ImGui.endMenu();
+        }
+        ImGui.endMenuBar();
+    }
+
+    private void drawStatsWindow() {
+        ImGui.begin("Renderer stats");
+        {
+            var stats = renderer.getStats();
+            ImGui.text("Draw calls: " + stats.getDrawCalls());
+            ImGui.text("Quad count: " + stats.getQuadCount());
+            ImGui.text("Vertex count: " + stats.getTotalVertexCount());
+            ImGui.text("Index count: " + stats.getTotalIndexCount());
+        }
         ImGui.end();
     }
 
-    public void onEvent(Event event) {
-        cameraController.onEvent(event);
-        // TODO: Make application block event function
-        // Example: application.blockEvent(event, condition)
-        if (viewportFocused && viewportHovered) {
-            editorCamera.onEvent(event);
+    private void drawSettingsWindow() {
+        ImGui.begin("Settings");
+        {
+            if (ImGui.checkbox("Show physics colliders", showPhysicsColliders)) {
+                showPhysicsColliders = !showPhysicsColliders;
+            }
+            var cc = new float[]{colliderColor.x, colliderColor.y, colliderColor.z, colliderColor.w};
+            if (ImGui.colorEdit4("Collider color", cc)) {
+                colliderColor = new Vector4f(cc[0], cc[1], cc[2], cc[3]);
+            }
+            var bg = new float[]{backgroundColor.x, backgroundColor.y, backgroundColor.z, backgroundColor.w};
+            if (ImGui.colorEdit4("Background color", bg)) {
+                backgroundColor = new Vector4f(bg[0], bg[1], bg[2], bg[3]);
+            }
         }
-
-        var dispatcher = new EventDispatcher(event);
-        dispatcher.dispatch(KeyPressedEvent.class, this::handleShortcuts);
-        dispatcher.dispatch(MouseButtonPressedEvent.class, this::handleMouePicking);
-        dispatcher.dispatch(FilesDropEvent.class, contentBrowserPanel::onFilesDropEvent);
+        ImGui.end();
     }
 
     private void drawPhysicsColliders() {
@@ -430,10 +448,7 @@ public class EditorLayer extends Layer {
                 size[1] = scale[1] * collider.getSize()[1] * 2.0f;
                 size[2] = 1.0f;
 
-                var colliderTransform = new Matrix4f()
-                        .translate(new Vector3f(position))
-                        .rotate(rotation, new Vector3f(0.0f, 0.0f, 1.0f))
-                        .scale(new Vector3f(size));
+                var colliderTransform = new Matrix4f().translate(new Vector3f(position)).rotate(rotation, new Vector3f(0.0f, 0.0f, 1.0f)).scale(new Vector3f(size));
 
                 renderer.drawRect(colliderTransform, colliderColor);
             }
@@ -456,41 +471,12 @@ public class EditorLayer extends Layer {
                 size[1] = scale[1] * collider.getRadius() * 2.0f;
                 size[2] = 1.0f;
 
-                var colliderTransform = new Matrix4f()
-                        .translate(new Vector3f(position))
-                        .scale(new Vector3f(size));
+                var colliderTransform = new Matrix4f().translate(new Vector3f(position)).scale(new Vector3f(size));
 
                 renderer.drawCircle(colliderTransform, colliderColor, 0.05f, 0.0f, -1);
             }
         }
         renderer.endScene();
-    }
-
-    public void createToolbar() {
-        ImGui.begin("##itembar", ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoBringToFrontOnFocus);
-        {
-            float size = 32.0f;
-            ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 0, 1);
-            ImGui.pushStyleVar(ImGuiStyleVar.WindowBorderSize, 0);
-            ImGui.pushStyleColor(ImGuiCol.WindowBg, 0.1f, 0.1f, 0.1f, 1.0f);
-            ImGui.setWindowSize(ImGui.getWindowWidth(), size);
-            var texture = sceneState == SceneState.RUNNING ? stopButtonTexture : playButtonTexture;
-            ImGui.pushStyleColor(ImGuiCol.Button, 0, 0, 0, 0);
-            ImGui.pushStyleColor(ImGuiCol.ButtonHovered, 0.1f, 0.1f, 0.1f, 1);
-            ImGui.setCursorPosX(ImGui.getWindowWidth() / 2.0f - (size / 2.0f));
-            if (ImGui.imageButton(texture.getId(), size, size, 0, 1, 1, 0, 0)) {
-                if (sceneState == SceneState.RUNNING) {
-                    stop();
-                } else {
-                    play();
-                }
-            }
-            var itemHovered = ImGui.isItemHovered();
-            ImGui.setMouseCursor(itemHovered ? ImGuiMouseCursor.Hand : ImGuiMouseCursor.Arrow);
-            ImGui.popStyleColor(3);
-            ImGui.popStyleVar(2);
-        }
-        ImGui.end();
     }
 
     private void play() {
