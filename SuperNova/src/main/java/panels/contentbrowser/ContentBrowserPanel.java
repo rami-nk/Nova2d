@@ -185,8 +185,9 @@ public class ContentBrowserPanel {
                     ImGui.pushStyleColor(ImGuiCol.Button, 0, 0, 0, 0);
                     ImGui.pushID(file.getName());
 
+                    ImageAsset imageAsset = null;
                     if (FileUtils.isImage(file)) {
-                        var imageAsset = AssetManager.getImageAsset(file);
+                        imageAsset = AssetManager.getImageAsset(file);
                         if (ImGui.imageButton(imageAsset.getTextureId(), iconSize, iconSize, 0, 1, 1, 0)) {
                             showImageViewer = true;
                             selectedImageAsset = imageAsset;
@@ -196,7 +197,11 @@ public class ContentBrowserPanel {
                     }
                     if (ImGui.beginDragDropSource()) {
                         ImGui.setDragDropPayload(DragAndDropDataType.CONTENT_BROWSER_ITEM, file.getAbsolutePath());
-                        ImGui.image(documentIconTexture.getId(), iconSize, iconSize, 0, 1, 1, 0);
+                        if (Objects.nonNull(imageAsset)) {
+                            ImGui.image(imageAsset.getTextureId(), iconSize, iconSize, 0, 1, 1, 0);
+                        } else {
+                            ImGui.image(documentIconTexture.getId(), iconSize, iconSize, 0, 1, 1, 0);
+                        }
                         ImGui.text(file.getName());
                         ImGui.endDragDropSource();
                     }
