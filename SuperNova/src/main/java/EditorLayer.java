@@ -24,6 +24,7 @@ import io.nova.event.EventDispatcher;
 import io.nova.event.FilesDropEvent;
 import io.nova.event.key.KeyPressedEvent;
 import io.nova.event.mouse.MouseButtonPressedEvent;
+import io.nova.imgui.Themes;
 import io.nova.utils.FileDialog;
 import io.nova.utils.FileUtils;
 import io.nova.window.Input;
@@ -410,6 +411,39 @@ public class EditorLayer extends Layer {
             var bg = new float[]{backgroundColor.x, backgroundColor.y, backgroundColor.z, backgroundColor.w};
             if (ImGui.colorEdit4("Background color", bg)) {
                 backgroundColor = new Vector4f(bg[0], bg[1], bg[2], bg[3]);
+            }
+
+            if (ImGui.beginCombo("Themes", "Themes")) {
+
+                if (ImGui.selectable("Dark")) {
+                    Themes.setDarkTheme();
+                }
+                if (ImGui.selectable("White")) {
+                    Themes.setWhiteTheme();
+                }
+                if (ImGui.selectable("Wild")) {
+                    Themes.setWildColorTheme();
+                }
+                if (ImGui.selectable("Dark 2")) {
+                    Themes.setDarkTheme2();
+                }
+                if (ImGui.selectable("Deep dark 1")) {
+                    Themes.setDeepDarkTheme();
+                }
+                if (ImGui.selectable("Deep dark 2")) {
+                    Themes.setDeepDarkTheme2();
+                }
+                if (ImGui.selectable("Imgui dark")) {
+                    ImGui.styleColorsDark();
+                }
+                if (ImGui.selectable("Imgui light")) {
+                    ImGui.styleColorsLight();
+                }
+                if (ImGui.selectable("Imgui classic")) {
+                    ImGui.styleColorsClassic();
+                }
+
+                ImGui.endCombo();
             }
         }
         ImGui.end();
