@@ -22,6 +22,7 @@ import io.nova.ecs.entity.Group;
 import io.nova.ecs.serializer.SceneSerializer;
 import io.nova.event.Event;
 import io.nova.event.EventDispatcher;
+import io.nova.event.FilesDropEvent;
 import io.nova.event.key.KeyPressedEvent;
 import io.nova.event.mouse.MouseButtonPressedEvent;
 import io.nova.utils.FileDialog;
@@ -393,6 +394,7 @@ public class EditorLayer extends Layer {
         var dispatcher = new EventDispatcher(event);
         dispatcher.dispatch(KeyPressedEvent.class, this::handleShortcuts);
         dispatcher.dispatch(MouseButtonPressedEvent.class, this::handleMouePicking);
+        dispatcher.dispatch(FilesDropEvent.class, contentBrowserPanel::onFilesDropEvent);
     }
 
     private void drawPhysicsColliders() {
