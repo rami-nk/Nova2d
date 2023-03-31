@@ -13,5 +13,6 @@ public class EntityPropertiesPanel {
         BoxColliderComponentNode.create(entity);
         CircleColliderComponentNode.create(entity);
         RigidBodyComponentNode.create(entity);
+        AnimationComponentNode.create(entity);
     }
 }
