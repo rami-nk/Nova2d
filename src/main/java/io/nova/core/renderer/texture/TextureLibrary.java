@@ -15,6 +15,16 @@ public class TextureLibrary {
         return textures.getIndex(key);
     }
 
+    public static Texture uploadTexture(Path path) {
+        var key = path.getFileName().toString();
+        if (!textures.containsKey(key)) {
+            var texture = TextureFactory.create(path.toAbsolutePath());
+            textures.putIndexed(key, texture);
+            return texture;
+        }
+        return textures.get(key);
+    }
+
     public static Texture uploadAndGet(Path path) {
         upload(path);
         var key = path.getFileName().toString();

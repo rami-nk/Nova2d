@@ -6,6 +6,8 @@ import imgui.flag.*;
 import imgui.type.ImBoolean;
 import io.nova.core.renderer.texture.Texture;
 import io.nova.core.renderer.texture.TextureLibrary;
+import io.nova.event.FilesDropEvent;
+import io.nova.utils.FileUtils;
 import panels.DragAndDropDataType;
 
 import java.io.File;
@@ -52,6 +54,21 @@ public class ContentBrowserPanel {
                 return f1.getName().compareTo(f2.getName());
             }
         });
+    }
+
+    public boolean onFilesDropEvent(FilesDropEvent event) {
+        var paths = event.getPaths();
+        for (var path : paths) {
+            var p = Path.of(path);
+            var file = p.toFile();
+            var fileName = file.getName();
+            try {
+                Files.copy(p, Path.of(String.valueOf(currentDirectory), fileName));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return false;
     }
 
     public void onImGuiRender() {
@@ -168,8 +185,9 @@ public class ContentBrowserPanel {
                     ImGui.pushStyleColor(ImGuiCol.Button, 0, 0, 0, 0);
                     ImGui.pushID(file.getName());
 
-                    if (isImage(file)) {
-                        var imageAsset = AssetManager.getImageAsset(file);
+                    ImageAsset imageAsset = null;
+                    if (FileUtils.isImage(file)) {
+                        imageAsset = AssetManager.getImageAsset(file);
                         if (ImGui.imageButton(imageAsset.getTextureId(), iconSize, iconSize, 0, 1, 1, 0)) {
                             showImageViewer = true;
                             selectedImageAsset = imageAsset;
@@ -179,7 +197,11 @@ public class ContentBrowserPanel {
                     }
                     if (ImGui.beginDragDropSource()) {
                         ImGui.setDragDropPayload(DragAndDropDataType.CONTENT_BROWSER_ITEM, file.getAbsolutePath());
-                        ImGui.image(documentIconTexture.getId(), iconSize, iconSize, 0, 1, 1, 0);
+                        if (Objects.nonNull(imageAsset)) {
+                            ImGui.image(imageAsset.getTextureId(), iconSize, iconSize, 0, 1, 1, 0);
+                        } else {
+                            ImGui.image(documentIconTexture.getId(), iconSize, iconSize, 0, 1, 1, 0);
+                        }
                         ImGui.text(file.getName());
                         ImGui.endDragDropSource();
                     }
@@ -192,15 +214,5 @@ public class ContentBrowserPanel {
             }
             ImGui.columns();
         }
-    }
-
-    private boolean isImage(File file) {
-        try {
-            var contentType = Files.probeContentType(file.toPath());
-            return contentType != null && contentType.startsWith("image");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
     }
 }

@@ -22,16 +22,13 @@
           "width" : 64,
           "height" : 64
         },
+        "subTexture" : null,
         "tilingFactor" : 1.0,
         "colorAsVec" : {
           "finite" : true
         }
       } ],
       "cache" : {
-        "io.nova.ecs.component.TagComponent" : {
-          "@class" : "io.nova.ecs.component.TagComponent",
-          "tag" : "Right"
-        },
         "io.nova.ecs.component.TransformComponent" : {
           "@class" : "io.nova.ecs.component.TransformComponent",
           "translation" : [ -0.7, 0.0, 0.0 ],
@@ -42,6 +39,10 @@
             "affine" : true
           }
         },
+        "io.nova.ecs.component.TagComponent" : {
+          "@class" : "io.nova.ecs.component.TagComponent",
+          "tag" : "Right"
+        },
         "io.nova.ecs.component.SpriteRendererComponent" : {
           "@class" : "io.nova.ecs.component.SpriteRendererComponent",
           "color" : [ 0.3388292, 0.73745173, 0.520441, 1.0 ],
@@ -51,6 +52,7 @@
             "width" : 64,
             "height" : 64
           },
+          "subTexture" : null,
           "tilingFactor" : 1.0,
           "colorAsVec" : {
             "finite" : true
@@ -81,16 +83,13 @@
           "width" : 16,
           "height" : 16
         },
+        "subTexture" : null,
         "tilingFactor" : 1.0,
         "colorAsVec" : {
           "finite" : true
         }
       } ],
       "cache" : {
-        "io.nova.ecs.component.TagComponent" : {
-          "@class" : "io.nova.ecs.component.TagComponent",
-          "tag" : "Left"
-        },
         "io.nova.ecs.component.TransformComponent" : {
           "@class" : "io.nova.ecs.component.TransformComponent",
           "translation" : [ 0.0, 0.0, 0.0 ],
@@ -101,6 +100,10 @@
             "affine" : true
           }
         },
+        "io.nova.ecs.component.TagComponent" : {
+          "@class" : "io.nova.ecs.component.TagComponent",
+          "tag" : "Left"
+        },
         "io.nova.ecs.component.SpriteRendererComponent" : {
           "@class" : "io.nova.ecs.component.SpriteRendererComponent",
           "color" : [ 0.14461623, 0.34362936, 0.18457249, 1.0 ],
@@ -110,6 +113,7 @@
             "width" : 16,
             "height" : 16
           },
+          "subTexture" : null,
           "tilingFactor" : 1.0,
           "colorAsVec" : {
             "finite" : true
@@ -135,7 +139,7 @@
         "@class" : "io.nova.ecs.component.SceneCameraComponent",
         "camera" : {
           "projectionType" : "PERSPECTIVE",
-          "aspectRatio" : 1.1717172,
+          "aspectRatio" : 1.1262136,
           "orthographicNearPlane" : -1.0,
           "orthographicFarPlane" : 1.0,
           "orthographicSize" : 10.0,
@@ -155,7 +159,7 @@
           "@class" : "io.nova.ecs.component.SceneCameraComponent",
           "camera" : {
             "projectionType" : "PERSPECTIVE",
-            "aspectRatio" : 1.1717172,
+            "aspectRatio" : 1.1262136,
             "orthographicNearPlane" : -1.0,
             "orthographicFarPlane" : 1.0,
             "orthographicSize" : 10.0,
@@ -169,60 +173,254 @@
       },
       "id" : 3,
       "activated" : true
+    }, {
+      "components" : [ {
+        "@class" : "io.nova.ecs.component.TransformComponent",
+        "translation" : [ 0.0, 0.0, 0.0 ],
+        "rotation" : [ 0.0, 0.0, 0.0 ],
+        "scale" : [ 1.0, 1.0, 1.0 ],
+        "transform" : {
+          "finite" : true,
+          "affine" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.TagComponent",
+        "tag" : "Unnamed Entity"
+      }, {
+        "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+        "color" : [ 0.9, 0.9, 0.9, 1.0 ],
+        "texture" : null,
+        "subTexture" : null,
+        "tilingFactor" : 1.0,
+        "colorAsVec" : {
+          "finite" : true
+        }
+      }, {
+        "@class" : "io.nova.ecs.component.AnimationComponent",
+        "clips" : [ {
+          "frames" : [ {
+            "texture" : {
+              "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+              "filepath" : "SuperNova/src/main/resources/textures/spritesheet.png",
+              "width" : 512,
+              "height" : 128
+            },
+            "textureCoordinates" : [ 0.0, 0.0, 0.25, 0.0, 0.25, 1.0, 0.0, 1.0 ],
+            "leftTop" : [ 0.0, 1.0 ],
+            "rightBottom" : [ 0.25, 0.0 ]
+          }, {
+            "texture" : {
+              "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+              "filepath" : "SuperNova/src/main/resources/textures/spritesheet.png",
+              "width" : 512,
+              "height" : 128
+            },
+            "textureCoordinates" : [ 0.25, 0.0, 0.5, 0.0, 0.5, 1.0, 0.25, 1.0 ],
+            "leftTop" : [ 0.25, 1.0 ],
+            "rightBottom" : [ 0.5, 0.0 ]
+          }, {
+            "texture" : {
+              "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+              "filepath" : "SuperNova/src/main/resources/textures/spritesheet.png",
+              "width" : 512,
+              "height" : 128
+            },
+            "textureCoordinates" : [ 0.5, 0.0, 0.75, 0.0, 0.75, 1.0, 0.5, 1.0 ],
+            "leftTop" : [ 0.5, 1.0 ],
+            "rightBottom" : [ 0.75, 0.0 ]
+          }, {
+            "texture" : {
+              "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+              "filepath" : "SuperNova/src/main/resources/textures/spritesheet.png",
+              "width" : 512,
+              "height" : 128
+            },
+            "textureCoordinates" : [ 0.75, 0.0, 1.0, 0.0, 1.0, 1.0, 0.75, 1.0 ],
+            "leftTop" : [ 0.75, 1.0 ],
+            "rightBottom" : [ 1.0, 0.0 ]
+          } ],
+          "samples" : 12,
+          "name" : "Animation clip",
+          "currentFrame" : 0,
+          "currentFrameTexture" : null
+        } ],
+        "currentClip" : {
+          "frames" : [ {
+            "texture" : {
+              "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+              "filepath" : "SuperNova/src/main/resources/textures/spritesheet.png",
+              "width" : 512,
+              "height" : 128
+            },
+            "textureCoordinates" : [ 0.0, 0.0, 0.25, 0.0, 0.25, 1.0, 0.0, 1.0 ],
+            "leftTop" : [ 0.0, 1.0 ],
+            "rightBottom" : [ 0.25, 0.0 ]
+          }, {
+            "texture" : {
+              "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+              "filepath" : "SuperNova/src/main/resources/textures/spritesheet.png",
+              "width" : 512,
+              "height" : 128
+            },
+            "textureCoordinates" : [ 0.25, 0.0, 0.5, 0.0, 0.5, 1.0, 0.25, 1.0 ],
+            "leftTop" : [ 0.25, 1.0 ],
+            "rightBottom" : [ 0.5, 0.0 ]
+          }, {
+            "texture" : {
+              "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+              "filepath" : "SuperNova/src/main/resources/textures/spritesheet.png",
+              "width" : 512,
+              "height" : 128
+            },
+            "textureCoordinates" : [ 0.5, 0.0, 0.75, 0.0, 0.75, 1.0, 0.5, 1.0 ],
+            "leftTop" : [ 0.5, 1.0 ],
+            "rightBottom" : [ 0.75, 0.0 ]
+          }, {
+            "texture" : {
+              "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+              "filepath" : "SuperNova/src/main/resources/textures/spritesheet.png",
+              "width" : 512,
+              "height" : 128
+            },
+            "textureCoordinates" : [ 0.75, 0.0, 1.0, 0.0, 1.0, 1.0, 0.75, 1.0 ],
+            "leftTop" : [ 0.75, 1.0 ],
+            "rightBottom" : [ 1.0, 0.0 ]
+          } ],
+          "samples" : 12,
+          "name" : "Animation clip",
+          "currentFrame" : 0,
+          "currentFrameTexture" : null
+        },
+        "playing" : false
+      } ],
+      "cache" : {
+        "io.nova.ecs.component.TransformComponent" : {
+          "@class" : "io.nova.ecs.component.TransformComponent",
+          "translation" : [ 0.0, 0.0, 0.0 ],
+          "rotation" : [ 0.0, 0.0, 0.0 ],
+          "scale" : [ 1.0, 1.0, 1.0 ],
+          "transform" : {
+            "finite" : true,
+            "affine" : true
+          }
+        },
+        "io.nova.ecs.component.TagComponent" : {
+          "@class" : "io.nova.ecs.component.TagComponent",
+          "tag" : "Unnamed Entity"
+        },
+        "io.nova.ecs.component.AnimationComponent" : {
+          "@class" : "io.nova.ecs.component.AnimationComponent",
+          "clips" : [ {
+            "frames" : [ {
+              "texture" : {
+                "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+                "filepath" : "SuperNova/src/main/resources/textures/spritesheet.png",
+                "width" : 512,
+                "height" : 128
+              },
+              "textureCoordinates" : [ 0.0, 0.0, 0.25, 0.0, 0.25, 1.0, 0.0, 1.0 ],
+              "leftTop" : [ 0.0, 1.0 ],
+              "rightBottom" : [ 0.25, 0.0 ]
+            }, {
+              "texture" : {
+                "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+                "filepath" : "SuperNova/src/main/resources/textures/spritesheet.png",
+                "width" : 512,
+                "height" : 128
+              },
+              "textureCoordinates" : [ 0.25, 0.0, 0.5, 0.0, 0.5, 1.0, 0.25, 1.0 ],
+              "leftTop" : [ 0.25, 1.0 ],
+              "rightBottom" : [ 0.5, 0.0 ]
+            }, {
+              "texture" : {
+                "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+                "filepath" : "SuperNova/src/main/resources/textures/spritesheet.png",
+                "width" : 512,
+                "height" : 128
+              },
+              "textureCoordinates" : [ 0.5, 0.0, 0.75, 0.0, 0.75, 1.0, 0.5, 1.0 ],
+              "leftTop" : [ 0.5, 1.0 ],
+              "rightBottom" : [ 0.75, 0.0 ]
+            }, {
+              "texture" : {
+                "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+                "filepath" : "SuperNova/src/main/resources/textures/spritesheet.png",
+                "width" : 512,
+                "height" : 128
+              },
+              "textureCoordinates" : [ 0.75, 0.0, 1.0, 0.0, 1.0, 1.0, 0.75, 1.0 ],
+              "leftTop" : [ 0.75, 1.0 ],
+              "rightBottom" : [ 1.0, 0.0 ]
+            } ],
+            "samples" : 12,
+            "name" : "Animation clip",
+            "currentFrame" : 0,
+            "currentFrameTexture" : null
+          } ],
+          "currentClip" : {
+            "frames" : [ {
+              "texture" : {
+                "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+                "filepath" : "SuperNova/src/main/resources/textures/spritesheet.png",
+                "width" : 512,
+                "height" : 128
+              },
+              "textureCoordinates" : [ 0.0, 0.0, 0.25, 0.0, 0.25, 1.0, 0.0, 1.0 ],
+              "leftTop" : [ 0.0, 1.0 ],
+              "rightBottom" : [ 0.25, 0.0 ]
+            }, {
+              "texture" : {
+                "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+                "filepath" : "SuperNova/src/main/resources/textures/spritesheet.png",
+                "width" : 512,
+                "height" : 128
+              },
+              "textureCoordinates" : [ 0.25, 0.0, 0.5, 0.0, 0.5, 1.0, 0.25, 1.0 ],
+              "leftTop" : [ 0.25, 1.0 ],
+              "rightBottom" : [ 0.5, 0.0 ]
+            }, {
+              "texture" : {
+                "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+                "filepath" : "SuperNova/src/main/resources/textures/spritesheet.png",
+                "width" : 512,
+                "height" : 128
+              },
+              "textureCoordinates" : [ 0.5, 0.0, 0.75, 0.0, 0.75, 1.0, 0.5, 1.0 ],
+              "leftTop" : [ 0.5, 1.0 ],
+              "rightBottom" : [ 0.75, 0.0 ]
+            }, {
+              "texture" : {
+                "@class" : "io.nova.opengl.renderer.OpenGLTexture",
+                "filepath" : "SuperNova/src/main/resources/textures/spritesheet.png",
+                "width" : 512,
+                "height" : 128
+              },
+              "textureCoordinates" : [ 0.75, 0.0, 1.0, 0.0, 1.0, 1.0, 0.75, 1.0 ],
+              "leftTop" : [ 0.75, 1.0 ],
+              "rightBottom" : [ 1.0, 0.0 ]
+            } ],
+            "samples" : 12,
+            "name" : "Animation clip",
+            "currentFrame" : 0,
+            "currentFrameTexture" : null
+          },
+          "playing" : false
+        },
+        "io.nova.ecs.component.SpriteRendererComponent" : {
+          "@class" : "io.nova.ecs.component.SpriteRendererComponent",
+          "color" : [ 0.9, 0.9, 0.9, 1.0 ],
+          "texture" : null,
+          "subTexture" : null,
+          "tilingFactor" : 1.0,
+          "colorAsVec" : {
+            "finite" : true
+          }
+        }
+      },
+      "id" : 4,
+      "activated" : true
     } ]
   },
   "viewPortWidth" : 580,
-  "viewPortHeight" : 495,
-  "primaryCameraEntity" : {
-    "components" : [ {
-      "@class" : "io.nova.ecs.component.TransformComponent",
-      "translation" : [ 0.0, 0.2, 2.9 ],
-      "rotation" : [ 0.0, 0.0, 0.0 ],
-      "scale" : [ 1.0, 1.0, 1.0 ],
-      "transform" : {
-        "finite" : true,
-        "affine" : true
-      }
-    }, {
-      "@class" : "io.nova.ecs.component.TagComponent",
-      "tag" : "Camera"
-    }, {
-      "@class" : "io.nova.ecs.component.SceneCameraComponent",
-      "camera" : {
-        "projectionType" : "PERSPECTIVE",
-        "aspectRatio" : 1.1717172,
-        "orthographicNearPlane" : -1.0,
-        "orthographicFarPlane" : 1.0,
-        "orthographicSize" : 10.0,
-        "fov" : 0.7853982,
-        "perspectiveNearPlane" : 0.1,
-        "perspectiveFarPlane" : 1000.0
-      },
-      "primary" : true,
-      "fixedAspectRatio" : false
-    } ],
-    "cache" : {
-      "io.nova.ecs.component.TagComponent" : {
-        "@class" : "io.nova.ecs.component.TagComponent",
-        "tag" : "Camera"
-      },
-      "io.nova.ecs.component.SceneCameraComponent" : {
-        "@class" : "io.nova.ecs.component.SceneCameraComponent",
-        "camera" : {
-          "projectionType" : "PERSPECTIVE",
-          "aspectRatio" : 1.1717172,
-          "orthographicNearPlane" : -1.0,
-          "orthographicFarPlane" : 1.0,
-          "orthographicSize" : 10.0,
-          "fov" : 0.7853982,
-          "perspectiveNearPlane" : 0.1,
-          "perspectiveFarPlane" : 1000.0
-        },
-        "primary" : true,
-        "fixedAspectRatio" : false
-      }
-    },
-    "id" : 3,
-    "activated" : true
-  }
+  "viewPortHeight" : 515
 }

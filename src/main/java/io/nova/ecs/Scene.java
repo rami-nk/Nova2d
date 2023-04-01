@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.nova.core.renderer.Renderer;
 import io.nova.core.renderer.camera.Camera;
 import io.nova.core.renderer.camera.EditorCamera;
+import io.nova.core.renderer.camera.SceneCamera;
 import io.nova.ecs.component.*;
 import io.nova.ecs.entity.Entity;
 import io.nova.ecs.entity.EntityListener;
@@ -156,40 +157,9 @@ public class Scene {
     }
 
     public void onUpdateRuntime(float deltaTime) {
-        // Update scripts
-        {
-            var group = registry.getEntities(Group.create(ScriptComponent.class));
-            for (var entity : group) {
-                var script = entity.getComponent(ScriptComponent.class);
-                if (Objects.isNull(script.getInstance()) || !script.isActivated()) {
-                    script.createInstance();
-                    script.setInstanceEntity();
-                    script.onCreate();
-                }
-
-                // If the entity has a camera component we only want to update it if it is the primary camera
-                var camera = entity.getComponent(SceneCameraComponent.class);
-                if (Objects.isNull(camera)) {
-                    script.onUpdate(deltaTime);
-                } else if (camera.isPrimary()) {
-                    script.onUpdate(deltaTime);
-                }
-            }
-        }
-
-        // Update physics
-        {
-            physicsWorld.step(deltaTime, 6, 2);
-            var group = registry.getEntities(Group.create(RigidBodyComponent.class));
-            for (var entity : group) {
-                var transform = entity.getComponent(TransformComponent.class);
-                var rigidBody = entity.getComponent(RigidBodyComponent.class);
-                var body = rigidBody.getRuntimeBody();
-                var position = body.getPosition();
-                transform.setTranslation(new float[]{position.x, position.y, 0});
-                transform.setRotation(new float[]{0, 0, body.getAngle()});
-            }
-        }
+        updateScripts(deltaTime);
+        updatePhysics(deltaTime);
+        updateAnimations(deltaTime);
 
         Camera primaryCamera = null;
         Matrix4f cameraTransform = null;
@@ -213,6 +183,50 @@ public class Scene {
         }
 
         registry.update(deltaTime);
+    }
+
+    private void updateAnimations(float deltaTime) {
+        var group = registry.getEntities(Group.create(AnimationComponent.class, SpriteRendererComponent.class));
+        for (var entity : group) {
+            var animation = entity.getComponent(AnimationComponent.class);
+            var sprite = entity.getComponent(SpriteRendererComponent.class);
+            animation.play();
+            sprite.setSubTexture(animation.getCurrentClip().getCurrentFrameTexture());
+            sprite.setTexture(null);
+        }
+    }
+
+    private void updatePhysics(float deltaTime) {
+        physicsWorld.step(deltaTime, 6, 2);
+        var group = registry.getEntities(Group.create(RigidBodyComponent.class));
+        for (var entity : group) {
+            var transform = entity.getComponent(TransformComponent.class);
+            var rigidBody = entity.getComponent(RigidBodyComponent.class);
+            var body = rigidBody.getRuntimeBody();
+            var position = body.getPosition();
+            transform.setTranslation(new float[]{position.x, position.y, 0});
+            transform.setRotation(new float[]{0, 0, body.getAngle()});
+        }
+    }
+
+    private void updateScripts(float deltaTime) {
+        var group = registry.getEntities(Group.create(ScriptComponent.class));
+        for (var entity : group) {
+            var script = entity.getComponent(ScriptComponent.class);
+            if (Objects.isNull(script.getInstance()) || !script.isActivated()) {
+                script.createInstance();
+                script.setInstanceEntity();
+                script.onCreate();
+            }
+
+            // If the entity has a camera component we only want to update it if it is the primary camera
+            var camera = entity.getComponent(SceneCameraComponent.class);
+            if (Objects.isNull(camera)) {
+                script.onUpdate(deltaTime);
+            } else if (camera.isPrimary()) {
+                script.onUpdate(deltaTime);
+            }
+        }
     }
 
     public Entity createEntity() {
@@ -275,6 +289,12 @@ public class Scene {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void getCameraView(SceneCamera camera, Matrix4f view) {
+        renderer.beginScene(camera, view);
+        drawPrimitives();
+        renderer.endScene();
     }
 
     private class CameraComponentAddEventListener implements EntityListener {

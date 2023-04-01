@@ -22,13 +22,15 @@ public class TagComponentNode {
             }
             ImGui.popItemWidth();
 
-            if (ImGui.beginPopup("AddComponent")) {
+
+            if (ImGui.beginPopupContextVoid("AddComponent")) {
                 addComponentMenuItem(SpriteRendererComponent.class, "Sprite", entity);
                 addComponentMenuItem(CircleRendererComponent.class, "Circle", entity);
                 addComponentMenuItem(SceneCameraComponent.class, "Camera", entity);
                 addComponentMenuItem(BoxColliderComponent.class, "BoxCollider", entity);
                 addComponentMenuItem(CircleColliderComponent.class, "CircleCollider", entity);
                 addComponentMenuItem(RigidBodyComponent.class, "RigidBody", entity);
+                addComponentMenuItem(AnimationComponent.class, "Animation", entity);
                 ImGui.endPopup();
             }
         }

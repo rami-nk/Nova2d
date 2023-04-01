@@ -7,6 +7,7 @@ import io.nova.core.window.EventCallback;
 import io.nova.core.window.Window;
 import io.nova.core.window.WindowProps;
 import io.nova.event.Event;
+import io.nova.event.FilesDropEvent;
 import io.nova.event.key.KeyPressedEvent;
 import io.nova.event.key.KeyReleasedEvent;
 import io.nova.event.mouse.MouseButtonPressedEvent;
@@ -17,6 +18,7 @@ import io.nova.event.window.WindowClosedEvent;
 import io.nova.event.window.WindowResizeEvent;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.system.MemoryUtil;
+import org.lwjgl.system.Pointer;
 import org.lwjgl.system.jni.JNINativeInterface;
 
 import java.util.Objects;
@@ -25,7 +27,7 @@ import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_MULTISAMPLE;
-import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.MemoryUtil.*;
 
 public class Nova2dWindow implements Window {
 
@@ -132,6 +134,19 @@ public class Nova2dWindow implements Window {
             var data = (WindowData) MemoryUtil.memGlobalRefToObject(windowDataPointer);
 
             var event = new MouseMovedEvent((float) xPos, (float) yPos);
+            data.getEventCallback().dispatch(event);
+        });
+
+        glfwSetDropCallback(glfwWindow, (glfwWindowPointer, count, names) -> {
+            var windowDataPointer = glfwGetWindowUserPointer(glfwWindowPointer);
+            var data = (WindowData) MemoryUtil.memGlobalRefToObject(windowDataPointer);
+
+            String[] namesArray = new String[count];
+            for (int i = 0; i < count; i++) {
+                namesArray[i] = memUTF8(memGetAddress(names + Pointer.POINTER_SIZE * i));
+            }
+
+            var event = new FilesDropEvent(count, namesArray);
             data.getEventCallback().dispatch(event);
         });
 
