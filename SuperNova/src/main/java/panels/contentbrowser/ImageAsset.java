@@ -21,7 +21,7 @@ public class ImageAsset {
         this.file = file;
         this.name = file.getName();
         this.spriteMode = SpriteMode.SINGLE;
-        this.texture = TextureLibrary.uploadAndGet(file.toPath());
+        this.texture = TextureLibrary.uploadTexture(file.toPath());
 
         this.width = texture.getWidth();
         this.height = texture.getHeight();

@@ -105,8 +105,8 @@ public class EditorLayer extends Layer {
         contentBrowserPanel = new ContentBrowserPanel();
         editorCamera = new EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
         sceneState = SceneState.EDITING;
-        this.playButtonTexture = TextureLibrary.uploadAndGet(Path.of("SuperNova/src/main/resources/icons/play-button.png"));
-        this.stopButtonTexture = TextureLibrary.uploadAndGet(Path.of("SuperNova/src/main/resources/icons/stop-button.png"));
+        this.playButtonTexture = TextureLibrary.uploadTexture(Path.of("SuperNova/src/main/resources/icons/play-button.png"));
+        this.stopButtonTexture = TextureLibrary.uploadTexture(Path.of("SuperNova/src/main/resources/icons/stop-button.png"));
     }
 
     public void onDetach() {

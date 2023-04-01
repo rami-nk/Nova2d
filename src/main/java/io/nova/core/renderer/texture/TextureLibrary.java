@@ -6,15 +6,20 @@ public class TextureLibrary {
 
     private static final IndexedLinkedHashMap<String, Texture> textures = new IndexedLinkedHashMap<>();
 
-    public static int upload(Path path) {
+    public static void upload(Path path) {
         var key = path.getFileName().toString();
         if (!textures.containsKey(key)) {
             var texture = TextureFactory.create(path.toAbsolutePath());
-            return textures.putIndexed(key, texture);
+            textures.putIndexed(key, texture);
+            return;
         }
-        return textures.getIndex(key);
+        textures.getIndex(key);
     }
 
+    /**
+     * Uploads a texture to the library and returns the texture.
+     * Checks if the texture is already in the library and returns it if it is.
+     */
     public static Texture uploadTexture(Path path) {
         var key = path.getFileName().toString();
         if (!textures.containsKey(key)) {
@@ -23,12 +28,6 @@ public class TextureLibrary {
             return texture;
         }
         return textures.get(key);
-    }
-
-    public static Texture uploadAndGet(Path path) {
-        upload(path);
-        var key = path.getFileName().toString();
-        return get(key);
     }
 
     public static Texture get(String name) {

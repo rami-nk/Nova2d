@@ -21,15 +21,13 @@ class OpenGLDebugRenderer {
     private final Shader shader;
     private final VertexBuffer vertexBuffer;
     private final VertexArray vertexArray;
-    private final Runnable endSceneCallback;
     private final int elementsPerVertex;
     private float[] data;
     private int vertexCount;
     private int dataIndex;
     private float lineWidth;
 
-    protected OpenGLDebugRenderer(Runnable endSceneCallback) {
-        this.endSceneCallback = endSceneCallback;
+    protected OpenGLDebugRenderer() {
 
         vertexArray = VertexArrayFactory.create();
         var layout = new OpenGLVertexBufferLayout();
@@ -65,8 +63,7 @@ class OpenGLDebugRenderer {
 
     private void addRectData(Matrix4f transform, Vector4f color) {
         if (vertexCount >= MAX_INDICES) {
-            endSceneCallback.run();
-            resetData();
+            nextBatch();
         }
 
         var lineVertices = new Vector3f[]{
@@ -91,8 +88,7 @@ class OpenGLDebugRenderer {
 
     private void addLineData(Vector3f p1, Vector3f p2, Vector4f color) {
         if (vertexCount >= MAX_INDICES) {
-            endSceneCallback.run();
-            resetData();
+            nextBatch();
         }
 
         var arr = new Vector3f[]{p1, p2};
@@ -111,6 +107,11 @@ class OpenGLDebugRenderer {
         stats.quadCount++;
     }
 
+    private void nextBatch() {
+        endScene();
+        resetData();
+    }
+
     public void beginScene(Matrix4f viewProjection) {
         shader.bind();
         shader.setUniformMat4f("uViewProjection", viewProjection);
@@ -123,6 +124,7 @@ class OpenGLDebugRenderer {
             var copy = Arrays.copyOfRange(data, 0, dataIndex);
             vertexBuffer.reBufferData(copy);
         }
+        flush();
     }
 
     public void flush() {

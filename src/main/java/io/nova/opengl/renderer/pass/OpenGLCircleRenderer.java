@@ -17,14 +17,12 @@ class OpenGLCircleRenderer {
     private final Shader shader;
     private final VertexBuffer vertexBuffer;
     private final VertexArray vertexArray;
-    private final Runnable endSceneCallback;
     private final int elementsPerVertex;
     private float[] data;
     private int indexCount;
     private int dataIndex;
 
-    protected OpenGLCircleRenderer(int[] indices, Runnable endSceneCallback) {
-        this.endSceneCallback = endSceneCallback;
+    protected OpenGLCircleRenderer(int[] indices) {
 
         vertexArray = VertexArrayFactory.create();
         var layout = new OpenGLVertexBufferLayout();
@@ -58,8 +56,7 @@ class OpenGLCircleRenderer {
 
     private void addData(Matrix4f transform, Vector4f color, float thickness, float fade, int entityID) {
         if (indexCount >= MAX_INDICES) {
-            endSceneCallback.run();
-            resetData();
+            nextBatch();
         }
         for (int i = 0; i < 4; i++) {
             Vector4f transformedPos = vertexPositions[i].mul(transform, new Vector4f());
@@ -85,6 +82,11 @@ class OpenGLCircleRenderer {
         stats.quadCount++;
     }
 
+    private void nextBatch() {
+        endScene();
+        resetData();
+    }
+
     public void beginScene(Matrix4f viewProjection) {
         shader.bind();
         shader.setUniformMat4f("uViewProjection", viewProjection);
@@ -97,6 +99,7 @@ class OpenGLCircleRenderer {
             var copy = Arrays.copyOfRange(data, 0, dataIndex);
             vertexBuffer.reBufferData(copy);
         }
+        flush();
     }
 
     public void flush() {

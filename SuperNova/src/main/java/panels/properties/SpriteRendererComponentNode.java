@@ -22,7 +22,7 @@ public class SpriteRendererComponentNode {
             }
 
             if (Objects.isNull(sprite.getTexture()) && Objects.isNull(sprite.getSubTexture())) {
-                var grid = TextureLibrary.uploadAndGet(Path.of("SuperNova/src/main/resources/icons/checkerboard.png"));
+                var grid = TextureLibrary.uploadTexture(Path.of("SuperNova/src/main/resources/icons/checkerboard.png"));
                 ImGui.image(grid.getId(), size, size, 0, 1, 1, 0);
             }
             if (!Objects.isNull(sprite.getTexture())) {
@@ -43,7 +43,7 @@ public class SpriteRendererComponentNode {
                 }
                 if (payload != null) {
                     var texturePath = ImGui.getDragDropPayload().toString();
-                    sprite.setTexture(TextureLibrary.uploadAndGet(Path.of(texturePath)));
+                    sprite.setTexture(TextureLibrary.uploadTexture(Path.of(texturePath)));
                 }
                 ImGui.endDragDropTarget();
             }

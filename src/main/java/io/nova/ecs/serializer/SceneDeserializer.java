@@ -54,8 +54,8 @@ class SceneDeserializer extends StdDeserializer<Scene> {
                 }
                 if (component instanceof SpriteRendererComponent) {
                     var texture = ((SpriteRendererComponent) component).getTexture();
-                    if (!Objects.isNull(texture)) {
-                        texture = TextureLibrary.uploadAndGet(Path.of(texture.getFilepath()));
+                    if (Objects.nonNull(texture)) {
+                        texture = TextureLibrary.uploadTexture(Path.of(texture.getFilepath()));
                         ((SpriteRendererComponent) component).setTexture(texture);
                     }
                 }
