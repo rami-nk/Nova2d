@@ -45,6 +45,7 @@ import static imgui.extension.imguizmo.flag.Operation.*;
 
 public class EditorLayer extends Layer {
     private final Vector2f viewportSize = new Vector2f();
+    private final Vector2f[] viewportBounds = new Vector2f[2];
     private Scene activeScene, editorScene, runtimeScene;
     private Renderer renderer;
     private FrameBuffer frameBuffer;
@@ -54,7 +55,6 @@ public class EditorLayer extends Layer {
     private String filePath;
     private int gizmoOperation;
     private EditorCamera editorCamera;
-    private Vector2f[] viewportBounds = new Vector2f[2];
     private Entity hoveredEntity;
     private boolean viewportHovered = false;
     private boolean viewportFocused = false;
@@ -269,7 +269,6 @@ public class EditorLayer extends Layer {
                         sceneState = SceneState.EDITING;
                         var entity = activeScene.createEntity();
                         var component = new SpriteRendererComponent();
-                        editorCamera.getPosition();
                         component.setTexture(texture);
                         entity.addComponent(component);
                         activeScene.activateEntities(entity);
@@ -657,7 +656,7 @@ public class EditorLayer extends Layer {
 
     private boolean handleMouePicking(MouseButtonPressedEvent event) {
         if (event.getMouseCode() == MouseCode.BUTTON_LEFT) {
-            boolean notUsingGizmos = !ImGuizmo.isUsing() && !ImGuizmo.isOver();
+            boolean notUsingGizmos = !ImGuizmo.isOver();
             if (notUsingGizmos && viewportHovered && !editorCamera.isMoving()) {
                 entityPanel.setSelectedEntity(hoveredEntity);
             }
