@@ -27,7 +27,7 @@ public class Sandbox2d extends Layer {
     public void onAttach() {
         cameraController = new OrthographicCameraController(1000.0f / 600.0f, true);
         renderer = RendererFactory.create();
-        texture = TextureLibrary.uploadAndGet(Path.of("src/main/resources/tilemap_packed.png"));
+        texture = TextureLibrary.uploadTexture(Path.of("src/main/resources/tilemap_packed.png"));
         grass = new SubTexture(texture, new Vector2f(0, 10), new Vector2f(16.0f, 16.0f));
         stone = new SubTexture(texture, new Vector2f(1, 1), new Vector2f(16.0f, 16.0f));
         ceiling = new SubTexture(texture, new Vector2f(6, 6), new Vector2f(16.0f, 16.0f));

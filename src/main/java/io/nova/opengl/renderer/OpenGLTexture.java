@@ -163,6 +163,7 @@ public class OpenGLTexture implements Texture {
         if (this == o) return true;
         if (!(o instanceof OpenGLTexture that)) return false;
 
-        return rendererId == that.rendererId;
+        // TODO: Or (||) is only a quick fix, check where duplicate textures are created
+        return rendererId == that.rendererId || filepath.equals(that.filepath);
     }
 }

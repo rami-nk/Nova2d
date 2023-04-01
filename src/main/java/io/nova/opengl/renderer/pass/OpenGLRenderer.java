@@ -34,9 +34,9 @@ public class OpenGLRenderer implements Renderer {
         };
         var indices = generateIndices();
 
-        quadRenderer = new OpenGLQuadRenderer(indices, this::endScene);
-        circleRenderer = new OpenGLCircleRenderer(indices, this::endScene);
-        lineRenderer = new OpenGLDebugRenderer(this::endScene);
+        quadRenderer = new OpenGLQuadRenderer(indices);
+        circleRenderer = new OpenGLCircleRenderer(indices);
+        lineRenderer = new OpenGLDebugRenderer();
     }
 
     private int[] generateIndices() {
@@ -87,8 +87,6 @@ public class OpenGLRenderer implements Renderer {
         quadRenderer.endScene();
         circleRenderer.endScene();
         lineRenderer.endScene();
-
-        flush();
     }
 
     @Override

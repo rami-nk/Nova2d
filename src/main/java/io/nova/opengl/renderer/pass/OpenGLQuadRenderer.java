@@ -28,15 +28,13 @@ class OpenGLQuadRenderer {
     private final VertexArray vertexArray;
     private final Texture whiteTexture;
     private final TextureSlotManager textureSlotManager;
-    private final Runnable endSceneCallback;
     private final int elementsPerVertex;
     private float[] data;
     private int indexCount;
     private int dataIndex;
 
-    protected OpenGLQuadRenderer(int[] indices, Runnable endSceneCallback) {
+    protected OpenGLQuadRenderer(int[] indices) {
         this.textureSlotManager = new TextureSlotManager();
-        this.endSceneCallback = endSceneCallback;
 
         vertexArray = VertexArrayFactory.create();
         var layout = new OpenGLVertexBufferLayout();
@@ -110,14 +108,28 @@ class OpenGLQuadRenderer {
     }
 
     public void drawSprite(Matrix4f transform, SpriteRendererComponent component, int entityID) {
+        if (!textureSlotManager.hasSlots()) {
+            nextBatch();
+            textureSlotManager.reset();
+        }
 
         if (component.getTexture() != null) {
             var textureSlot = textureSlotManager.add(component.getTexture());
             addQuadData(transform, component.getTilingFactor(), component.getColorAsVec(), textureSlot, entityID);
         } else {
-            var whiteTextureSlot = 0.0f;
-            addQuadData(transform, 1.0f, component.getColorAsVec(), whiteTextureSlot, entityID);
+            if (component.getSubTexture() != null) {
+                var textureSlot = textureSlotManager.add(component.getSubTexture().getTexture());
+                addQuadDataSubTexture(transform, component.getTilingFactor(), component.getColorAsVec(), textureSlot, component.getSubTexture().getTextureCoordinates(), entityID);
+            } else {
+                var whiteTextureSlot = 0.0f;
+                addQuadData(transform, 1.0f, component.getColorAsVec(), whiteTextureSlot, entityID);
+            }
         }
+    }
+
+    private void nextBatch() {
+        endScene();
+        resetData();
     }
 
     public void drawQuad(Vector3f position, Vector2f size, Texture texture, float tilingFactor, Vector4f tintColor) {
@@ -148,7 +160,7 @@ class OpenGLQuadRenderer {
                 .translate(position)
                 .scale(size.x, size.y, 1.0f);
 
-        addQuadDataSubTexture(transform, tilingFactor, tintColor, textureSlot, subTexture.getTextureCoordinates());
+        addQuadDataSubTexture(transform, tilingFactor, tintColor, textureSlot, subTexture.getTextureCoordinates(), -1);
     }
 
     public void drawRotatedQuad(Vector3f position, Vector2f size, float rotation, SubTexture subTexture, float tilingFactor, Vector4f tintColor) {
@@ -159,7 +171,7 @@ class OpenGLQuadRenderer {
                 .rotate(rotation, new Vector3f(0.0f, 0.0f, 1.0f))
                 .scale(size.x, size.y, 1.0f);
 
-        addQuadDataSubTexture(transform, tilingFactor, tintColor, textureSlot, subTexture.getTextureCoordinates());
+        addQuadDataSubTexture(transform, tilingFactor, tintColor, textureSlot, subTexture.getTextureCoordinates(), -1);
     }
 
     public void drawRotatedQuad(Vector3f position, Vector2f size, float rotation, Vector4f color) {
@@ -194,7 +206,7 @@ class OpenGLQuadRenderer {
                 .rotate(rotation, new Vector3f(0.0f, 0.0f, 1.0f))
                 .scale(size.x, size.y, 1.0f);
 
-        addQuadDataSubTexture(transform, tilingFactor, white, textureSlot, subTexture.getTextureCoordinates());
+        addQuadDataSubTexture(transform, tilingFactor, white, textureSlot, subTexture.getTextureCoordinates(), -1);
     }
 
     private void addQuadData(Matrix4f transform, float tilingFactor, Vector4f color, float textureSlot) {
@@ -203,8 +215,8 @@ class OpenGLQuadRenderer {
 
     private void addQuadData(Matrix4f transform, float tilingFactor, Vector4f color, float textureSlot, int entityID) {
         if (indexCount >= MAX_INDICES) {
-            endSceneCallback.run();
-            resetData();
+            endScene();
+            flush();
         }
         for (int i = 0; i < 4; i++) {
             Vector4f transformedPos = vertexPositions[i].mul(transform, new Vector4f());
@@ -245,10 +257,9 @@ class OpenGLQuadRenderer {
         stats.quadCount++;
     }
 
-    private void addQuadDataSubTexture(Matrix4f transform, float tilingFactor, Vector4f color, float textureSlot, Vector2f[] textureCoords) {
+    private void addQuadDataSubTexture(Matrix4f transform, float tilingFactor, Vector4f color, float textureSlot, float[] textureCoords, int entityID) {
         if (indexCount >= MAX_INDICES) {
-            endSceneCallback.run();
-            resetData();
+            nextBatch();
         }
         for (int i = 0; i < 4; i++) {
             Vector4f transformedPos = vertexPositions[i].mul(transform, new Vector4f());
@@ -262,11 +273,12 @@ class OpenGLQuadRenderer {
             data[dataIndex++] = color.z;
             data[dataIndex++] = color.w;
 
-            data[dataIndex++] = textureCoords[i].x;
-            data[dataIndex++] = textureCoords[i].y;
+            data[dataIndex++] = textureCoords[i + i];
+            data[dataIndex++] = textureCoords[i + 1 + i];
 
             data[dataIndex++] = textureSlot;
             data[dataIndex++] = tilingFactor;
+            data[dataIndex++] = entityID;
         }
         indexCount += 6;
         stats.quadCount++;
@@ -283,6 +295,7 @@ class OpenGLQuadRenderer {
             var copy = Arrays.copyOfRange(data, 0, dataIndex);
             vertexBuffer.reBufferData(copy);
         }
+        flush();
     }
 
     public void flush() {

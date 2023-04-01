@@ -46,6 +46,11 @@ public class TextureSlotManager {
     }
 
     public boolean hasSlots() {
-        return occupiedSlots != 0;
+        return occupiedSlots < MAX_TEXTURES;
+    }
+
+    public void reset() {
+        textures.clear();
+        occupiedSlots = 0;
     }
 }

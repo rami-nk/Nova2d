@@ -1,11 +1,81 @@
 package io.nova.imgui;
 
 import imgui.ImGui;
+import imgui.ImGuiStyle;
 import imgui.flag.ImGuiCol;
 
 import java.util.Random;
 
 public class Themes {
+
+    public static void setDarkTheme2() {
+        ImGuiStyle style = ImGui.getStyle();
+        style.setFrameRounding(4);
+        style.setGrabRounding(4);
+        style.setScrollbarRounding(4);
+        style.setChildRounding(4);
+        style.setPopupRounding(4);
+        style.setWindowRounding(4);
+
+        style.setColor(ImGuiCol.Text, 0.86f, 0.86f, 0.86f, 1.00f);
+        style.setColor(ImGuiCol.TextDisabled, 0.48f, 0.48f, 0.48f, 1.00f);
+        style.setColor(ImGuiCol.WindowBg, 0.13f, 0.13f, 0.13f, 1.00f);
+        style.setColor(ImGuiCol.ChildBg, 0.20f, 0.20f, 0.20f, 1.00f);
+        style.setColor(ImGuiCol.PopupBg, 0.13f, 0.13f, 0.13f, 1.00f);
+        style.setColor(ImGuiCol.Border, 0.31f, 0.31f, 0.31f, 1.00f);
+        style.setColor(ImGuiCol.BorderShadow, 0.00f, 0.00f, 0.00f, 0.00f);
+        style.setColor(ImGuiCol.FrameBg, 0.20f, 0.20f, 0.20f, 1.00f);
+        style.setColor(ImGuiCol.FrameBgHovered, 0.25f, 0.25f, 0.25f, 1.00f);
+        style.setColor(ImGuiCol.FrameBgActive, 0.31f, 0.31f, 0.31f, 1.00f);
+        style.setColor(ImGuiCol.TitleBg, 0.13f, 0.13f, 0.13f, 1.00f);
+        style.setColor(ImGuiCol.TitleBgActive, 0.13f, 0.13f, 0.13f, 1.00f);
+        style.setColor(ImGuiCol.TitleBgCollapsed, 0.13f, 0.13f, 0.13f, 1.00f);
+        style.setColor(ImGuiCol.MenuBarBg, 0.20f, 0.20f, 0.20f, 1.00f);
+        style.setColor(ImGuiCol.ScrollbarBg, 0.13f, 0.13f, 0.13f, 1.00f);
+        style.setColor(ImGuiCol.ScrollbarGrab, 0.31f, 0.31f, 0.31f, 1.00f);
+        style.setColor(ImGuiCol.ScrollbarGrabHovered, 0.41f, 0.41f, 0.41f, 1.00f);
+        style.setColor(ImGuiCol.ScrollbarGrabActive, 0.51f, 0.51f, 0.51f, 1.00f);
+        style.setColor(ImGuiCol.CheckMark, 0.86f, 0.86f, 0.86f, 1.00f);
+        style.setColor(ImGuiCol.SliderGrab, 0.31f, 0.31f, 0.31f, 1.00f);
+        style.setColor(ImGuiCol.SliderGrabActive, 0.51f, 0.51f, 0.51f, 1.00f);
+        style.setColor(ImGuiCol.Button, 0.31f, 0.31f, 0.31f, 1.00f);
+        style.setColor(ImGuiCol.ButtonHovered, 0.41f, 0.41f, 0.41f, 1.00f);
+        style.setColor(ImGuiCol.ButtonActive, 0.51f, 0.51f, 0.51f, 1.00f);
+        style.setColor(ImGuiCol.Header, 0.31f, 0.31f, 0.31f, 1.00f);
+        style.setColor(ImGuiCol.HeaderHovered, 0.41f, 0.41f, 0.41f, 1.00f);
+        style.setColor(ImGuiCol.HeaderActive, 0.51f, 0.51f, 0.51f, 1.00f);
+        style.setColor(ImGuiCol.Separator, 0.31f, 0.31f, 0.31f, 1.00f);
+        style.setColor(ImGuiCol.SeparatorHovered, 0.41f, 0.41f, 0.41f, 1.00f);
+        style.setColor(ImGuiCol.SeparatorActive, 0.51f, 0.51f, 0.51f, 1.00f);
+        style.setColor(ImGuiCol.ResizeGrip, 0.31f, 0.31f, 0.31f, 1.00f);
+        style.setColor(ImGuiCol.ResizeGripHovered, 0.41f, 0.41f, 0.41f, 1.00f);
+        style.setColor(ImGuiCol.ResizeGripActive, 0.51f, 0.51f, 0.51f, 1.00f);
+        style.setColor(ImGuiCol.Tab, 0.13f, 0.13f, 0.13f, 1.00f);
+        style.setColor(ImGuiCol.TabHovered, 0.31f, 0.31f, 0.31f, 1.00f);
+        style.setColor(ImGuiCol.TabActive, 0.20f, 0.20f, 0.20f, 1.00f);
+        style.setColor(ImGuiCol.TabUnfocused, 0.13f, 0.13f, 0.13f, 1.00f);
+        style.setColor(ImGuiCol.TabUnfocusedActive, 0.20f, 0.20f, 0.20f, 1.00f);
+        style.setColor(ImGuiCol.DockingPreview, 0.00f, 0.69f, 0.85f, 0.70f);
+        style.setColor(ImGuiCol.DockingEmptyBg, 0.20f, 0.20f, 0.20f, 1.00f);
+        style.setColor(ImGuiCol.PlotLines, 0.86f, 0.86f, 0.86f, 1.00f);
+        style.setColor(ImGuiCol.PlotLinesHovered, 1.00f, 0.43f, 0.35f, 1.00f);
+        style.setColor(ImGuiCol.PlotHistogram, 0.86f, 0.86f, 0.86f, 1.00f);
+        style.setColor(ImGuiCol.PlotHistogramHovered, 1.00f, 0.43f, 0.35f, 1.00f);
+        style.setColor(ImGuiCol.TextSelectedBg, 0.00f, 0.69f, 0.85f, 1.00f);
+        style.setColor(ImGuiCol.ModalWindowDimBg, 0.20f, 0.20f, 0.20f, 0.35f);
+
+        style.setColor(ImGuiCol.Tab, 0.11f, 0.11f, 0.11f, 1.00f);
+        style.setColor(ImGuiCol.TabHovered, 0.18f, 0.18f, 0.18f, 1.00f);
+        style.setColor(ImGuiCol.TabActive, 0.26f, 0.26f, 0.26f, 1.00f);
+        style.setColor(ImGuiCol.TabUnfocused, 0.08f, 0.08f, 0.08f, 1.00f);
+        style.setColor(ImGuiCol.TabUnfocusedActive, 0.15f, 0.15f, 0.15f, 1.00f);
+
+        style.setTabRounding(4.0f);
+        style.setFrameRounding(4.0f);
+        style.setIndentSpacing(12.0f);
+        style.setItemInnerSpacing(6.0f, 2.0f);
+        style.setItemSpacing(12.0f, 8.0f);
+    }
 
     public static void setDeepDarkTheme() {
         var style = ImGui.getStyle();
